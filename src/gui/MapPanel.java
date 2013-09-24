@@ -1,45 +1,56 @@
 package gui;
 
-import javafx.application.Application;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebViewBuilder;
-import javafx.stage.Stage;
 
 /**
  * Klasse for å generere kartpanel
  * 
  * @author Håkon Løvdal
  */
-public class MapPanel extends Application {
+public class MapPanel {
 
-   /**
-    * Lag en WebView-instans
-    * 
-    * @param url Path til kart.html
-    * @return WebView med innhold basert på url/path
-    */
-   private WebView buildWebView(String url) {
-      WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
-      webView.getEngine().javaScriptEnabledProperty().set(true);
-	  webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
-      return webView;
-   }
+	private static void initAndShow() {
+		JFrame frame = new JFrame("Kartpanel");
+		final JFXPanel fxPanel = new JFXPanel();
+		frame.add(fxPanel);
+		frame.setSize(660, 511);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				initFX(fxPanel);
+			}
+		});
+	}
 
-   /**
-    * JavaFX 2.0's Application.start(Stage) metode.
-    * 
-    * @param stage Primary stage.
-    * @throws Exception 
-    */
-   @Override
-   public void start(Stage stage) throws Exception {
-      stage.setTitle("Google Maps: Prosjekt SAU");
-      Scene scene = new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
-      stage.setScene(scene);
-      stage.show();
+   
+   private static void initFX(JFXPanel fxPanel) {
+      Scene scene = createScene();
+      fxPanel.setScene(scene);
    }
+   
+   private static Scene createScene() {
+    	 return new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
+   }
+   
+   private static WebView buildWebView(String url) {
+	      WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
+	      webView.getEngine().javaScriptEnabledProperty().set(true);
+		  webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
+	      return webView;
+	   }
+
 
    /**
     * Main-funksjon for testing  av dette JavaFX karteksempelet.
@@ -47,6 +58,12 @@ public class MapPanel extends Application {
     * @param args (Fra command-line, ingen forventet)
     */
    public static void main(String[] args) {
-      Application.launch(args);
+	   SwingUtilities.invokeLater(new Runnable() {
+		
+		@Override
+		public void run() {
+			initAndShow();
+		}
+	});
    }
 }
