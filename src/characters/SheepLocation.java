@@ -2,27 +2,35 @@ package characters;
 
 public class SheepLocation {
 
-	private double x;
-	private double y;
-	private double z;
+	private double latitude;
+	private double longtidude;
+	private double height;
 	
 	public SheepLocation(double latitude, double longtidude, double height) {
-		this.x = latitude;
-		this.y = longtidude;
-		this.z = height;
+		this.latitude = latitude;
+		this.longtidude = longtidude;
+		this.height = height;
+	}
+	
+	public void editLocation(double latitude, double longtidude, double height) {
+		this.latitude = latitude;
+		this.longtidude = longtidude;
+		this.height = height;
 	}
 
-	public double getX() {
-		return x;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public double getY() {
-		return y;
+	public double getLongtidude() {
+		return longtidude;
 	}
 
-	public double getZ() {
-		return z;
+	public double getHeight() {
+		return height;
 	}
+
+	
 	
 	
 }
