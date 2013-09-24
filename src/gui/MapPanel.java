@@ -8,21 +8,19 @@ import javafx.scene.web.WebViewBuilder;
 import javafx.stage.Stage;
 
 /**
- * Klasse for å generere kartpanel
+ * Klasse for √• generere kartpanel
  * 
- * @author Håkon Løvdal
+ * @author H√•kon L√∏vdal
  */
-public class MapPanel extends Application
-{
+public class MapPanel extends Application {
 
    /**
     * Lag en WebView-instans
     * 
     * @param url Path til kart.html
-    * @return WebView med innhold basert på url/path
+    * @return WebView med innhold basert p√• url/path
     */
-   private WebView buildWebView(String url)
-   {
+   private WebView buildWebView(String url) {
       WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
       webView.getEngine().javaScriptEnabledProperty().set(true);
 	  webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
@@ -36,8 +34,7 @@ public class MapPanel extends Application
     * @throws Exception 
     */
    @Override
-   public void start(Stage stage) throws Exception
-   {
+   public void start(Stage stage) throws Exception {
       stage.setTitle("Google Maps: Prosjekt SAU");
       Scene scene = new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
       stage.setScene(scene);
@@ -49,8 +46,7 @@ public class MapPanel extends Application
     * 
     * @param args (Fra command-line, ingen forventet)
     */
-   public static void main(String[] args)
-   {
+   public static void main(String[] args) {
       Application.launch(args);
    }
 }
