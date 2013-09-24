@@ -33,23 +33,22 @@ public class MapPanel {
 			}
 		});
 	}
-
+	
+	private static void initFX(JFXPanel fxPanel) {
+		Scene scene = createScene();
+		fxPanel.setScene(scene);
+    }
    
-   private static void initFX(JFXPanel fxPanel) {
-      Scene scene = createScene();
-      fxPanel.setScene(scene);
-   }
+	private static Scene createScene() {
+    	return new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
+    }
    
-   private static Scene createScene() {
-    	 return new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
-   }
-   
-   private static WebView buildWebView(String url) {
-	      WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
-	      webView.getEngine().javaScriptEnabledProperty().set(true);
-		  webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
-	      return webView;
-	   }
+	private static WebView buildWebView(String url) {
+	    WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
+	    webView.getEngine().javaScriptEnabledProperty().set(true);
+		webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
+	    return webView;
+	}
 
 
    /**
@@ -57,8 +56,8 @@ public class MapPanel {
     * 
     * @param args (Fra command-line, ingen forventet)
     */
-   public static void main(String[] args) {
-	   SwingUtilities.invokeLater(new Runnable() {
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
 		
 		@Override
 		public void run() {
