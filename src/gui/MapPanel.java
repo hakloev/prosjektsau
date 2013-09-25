@@ -1,8 +1,9 @@
 package gui;
 
+import maps.Constants;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -44,7 +45,7 @@ public class MapPanel {
     }
    
 	private static Scene createScene() {
-    	return new Scene(buildWebView("/maps/kart.html"), 658, 498, Color.WHITE);
+    	return new Scene(buildWebView(Constants.pathToHtml), 658, 498, Color.WHITE);
     }
    
 	private static WebView buildWebView(String url) {
