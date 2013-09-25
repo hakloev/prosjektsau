@@ -16,12 +16,16 @@ import javafx.scene.web.WebViewBuilder;
  * @author Håkon Løvdal
  */
 public class MapPanel {
+	
+	public MapPanel() {
+		initAndShowMap();
+	}
 
-	private static void initAndShow() {
+	private static void initAndShowMap() {
 		JFrame frame = new JFrame("Kartpanel");
 		final JFXPanel fxPanel = new JFXPanel();
 		frame.add(fxPanel);
-		frame.setSize(660, 511);
+		frame.setSize(660, 520);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -49,19 +53,13 @@ public class MapPanel {
 		webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
 	    return webView;
 	}
-
-
-   /**
-    * Main-funksjon for testing  av dette JavaFX karteksempelet.
-    * 
-    * @param args (Fra command-line, ingen forventet)
-    */
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 		
 		@Override
 		public void run() {
-			initAndShow();
+			MapPanel p = new MapPanel();
 		}
 	});
    }

@@ -24,8 +24,14 @@
   		var marker = new google.maps.Marker({
   			position: pos, 
   			map: map, 
-  			title: 'Sheep idNr: '
+  			title: 'Sheep idNr: 2'
   		});	
+  		
+  		var marker1 = new google.maps.Marker({
+  			position: new google.maps.LatLng(65, 12),
+  			map: map,
+  			title: 'Sheep idNr: 1'
+  		});
 	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
