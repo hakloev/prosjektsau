@@ -15,7 +15,7 @@ import javafx.scene.web.WebViewBuilder;
 /**
  * Klasse for å generere kartpanel
  * 
- * @author Håkon Løvdal
+ * @author Max er best
  */
 public class MapPanel extends JPanel {
 	
