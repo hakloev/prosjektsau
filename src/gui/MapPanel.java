@@ -3,6 +3,7 @@ package gui;
 import maps.Constants;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -16,7 +17,7 @@ import javafx.scene.web.WebViewBuilder;
  * 
  * @author Håkon Løvdal
  */
-public class MapPanel {
+public class MapPanel extends JPanel {
 	
 	public MapPanel() {
 		initAndShowMap();
@@ -55,13 +56,13 @@ public class MapPanel {
 	    return webView;
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-		
-		@Override
-		public void run() {
-			MapPanel p = new MapPanel();
-		}
-	});
-   }
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//		
+//		@Override
+//		public void run() {
+//			MapPanel p = new MapPanel();
+//		}
+//	});
+//   }
 }
