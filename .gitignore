@@ -7,3 +7,6 @@
 .project
 
 .settings
+
+#For all who hates DS_Store
+.DS_Store
