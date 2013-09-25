@@ -31,7 +31,6 @@ public class ProgramFrame extends JFrame{
 		program.setSize(windowSize);
 		
 		MapPanel mapPanel = new MapPanel();
-		mapPanel.
 		program.add(mapPanel);
 	}
 
