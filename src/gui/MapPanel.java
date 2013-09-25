@@ -13,7 +13,7 @@ import javafx.scene.web.WebView;
 import javafx.scene.web.WebViewBuilder;
 
 /**
- * Klasse for å generere kartpanel
+ * Klasse for �� generere kartpanel
  * 
  * @author Max er best
  */
@@ -23,13 +23,11 @@ public class MapPanel extends JPanel {
 		initAndShowMap();
 	}
 
-	private static void initAndShowMap() {
-		JFrame frame = new JFrame("Kartpanel");
+	private void initAndShowMap() {
 		final JFXPanel fxPanel = new JFXPanel();
-		frame.add(fxPanel);
-		frame.setSize(660, 520);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		add(fxPanel);
+		setSize(660, 520);
+		setVisible(true);
 		
 		Platform.runLater(new Runnable() {
 			
@@ -40,16 +38,16 @@ public class MapPanel extends JPanel {
 		});
 	}
 	
-	private static void initFX(JFXPanel fxPanel) {
+	private void initFX(JFXPanel fxPanel) {
 		Scene scene = createScene();
 		fxPanel.setScene(scene);
     }
    
-	private static Scene createScene() {
+	private Scene createScene() {
     	return new Scene(buildWebView(Constants.pathToHtml), 658, 498, Color.WHITE);
     }
    
-	private static WebView buildWebView(String url) {
+	private WebView buildWebView(String url) {
 	    WebView webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
 	    webView.getEngine().javaScriptEnabledProperty().set(true);
 		webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
@@ -64,5 +62,5 @@ public class MapPanel extends JPanel {
 //			MapPanel p = new MapPanel();
 //		}
 //	});
-//   }
+ //  }
 }
