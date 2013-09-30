@@ -57,7 +57,7 @@ public class Farmer
 //		if(email.contains(krøllalfa, men fikk error på å teste etter @)) 
 //		{
 //			this.email = email;
-//		}
+//		}sdfghjklø
 		this.email = email;
 	}
 	
