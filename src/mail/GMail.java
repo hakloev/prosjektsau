@@ -50,7 +50,7 @@ public class GMail {
 				try {
 		 
 					Message message = new MimeMessage(session);
-					message.setFrom(new InternetAddress("from-email@gmail.com"));
+					message.setFrom(new InternetAddress(username));
 					message.setRecipients(Message.RecipientType.TO,
 						InternetAddress.parse(recipient));
 					message.setSubject(subject);
