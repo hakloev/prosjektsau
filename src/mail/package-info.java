@@ -1,0 +1,8 @@
+/**
+ * 
+ */
+/**
+ * @author maxmelander
+ *
+ */
+package mail;
