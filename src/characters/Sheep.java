@@ -27,5 +27,9 @@ public class Sheep {
 	public SheepLocation getLocation() {
 		return location;
 	}
+	
+	public String toString() {
+		return "idNR" + idNr;
+	}
 
 }
