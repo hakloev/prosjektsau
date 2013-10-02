@@ -8,19 +8,18 @@ public class Farmer
 	private String passWord;
 	private String firstName;
 	private String lastName;
-	private int phoneNumber;
+	private String phoneNumber;
 	private String email;
 	
 	public Farmer(int ownerID, String userName, String passWord,
-			String firstName, String lastName, int phoneNumber, String email) 
-	{
+			String firstName, String lastName, String phoneNumber, String email) {
 		this.ownerID = ownerID;
-		this.email = email;
+		setEmail(email);
 		this.userName = email;
-		this.passWord = passWord;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
+		setPassWord(passWord);
+		setFirstName(firstName);
+		setLastName(lastName);
+		setPhoneNumber(phoneNumber);
 		
 	}
 	
@@ -28,7 +27,9 @@ public class Farmer
 	public String getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(String firstName) {
+	
+	//Trenger exception handler
+	private void setFirstName(String firstName) {
 		int firstNameLength = firstName.length();
 		if(firstNameLength < 3 && firstNameLength > 12)
 			{
@@ -39,7 +40,9 @@ public class Farmer
 	public String getLastName() {
 		return lastName;
 	}
-	public void setLastName(String lastName) {
+	
+	//Trenger exception handler
+	private void setLastName(String lastName) {
 		int lastNameLength = lastName.length();
 		if(lastNameLength < 3 && lastNameLength > 12)
 			{
@@ -48,17 +51,15 @@ public class Farmer
 	}
 
 	
-	public String getEmail() 
-	{
+	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) 
-	{
-//		if(email.contains(krøllalfa, men fikk error på å teste etter @)) 
-//		{
-//			this.email = email;
-//		}sdfghjklø
-		this.email = email;
+	
+	//Trenger exception handler
+	private void setEmail(String email) {
+		if(email.contains("@")){
+			this.email = email;
+		}
 	}
 	
 	public String getUserName() {
@@ -71,31 +72,24 @@ public class Farmer
 	}
 	
 	
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	public void setPhoneNumber(int phoneNumber) {
-		if(phoneNumber >= 10000000 && phoneNumber <= 99999999)
-		{
+	private void setPhoneNumber(String phoneNumber) {
+		if (phoneNumber.matches("[0-9]+") && phoneNumber.length() == 8) {
 			this.phoneNumber = phoneNumber;
 		}
 	}
 	
-	
 	public String getPassWord() {
 		return passWord;
 	}
-	public void setPassWord(String passWord) 
-	{
+	
+	private void setPassWord(String passWord) {
 		int passWordLength = passWord.length();
 		if (passWordLength < 10 && passWordLength > 6)
 		{
 			this.passWord = passWord;
 		}
 	}
-	
-	
-	
-	
-	
 }
