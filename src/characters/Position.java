@@ -1,12 +1,12 @@
 package characters;
 
-public class SheepLocation {
+public class Position {
 
 	private double latitude;
 	private double longtidude;
 	private double height;
 	
-	public SheepLocation(double latitude, double longtidude, double height) {
+	public Position(double latitude, double longtidude, double height) {
 		this.latitude = latitude;
 		this.longtidude = longtidude;
 		this.height = height;
