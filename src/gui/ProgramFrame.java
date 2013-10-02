@@ -12,18 +12,22 @@ public class ProgramFrame extends JFrame{
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
-	static MapPanel mapPanel;
 	
+	private MapPanel mapPanel;
+	private UserPanel userPanel;
+	private SheepPanel sheepPanel;
+	private AlarmPanel alarmPanel;
+	private LogPanel logPanel;
+	private JTabbedPane jTabPane;
+
 	public ProgramFrame() {
 		initFrame();
-		mapPanel = new MapPanel();
-		JTabbedPane jtb = new JTabbedPane();
-		jtb.addTab("Tab", new JPanel());
-		jtb.add("Map Panel", mapPanel);
-		add(jtb);
-
+		initGuiTabs();
+		//jTabPane.setEnabled(false);
 	}
-
+	/**
+	 * Initializes the program frame.
+	 */
 	private void initFrame() {
 		setVisible(true);
 		setPreferredSize(windowSize);
@@ -31,6 +35,25 @@ public class ProgramFrame extends JFrame{
 		setMaximumSize(maxWindowSize);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(windowSize);
+	}
+	
+	/**
+	 * Initializes the different panels that goes to the JTabbedPane, along the JTabbedPane.
+	 */
+	private void initGuiTabs(){
+		userPanel = new UserPanel();
+		sheepPanel = new SheepPanel();
+		mapPanel = new MapPanel();
+		alarmPanel = new AlarmPanel();
+		logPanel = new LogPanel();
+		
+		jTabPane = new JTabbedPane();
+		jTabPane.add("User Panel", userPanel);
+		jTabPane.add("Sheep Panel", sheepPanel);
+		jTabPane.add("Map Panel", mapPanel);
+		jTabPane.add("Alarm Panel", alarmPanel);
+		jTabPane.add("Log Panel", logPanel);
+		this.add(jTabPane);
 	}
 
 	/**
@@ -46,7 +69,7 @@ public class ProgramFrame extends JFrame{
 		});
 		
 		windowSize = new Dimension(800,600);
-		minWindowSize = new Dimension(660, 520);
+		minWindowSize = new Dimension(760, 570);
 		maxWindowSize = new Dimension(1200,900);
 	}
 
