@@ -9,10 +9,12 @@ import javax.swing.SwingUtilities;
 
 public class ProgramFrame extends JFrame{
 	
+	//Størrelsesvariabler for vinduet
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
 	
+	//Div panel og swing variabler
 	private MapPanel mapPanel;
 	private UserPanel userPanel;
 	private SheepPanel sheepPanel;
@@ -38,14 +40,59 @@ public class ProgramFrame extends JFrame{
 	}
 	
 	/**
+	 * Henter brukerpanelet userPanel.
+	 * 
+	 * @return JPanel
+	 */
+	public UserPanel getUserPanel(){
+		return userPanel;
+	}
+	
+	/**
+	 * Henter sauepanelet sheepPanel.
+	 * 
+	 * @return JPanel
+	 */
+	public SheepPanel getSheepPanel(){
+		return sheepPanel;
+	}
+	
+	/**
+	 * Henter kartpanelet mapPanel.
+	 * 
+	 * @return JPanel
+	 */
+	public MapPanel getMapPanel(){
+		return mapPanel;
+	}
+	
+	/**
+	 * Henter alarmpanelet alarmPanel.
+	 * 
+	 * @return JPanel
+	 */
+	public AlarmPanel getAlarmPanel(){
+		return alarmPanel;
+	}
+	
+	/**
+	 * Henter loggpanelet logPanel.
+	 * 
+	 * @return JPanel
+	 */
+	public LogPanel getLogPanel(){
+		return logPanel;
+	}
+	
+	/**
 	 * Initializes the different panels that goes to the JTabbedPane, along the JTabbedPane.
 	 */
 	private void initGuiTabs(){
-		userPanel = new UserPanel();
-		sheepPanel = new SheepPanel();
-		mapPanel = new MapPanel();
-		alarmPanel = new AlarmPanel();
-		logPanel = new LogPanel();
+		userPanel = new UserPanel(this);
+		sheepPanel = new SheepPanel(this);
+		mapPanel = new MapPanel(this);
+		alarmPanel = new AlarmPanel(this);
+		logPanel = new LogPanel(this);
 		
 		jTabPane = new JTabbedPane();
 		jTabPane.add("User Panel", userPanel);

@@ -16,8 +16,8 @@ import javax.swing.border.TitledBorder;
 
 public class UserPanel extends JPanel {
 
-
-
+	private ProgramFrame programFrame;
+	
 	private static DefaultListModel test2 = null;
 
 	private JButton loginButton;
@@ -30,7 +30,8 @@ public class UserPanel extends JPanel {
 	
 	private JSeparator js;
 	
-	public UserPanel() {
+	public UserPanel(ProgramFrame programFrame) {
+		this.programFrame = programFrame;
 		initElements();
 		initDesign();
 	}
