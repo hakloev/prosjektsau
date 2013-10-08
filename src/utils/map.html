@@ -27,11 +27,13 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
  
 		  var map;
           var markers = [];
+          var latitude;
+          var longtitude;
  
 		  function initialize() {
 		    var mapOptions = {
 		      zoom: 5,
-		      center: new google.maps.LatLng(63.43060, 10,39249),
+		      center: new google.maps.LatLng(63.3, 10.3),
 			  streetViewControl: false,
 		      mapTypeControlOptions: {
 		        mapTypeIds: ['topo2', 'topo2graatone'],
@@ -55,18 +57,18 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
             markers.push(marker);
         }
 
-        function setAllMap(map) {
+        function setAllMarkersOnMap(map) {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setMap(map)
             }
         }
 
         function clearMarkers() {
-            setAllMap(null);
+            setAllMarkersOnMap(null);
         }
 
         function showMarkers() {
-            setAllMap(map);
+            setAllMarkersOnMap(map);
         }
 
         function deleteMarkers() {
@@ -80,9 +82,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 </head>
 <body onload="initialize()">
     <div id="panel">
-        <input onclick="clearMarkers();" type=button value="Skjul sauer">
         <input onclick="showMarkers();" type=button value="Vis alle sauer">
-        <input onclick="deleteMarkers();" type=button value="Slett sauer">
+        <input onclick="clearMarkers();" type=button value="Skjul alle sauer">
     </div>
   <div id="map_canvas" style="width:600px; height:400px"></div>
   <div style="width:600px;text-align:right"><a href="http://www.statkart.no">Statens kartverk</a>, 
