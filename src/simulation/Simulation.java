@@ -3,49 +3,58 @@ package simulation;
 import java.util.ArrayList;
 import java.util.Random;
 
+import characters.Position;
+import characters.Sheep;
+
 /**
- * Klasse for aa simulere sauenes posisjonendringer
+ * A simulation of sheep movement and attacks
  * 
- * @author Max er best, Thomas er en god nummer to.
+ * @author.
  */
 
 public class Simulation {
-	private long previousUpdateTime = System.currentTimeMillis();
+	private ArrayList<Sheep> sheepList;
+	private long previousUpdateTime;
 	private long timeNow;
-	private int numberofSheep;
+	private Random rand;
+	private Position sheepLocation;
+	public static final int MSINDAY = 86400000;
+	public static final int NUMBEROFUPDATESPERDAY = 3;
+	public static final int NEGATIVE = 0;
+	public static final int POSITIVE = 1;
 
 	public Simulation() {
-		
-	}//simulation
+		rand = new Random();
+		sheepList = new ArrayList<Sheep>();
+	}
 	
 	public void runSimulation(){
 		boolean running = true;
-		int updateIntervalLimit = 1000; // tid i MS som sier hvor ofte sau skal oppdateres.
-		ArrayList<Integer> sheepIdList = new ArrayList<Integer>();  //faar alle saueID som liste
-		//
-		//kode for � hente id fra DB for legge dem i liste
-		//
-
+		long updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
+		int sign;
+		
 		while (running){
-			timeNow = System.currentTimeMillis();
-
-			for (int sheepID : sheepIdList){
-				//
-				//kode for � sende inkrementering/dekrementering for sauePOS til DB
-				//
-				System.out.println("sheep " + sheepID + " updated." );
-
-
-				//klokka n� minus hva klokka var istad = timePassed siden forrige update
-				while (timeNow - previousUpdateTime <= updateIntervalLimit){ 
-					//vent med � gaa videre til det er tid for neste update.
+			timeNow = System.currentTimeMillis() % MSINDAY; //MS after midnight		
+			for (Sheep currentSheep : sheepList){
+				sign = rand.nextInt(2);
+				sheepLocation = currentSheep.getLocation();
+				if (sign == NEGATIVE){
+					//decrement sheep position
+				}
+				else{
+					//increment sheep position
+				}
 				
-				}//while wait for neste udpdate
-			}//for sheep
-		}//while running
+				//check if a sheep attack should occur
+				//update sheep in database
+				
+				while (timeNow - previousUpdateTime <= updateInterval){}//waits until enough time has passed	
+			}
+			previousUpdateTime = timeNow;
+		}
 	}
-
-	// metode som tar inn en sau og oppdaterer en posisjon til denne. 
-	private void updateSheep (int sheepId){
+	
+	public void sheepAttack(){
+		//fucks shit up yo
 	}
 }
