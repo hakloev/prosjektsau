@@ -3,18 +3,18 @@ package characters;
 public class Position {
 
 	private double latitude;
-	private double longtidude;
+	private double longitude;
 	private double height;
 	
-	public Position(double latitude, double longtidude, double height) {
+	public Position(double latitude, double longitude, double height) {
 		this.latitude = latitude;
-		this.longtidude = longtidude;
+		this.longitude = longitude;
 		this.height = height;
 	}
 	
 	public void editLocation(double latitude, double longtidude, double height) {
 		this.latitude = latitude;
-		this.longtidude = longtidude;
+		this.longitude = longtidude;
 		this.height = height;
 	}
 
@@ -22,14 +22,19 @@ public class Position {
 		return latitude;
 	}
 
-	public double getLongtidude() {
-		return longtidude;
+	public double getLongitude() {
+		return longitude;
 	}
 
 	public double getHeight() {
 		return height;
 	}
-
+	
+	@Override
+	public String toString(){
+		return ("Latitude: " + this.latitude + " Longitude: " + this.longitude+ " Height: " + this.height);
+		
+	}
 	
 	
 	
