@@ -17,7 +17,7 @@ public class ProgramFrame extends JFrame{
 	//Div panel og swing variabler
 	private MapPanel mapPanel;
 	private UserPanel userPanel;
-	//private SheepPanel sheepPanel;
+	private SheepPanel sheepPanel;
 	private AlarmPanel alarmPanel;
 	private LogPanel logPanel;
 	private JTabbedPane jTabPane;
@@ -31,6 +31,7 @@ public class ProgramFrame extends JFrame{
 	 * Initializes the program frame.
 	 */
 	private void initFrame() {
+		setResizable(false);
 		setVisible(true);
 		setPreferredSize(windowSize);
 		setMinimumSize(minWindowSize);
@@ -53,9 +54,9 @@ public class ProgramFrame extends JFrame{
 	 * 
 	 * @return JPanel
 	 */
-//	public SheepPanel getSheepPanel(){
-//		return sheepPanel;
-//	}
+	public SheepPanel getSheepPanel(){
+		return sheepPanel;
+	}
 	
 	/**
 	 * Henter kartpanelet mapPanel.
@@ -89,14 +90,14 @@ public class ProgramFrame extends JFrame{
 	 */
 	private void initGuiTabs(){
 		userPanel = new UserPanel(this);
-		//sheepPanel = new SheepPanel(this);
+		sheepPanel = new SheepPanel(this);
 		mapPanel = new MapPanel(this);
 		alarmPanel = new AlarmPanel(this);
 		logPanel = new LogPanel(this);
 		
 		jTabPane = new JTabbedPane();
 		jTabPane.add("User Panel", userPanel);
-		//jTabPane.add("Sheep Panel", sheepPanel);
+		jTabPane.add("Sheep Panel", sheepPanel);
 		jTabPane.add("Map Panel", mapPanel);
 		jTabPane.add("Alarm Panel", alarmPanel);
 		jTabPane.add("Log Panel", logPanel);
@@ -116,7 +117,7 @@ public class ProgramFrame extends JFrame{
 		});
 		
 		windowSize = new Dimension(800,600);
-		minWindowSize = new Dimension(760, 570);
+		minWindowSize = new Dimension(600, 500);
 		maxWindowSize = new Dimension(1200,900);
 	}
 

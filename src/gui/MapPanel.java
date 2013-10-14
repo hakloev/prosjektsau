@@ -39,7 +39,7 @@ public class MapPanel extends JPanel {
 	private void initAndShowMap() {
 		final JFXPanel fxPanel = new JFXPanel();
 		add(fxPanel);
-		setSize(660, 520);
+		setSize(600, 400);
 		setVisible(true);
 		
 		Platform.runLater(new Runnable() {
@@ -67,7 +67,7 @@ public class MapPanel extends JPanel {
 	 * @return scene
 	 */
 	private Scene createScene() {
-    	return new Scene(buildWebView(Constants.pathToHtml), 658, 498, Color.WHITE);
+    	return new Scene(buildWebView(Constants.pathToHtml), 698, 450, Color.WHITE);
     }
 	
 	/**
