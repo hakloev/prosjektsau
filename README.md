@@ -1,6 +1,13 @@
-IT1901
-======
+IT1901 - PROSJEKTGRUPPA SAU
+===========================
 
-PROSJEKT SAU
+GitHub-repo for utvikling av java-applikasjon
 
-IT1901 - G11 
+Gruppe 11 består av:
+
+  * Andreas Lyngby
+  * Andreas Lønes
+  * Håkon Løvdal
+  * Mads Midtlyng
+  * Max Melander
+  * Thomas Mathiesen

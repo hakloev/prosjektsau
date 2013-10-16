@@ -1,25 +1,61 @@
 package characters;
 
-public class Farmer {
+public class Farmer 
+{
 
-	private final int ownerID;
+	private final int farmerId;
 	private String userName;
-	private String passWord;
-	private String firstName;
-	private String lastName;
-	private int phoneNumber;
+	private String email;
 	
-	public Farmer(int ownerID, String userName, String passWord,
-			String firstName, String lastName, int phoneNumber) {
-		this.ownerID = ownerID;
+	/**
+	 * 
+	 * @param ownerID the farmer's owner ID
+	 * @param userName the farmer's user name
+	 * @param email the farmers Email address
+	 */
+	public Farmer(int farmerId, String userName, String email) {
+		this.farmerId = farmerId;
+		setEmail(email);
 		this.userName = userName;
-		this.passWord = passWord;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
+		
+		
 	}
 	
+	/**
+	 * 
+	 * @return returns the farmer's Email
+	 */
+	public String getEmail() {
+		return email;
+	}
 	
+	/**
+	 * sets the farmer's Email address
+	 * 
+	 * @param email
+	 */
+	//Trenger exception handler
+	private void setEmail(String email) {
+		if(email.contains("@")){
+			this.email = email;
+		}
+	}
 	
+	/**
+	 * 
+	 * @return returns the farmer's username
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * 
+	 * @return returns the farmer's owner ID
+	 */
+	public int getFarmerId() {
+		return farmerId;
+	}
 	
 }
+

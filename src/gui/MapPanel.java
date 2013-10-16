@@ -1,5 +1,12 @@
 package gui;
 
+<<<<<<< HEAD
+=======
+import maps.Constants;
+
+
+import javax.swing.JFrame;
+>>>>>>> master
 import javax.swing.JPanel;
 
 import utils.Constants;
@@ -16,7 +23,11 @@ import javafx.scene.web.WebViewBuilder;
 
 
 /**
+<<<<<<< HEAD
  * Class to generate map-panel
+=======
+ * Klasse for �� generere kartpanel
+>>>>>>> master
  * 
  * @author Håkon Ødegård Løvdal
  */
@@ -85,6 +96,7 @@ public class MapPanel extends JPanel {
 	    return webView;
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
 	 * 
@@ -138,3 +150,15 @@ public class MapPanel extends JPanel {
 //	});
  //  }
 }
+=======
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+		
+		@Override
+		public void run() {
+			MapPanel p = new MapPanel();
+		}
+	});
+   }
+}
+>>>>>>> master
