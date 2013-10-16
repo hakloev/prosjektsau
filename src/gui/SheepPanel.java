@@ -81,12 +81,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private GroupLayout layout;
 	
-	private ArrayList<Sheep> sheeps;
-
-	
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
-		sheeps = new ArrayList<Sheep>();
 		
 		initElements();
 		initDesign();
@@ -149,11 +145,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 		//sheepWeight.setMaximumSize(new Dimension(200,17));
 		sheepWeight.setEditable(false);
 		
-		infoMode = new JRadioButton("Info modus");
+		infoMode = new JRadioButton("Infomodus");
 		updateMode = new JRadioButton("Oppdateringsmodus");
+		updateMode.setSelected(true);
 		radioGroup1 = new ButtonGroup();
 		radioGroup1.add(infoMode);
 		radioGroup1.add(updateMode);
+		infoMode.setSelected(true);
+		radioGroup1.setSelected(infoMode.getModel(), true);
 		
 		mapAll = new JRadioButton("Alle");
 		mapSelected = new JRadioButton("Valgt");
@@ -178,6 +177,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 		deleteMap.addActionListener(new DeleteMapListener());
 		newSheep.addActionListener(new newSheepListener());
 		addSheep.addActionListener(new addNewSheepListener());
+		updateSheep.addActionListener(new EditSheepInfoListener());
+		updateMode.addActionListener(new UpdateModeListener());
+		infoMode.addActionListener(new InfoModeListener());
 		
 		
 	}
@@ -315,16 +317,18 @@ public class SheepPanel extends JPanel implements ItemListener{
 		// for loop ellerno lignende
 		String testSau1 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
 		String testSau2 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"987654321\",\"nick\":\"Zelda\",\"birthYear\":\"1992\",\"lat\":\"62.39123\",\"long\":\"9.26864\"}}}";
-		sheeps.add(new GetAndParseJson(testSau1).getSheep());
-		sheeps.add(new GetAndParseJson(testSau2).getSheep());
-		sheepList.addElement(sheeps.get(0));
-		sheepList.addElement(sheeps.get(1));
+		sheepList.addElement(new GetAndParseJson(testSau1).getSheep());
+		sheepList.addElement(new GetAndParseJson(testSau2).getSheep());
 	}
 	
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void updateSheep() {
+		// oppdater sau-objektet i lista og send til server
 	}
 	
 	private void setEditable(boolean bool) {
@@ -341,17 +345,30 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
 	}
 	
+	private void setEditableWithSheepInfo(boolean bool) {
+		sheepId.setEditable(false); // id må genereres selv
+		sheepNick.setEditable(bool);
+		sheepAge.setEditable(bool);
+		sheepWeight.setEditable(bool);
+		sheepPos.setEditable(bool);
+	}
+	
 	class ListListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			if (!e.getValueIsAdjusting()) {
-				Sheep sheep = list.getSelectedValue();
-				sheepId.setText(Integer.toString(sheep.getIdNr())); 
-				sheepNick.setText(sheep.getNick());
-				sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
-				sheepWeight.setText("Vi bruker ikke vekt, right?");
-				sheepPos.setText("Breddegrad: " + sheep.getLocation().getLatitude() + " Lengdegrad: " + sheep.getLocation().getLongtidude());
+			if (!updateMode.isSelected()) {
+				if (!e.getValueIsAdjusting()) {
+					Sheep sheep = list.getSelectedValue();
+					sheepId.setText(Integer.toString(sheep.getIdNr())); 
+					sheepNick.setText(sheep.getNick());
+					sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
+					sheepWeight.setText("Vi bruker ikke vekt, right?");
+					sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongtidude());
+				}
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus", 
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
@@ -406,19 +423,63 @@ public class SheepPanel extends JPanel implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			String posInput = sheepPos.getText();
 			if (posInput.matches("[0-9.,]*")) {
-						String[] pos = posInput.split(",");
-						// generete id funksjon? Hash?
-						Sheep sheep = new Sheep(555555, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), 
-								programFrame.getUserPanel().getFarmer(), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
-						sheeps.add(sheep);
-						sheepList.addElement(sheep);
+				String[] pos = posInput.split(",");
+				// generete id funksjon? Hash?
+				
+				// genere sauer i en lignede metode som updateSheep()??
+				Sheep sheep = new Sheep(555555, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), 
+				programFrame.getUserPanel().getFarmer(), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
+				sheepList.addElement(sheep);	
 			} else {
 				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345,10.435\nDu kan ha opptil seks desimaler", 
 						"Posisjonsfeil", JOptionPane.WARNING_MESSAGE);
 			}
-			
-			
 			setEditable(false);
+		}
+	}
+	
+	class EditSheepInfoListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (updateMode.isSelected()) {
+				setEditableWithSheepInfo(false);
+				updateSheep();
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan ikke oppdatere en sau uten å\nvære i oppdateringsmodus",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+				setEditableWithSheepInfo(false);
+			}
+			updateMode.setSelected(false);
+			infoMode.setSelected(true);
+			radioGroup1.setSelected(infoMode.getModel(), true);
+		}
+	}
+	
+	class UpdateModeListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (list.isSelectionEmpty()) {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må ha valgt en sau for å gå i editeringsmodus",
+						"Posisjonsfeil", JOptionPane.WARNING_MESSAGE);
+				updateMode.setSelected(false);
+				infoMode.setSelected(true);
+				radioGroup1.setSelected(infoMode.getModel(), true);
+			} else {
+				setEditableWithSheepInfo(true);
+			}
+		}
+	}
+	
+	class InfoModeListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// kan nå gå fra oppdatering til info uten å lagre endringer.. 
+			setEditableWithSheepInfo(false);
+			infoMode.setSelected(true);
+			radioGroup1.setSelected(infoMode.getModel(), true);
 		}
 	}
 }

@@ -3,6 +3,9 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -60,7 +63,6 @@ public class UserPanel extends JPanel {
         layout.setAutoCreateContainerGaps(true);
 		
 		loginButton = new JButton("Logg inn");
-		loginButton.addActionListener(new LoginListener());
 		
 		usernameText = new JLabel("Brukernavn:");
 		passwordText = new JLabel("Password:");
@@ -74,7 +76,10 @@ public class UserPanel extends JPanel {
 		
 		js = new JSeparator();
 		
+		// Listeners
+		loginButton.addActionListener(new LoginListener());
 	}
+
 	
 	public void initDesign(){
 		layout.setHorizontalGroup(layout.createSequentialGroup()
