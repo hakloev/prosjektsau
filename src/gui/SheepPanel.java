@@ -1,13 +1,25 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
+
+
+
+import java.util.ArrayList;
+
+import javafx.application.Platform;
+
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -16,14 +28,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import serverconnection.GetAndParseJson;
+import characters.Sheep;
 
 
 public class SheepPanel extends JPanel implements ItemListener{
 	
 	private ProgramFrame programFrame;
 	
-	private JList list;
-	private DefaultListModel sheepList;
+	private JList<Sheep> list;
+	private DefaultListModel<Sheep> sheepList;
 	private JScrollPane listScrollPane;
 	
 	private JLabel sheepListText;
@@ -32,8 +51,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JButton getSheepInfo;
 	private JButton deleteSheep;
 	private JButton addSheep;
+	private JButton newSheep;
 	private JButton updateSheep;
 	private JButton showMap;
+	private JButton deleteMap;
 	
 	private JRadioButton infoMode;
 	private JRadioButton updateMode;
@@ -60,8 +81,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private GroupLayout layout;
 	
+	private ArrayList<Sheep> sheeps;
+
+	
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
+		sheeps = new ArrayList<Sheep>();
 		
 		initElements();
 		initDesign();
@@ -81,9 +106,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-        sheepList = new DefaultListModel();
+        sheepList = new DefaultListModel<Sheep>();
         
-		list = new JList(sheepList);
+		list = new JList<Sheep>(sheepList);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		listScrollPane = new JScrollPane(list);
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
@@ -136,12 +163,23 @@ public class SheepPanel extends JPanel implements ItemListener{
 		
 		getSheepInfo = new JButton("Hent info");
 		deleteSheep = new JButton("Slett sau");
-		addSheep = new JButton("Legg til sau");
+		addSheep = new JButton("Legg til ny sau");
+		newSheep = new JButton("Ny sau");
 		updateSheep = new JButton("Oppdater sau");
-		showMap = new JButton("Vis p� kart");
+		showMap = new JButton("Vis på kart");
+		deleteMap = new JButton("Slett alle på kart");
 		
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
+		
+		// Listeners for everything
+		list.addListSelectionListener(new ListListener());
+		showMap.addActionListener(new ShowInMapListener());
+		deleteMap.addActionListener(new DeleteMapListener());
+		newSheep.addActionListener(new newSheepListener());
+		addSheep.addActionListener(new addNewSheepListener());
+		
+		
 	}
 	
 	public void initDesign(){
@@ -188,11 +226,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 											.addComponent(showMap)
 											.addComponent(mapSelected)
 											.addComponent(mapAll)
+											.addComponent(deleteMap)
 										) 
 									)
 								)
 								.addComponent(designSeperator2)
 								.addGroup(layout.createSequentialGroup()
+										.addComponent(newSheep)
 										.addComponent(addSheep)
 										.addComponent(deleteSheep)
 								)
@@ -250,11 +290,13 @@ public class SheepPanel extends JPanel implements ItemListener{
                         		.addComponent(showMap)
                         		.addComponent(mapAll)
                         		.addComponent(mapSelected)
+                        		.addComponent(deleteMap)
 	                        )
 	                        .addGap(20)
 	                        .addComponent(designSeperator2)
 	                        .addGap(20)
 	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	                        		.addComponent(newSheep)
 	                        		.addComponent(addSheep)
 	                        		.addComponent(deleteSheep)
 	                        )
@@ -267,10 +309,116 @@ public class SheepPanel extends JPanel implements ItemListener{
 			)
 		);
 	}
-
+	
+	public void initUserSheeps() {
+		// skal spørre etter alle sauer, her henter den standard sauen fra test json
+		// for loop ellerno lignende
+		String testSau1 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
+		String testSau2 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"987654321\",\"nick\":\"Zelda\",\"birthYear\":\"1992\",\"lat\":\"62.39123\",\"long\":\"9.26864\"}}}";
+		sheeps.add(new GetAndParseJson(testSau1).getSheep());
+		sheeps.add(new GetAndParseJson(testSau2).getSheep());
+		sheepList.addElement(sheeps.get(0));
+		sheepList.addElement(sheeps.get(1));
+	}
+	
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void setEditable(boolean bool) {
+		sheepId.setEditable(false); // id må genereres selv
+		sheepNick.setEditable(bool);
+		sheepAge.setEditable(bool);
+		sheepWeight.setEditable(bool);
+		sheepPos.setEditable(bool);
+		
+		sheepId.setText("ID");
+		sheepNick.setText("Kallenavn");
+		sheepAge.setText("Tast inn fødselsår");
+		sheepWeight.setText("Vekt");
+		sheepPos.setText("Breddegrad: Lengdegrad: ");
+	}
+	
+	class ListListener implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			if (!e.getValueIsAdjusting()) {
+				Sheep sheep = list.getSelectedValue();
+				sheepId.setText(Integer.toString(sheep.getIdNr())); 
+				sheepNick.setText(sheep.getNick());
+				sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
+				sheepWeight.setText("Vi bruker ikke vekt, right?");
+				sheepPos.setText("Breddegrad: " + sheep.getLocation().getLatitude() + " Lengdegrad: " + sheep.getLocation().getLongtidude());
+			}
+		}
+	}
+	
+	class ShowInMapListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ButtonModel bm = radioGroup2.getSelection();
+			if (bm == null) {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge om du vil vise en eller alle sauer", 
+						"Kartfeil", JOptionPane.WARNING_MESSAGE);
+			} else {
+				MapPanel map = programFrame.getMapPanel();
+				if (mapSelected.isSelected()) {
+					if (!list.isSelectionEmpty()) {
+						Sheep sheep = list.getSelectedValue();
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongtidude());					
+					} else {
+						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
+								"Kartfeil", JOptionPane.WARNING_MESSAGE);
+					}
+				} else {
+					for (int i = 0; i < list.getModel().getSize(); i++) {
+						Sheep sheep = list.getModel().getElementAt(i);
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongtidude());
+					}
+				}
+			}
+		}
+	}
+	
+	class DeleteMapListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			programFrame.getMapPanel().deleteMarkers();
+		}
+	}
+	
+	class newSheepListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			setEditable(true);
+		}
+	}
+	
+	class addNewSheepListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String posInput = sheepPos.getText();
+			if (posInput.matches("[0-9.,]*")) {
+						String[] pos = posInput.split(",");
+						// generete id funksjon? Hash?
+						Sheep sheep = new Sheep(555555, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), 
+								programFrame.getUserPanel().getFarmer(), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
+						sheeps.add(sheep);
+						sheepList.addElement(sheep);
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345,10.435\nDu kan ha opptil seks desimaler", 
+						"Posisjonsfeil", JOptionPane.WARNING_MESSAGE);
+			}
+			
+			
+			setEditable(false);
+		}
 	}
 }

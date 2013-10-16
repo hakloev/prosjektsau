@@ -1,10 +1,17 @@
 package gui;
 
-import utils.Constants;
+import java.awt.EventQueue;
+import java.security.Principal;
+import java.util.Enumeration;
 
+import sun.net.www.content.text.plain;
+import utils.Constants;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import com.sun.javafx.application.PlatformImpl;
+import com.sun.media.jfxmediaimpl.platform.PlatformManager;
 
 import utils.Constants;
 import javafx.application.Platform;
@@ -12,6 +19,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
@@ -27,6 +35,7 @@ import javafx.scene.web.WebViewBuilder;
 public class MapPanel extends JPanel {
 	
 	private ProgramFrame programFrame;
+	private JFXPanel fxPanel;
 	private WebEngine webEngine;
 	private WebView webView;
 	
@@ -41,52 +50,44 @@ public class MapPanel extends JPanel {
 	 * 
 	 */
 	private void initAndShowMap() {
-		final JFXPanel fxPanel = new JFXPanel();
-		add(fxPanel);
-		setSize(600, 400);
-		setVisible(true);
+		fxPanel = new JFXPanel();
 		
-		Platform.runLater(new Runnable() {
+		PlatformImpl.startup(new Runnable() {
 			
 			@Override
 			public void run() {
-				initFX(fxPanel);
+				initFX();
 			}
 		});
+		
+		add(fxPanel);
+		setSize(600, 400);
+		setVisible(true);
 	}
 	
 	/**
-	 * Initiates the JavaFX-panel. Takes the panel as an argument
+	 * Initiates the JavaFX-panel
 	 * 
-	 * @param fxPanel
 	 */
-	private void initFX(JFXPanel fxPanel) {
-		Scene scene = createScene();
+	private void initFX() {
+		Group root = new Group();
+		Scene scene = new Scene(root, 698, 500);
+		webView = WebViewBuilder.create().prefHeight(698).prefWidth(1500).build();
+		buildWebEngine(Constants.pathToHtml);
+		root.getChildren().add(webView);
 		fxPanel.setScene(scene);
-    }
-   
-	/**
-	 * Returns the scene inside the JavaFX-panel
-	 * 
-	 * @return scene
-	 */
-	private Scene createScene() {
-    	return new Scene(buildWebView(Constants.pathToHtml), 698, 450, Color.WHITE);
     }
 	
 	/**
-	 * Builds and returns the WebEngine and WebView
+	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
 	 * 
 	 * @param url
-	 * @return webView
 	 */
-	private WebView buildWebView(String url) {
-	    webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
-	    webView.getEngine().javaScriptEnabledProperty().set(true); 
-		webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
-		webEngine = webView.getEngine();
-	    return webView;
+	private void buildWebEngine(String url) {
+	    webEngine = webView.getEngine();
+	    webEngine.javaScriptEnabledProperty().set(true); 
+		webEngine.load(MapPanel.class.getResource(url).toExternalForm());
 	}
 	
 	/**
@@ -96,20 +97,13 @@ public class MapPanel extends JPanel {
 	 * @param lat
 	 * @param lng
 	 */
-	protected void addMarker(final String title,final double lat, final double lng){
+	
+	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {
 			
 			@Override
 			public void run() {
-				webEngine.getLoadWorker().stateProperty().addListener(
-						new ChangeListener<State>(){
-							public void changed(ObservableValue ov, State oldState, State newState){
-								if(newState == State.SUCCEEDED){
-									webEngine.executeScript("addMarker('" + title + "', " + lat + ", " + lng + ")");
-								}
-							}
-						}
-					);
+				webEngine.executeScript("addMarker('" + title + "', " + lat + ", " + lng + ")");
 			}
 		});
 	}
@@ -119,15 +113,7 @@ public class MapPanel extends JPanel {
 			
 			@Override
 			public void run() {
-				webEngine.getLoadWorker().stateProperty().addListener(
-						new ChangeListener<State>(){
-							public void changed(ObservableValue ov, State oldState, State newState){
-								if(newState == State.SUCCEEDED){
-									webEngine.executeScript("deleteMarkers()");
-								}
-							}
-						}
-						);
+			webEngine.executeScript("deleteMarkers()");
 			}
 		});
 	}

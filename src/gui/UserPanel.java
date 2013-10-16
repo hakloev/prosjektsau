@@ -1,18 +1,24 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
+
+import characters.Farmer;
+import serverconnection.GetAndParseJson;
 
 public class UserPanel extends JPanel {
 
@@ -38,6 +44,8 @@ public class UserPanel extends JPanel {
 	private JTextField lastName;
 	private JTextField farmerId;
 	
+	private Farmer farmer;
+	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
@@ -52,6 +60,7 @@ public class UserPanel extends JPanel {
         layout.setAutoCreateContainerGaps(true);
 		
 		loginButton = new JButton("Logg inn");
+		loginButton.addActionListener(new LoginListener());
 		
 		usernameText = new JLabel("Brukernavn:");
 		passwordText = new JLabel("Password:");
@@ -64,6 +73,7 @@ public class UserPanel extends JPanel {
 		passwordField.setMaximumSize(new Dimension(1000,20));
 		
 		js = new JSeparator();
+		
 	}
 	
 	public void initDesign(){
@@ -91,5 +101,40 @@ public class UserPanel extends JPanel {
 			.addComponent(loginButton)
 			.addComponent(js)
 		);
+	}
+	
+	public Farmer getFarmer() {
+		return this.farmer;
+	}
+	
+	class LoginListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (validUser(usernameField.getText(), passwordField.getPassword())) {
+				loginButton.setEnabled(false);
+				usernameField.setEditable(false);
+				passwordField.setEditable(false);
+				
+				String testFarmer = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
+				farmer = new GetAndParseJson(testFarmer).getFarmer();
+				
+				programFrame.getSheepPanel().initUserSheeps();
+				programFrame.getJTabbedPane().setSelectedIndex(1); // endre panel til sheep panel
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn eller passord!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+
+		private boolean validUser(String text, char[] password) {
+			// sjekk mot database
+			// for nå kun sjekk lokalt
+			if (text.equalsIgnoreCase("sau") && "123".equalsIgnoreCase(new String(password))) {
+				return true;
+			}
+			return false;
+		}
+		
 	}
 }

@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Dimension;
 
+import utils.Constants;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -10,7 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class ProgramFrame extends JFrame{
 	
-	//St�rrelsesvariabler for vinduet
+	//St���rrelsesvariabler for vinduet
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
@@ -22,7 +24,7 @@ public class ProgramFrame extends JFrame{
 	private AlarmPanel alarmPanel;
 	private LogPanel logPanel;
 	private JTabbedPane jTabPane;
-
+	
 	public ProgramFrame() {
 		initFrame();
 		initGuiTabs();
@@ -39,6 +41,7 @@ public class ProgramFrame extends JFrame{
 		setMaximumSize(maxWindowSize);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(windowSize);
+		setTitle(Constants.title);
 	}
 	
 	/**
@@ -84,6 +87,10 @@ public class ProgramFrame extends JFrame{
 	 */
 	public LogPanel getLogPanel(){
 		return logPanel;
+	}
+	
+	public JTabbedPane getJTabbedPane() {
+		return jTabPane;
 	}
 	
 	/**
