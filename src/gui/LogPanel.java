@@ -23,12 +23,11 @@ public class LogPanel extends JPanel{
 	private JComboBox yearBox;
 	private JComboBox monthBox;
 	private JComboBox dayBox;
-	
 	private JLabel datoTidText;
 	private JLabel logDescText;
 	
 	private JTextArea datoTid;
-	private JTextArea logDesc;
+	private JScrollPane logDesc;
 	
 	private JButton deleteLogItem;
 	private JButton getDateList;
@@ -68,7 +67,7 @@ public class LogPanel extends JPanel{
 		dayBox.setMinimumSize(new Dimension(120,20));
 		dayBox.setMaximumSize(new Dimension(120,20));
 		
-		getDateList = new JButton("Hen dagslogg");
+		getDateList = new JButton("Hent dagslogg");
 		
 		datoTidText = new JLabel("Dato & tid: ");
 		logDescText = new JLabel("Log:");
@@ -76,7 +75,7 @@ public class LogPanel extends JPanel{
 		datoTid = new JTextArea("Dato & tid");
 		datoTid.setMinimumSize(new Dimension(200,20));
 		datoTid.setMaximumSize(new Dimension(1000,20));
-		logDesc = new JTextArea("Logggggg");
+		logDesc = new JScrollPane(new JTextArea("Logggggg"));
 	}
 	
 	private void initDesign() {

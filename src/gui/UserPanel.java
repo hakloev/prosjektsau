@@ -30,6 +30,14 @@ public class UserPanel extends JPanel {
 	
 	private JSeparator js;
 	
+	private JLabel firstNameText;
+	private JLabel lastNameText;
+	private JLabel farmerIdText;
+	
+	private JTextField firstName;
+	private JTextField lastName;
+	private JTextField farmerId;
+	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
