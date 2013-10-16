@@ -2,7 +2,7 @@
 /bin
 *.class
 
-Eclipse\ Prosjekt\ 1/
+/ec_prosjekt1
 
 #Eclipse project files
 .classpath
