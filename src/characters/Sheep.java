@@ -7,6 +7,7 @@ public class Sheep {
 	private int birthYear;
 	private int ownerId;
 	private Position location = null;
+	private int pulse;
 	
 	/**
 	 * 
@@ -111,6 +112,23 @@ public class Sheep {
 	
 	public String toString() {
 		return "idNR" + idNr;
+	}
+	
+	public void setPulse(int pulse){
+		this.pulse = pulse;
+	}
+	
+	public int getPulse(){
+		return pulse;
+	}
+	
+	public boolean isDead(){
+		if (pulse < 1){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 }

@@ -16,6 +16,7 @@ public class Test {
 		Random rand = new Random();
 		for (int i = 0; i < 11; i++){
 			Sheep sheep = new Sheep(i, "Nick" + i, 1991, 201);
+			sheep.setPulse(100); 
 			sheep.setLocation(rand.nextInt(20), rand.nextInt(20), rand.nextInt(20));
 			sheepList.add(sheep);
 		}
