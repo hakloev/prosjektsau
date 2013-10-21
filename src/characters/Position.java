@@ -19,7 +19,7 @@ public class Position {
 		return latitude;
 	}
 
-	public double getLongtidude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
