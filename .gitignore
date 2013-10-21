@@ -1,12 +1,17 @@
 # Java class filer
 /bin
 *.class
+/out
 
 /ec_prosjekt1
 
 #Eclipse project files
 .classpath
 .project
+
+#IntelliJ project files
+.idea
+prosjektsau.iml
 
 .settings
 
