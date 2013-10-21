@@ -7,6 +7,7 @@ public class Farmer
 	private final String farmerHash;
 	private String userName;
 	private String email;
+	private Area area;
 	
 	/**
 	 * 
@@ -67,5 +68,23 @@ public class Farmer
 				+ ", userName=" + userName + ", email=" + email + "]";
 	}
 	
+	/**
+	 * sets the farmer's area
+	 * 
+	 * @param area
+	 */
+	//Trenger exception-handler!!!!!!!!
+	public void setArea(Area area) {
+		this.area = area;
+	}
+	
+	
+	/**
+	 * 
+	 * @return returns the farmer's are
+	 */
+	public Area getArea() {
+		return area;
+	}
 }
 
