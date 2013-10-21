@@ -1,7 +1,13 @@
 # Java class filer
 /bin
 *.class
+/out
 
+#IntelliJ project files
+.idea
+prosjektsau.iml
+
+# Eclipse workspace on loevdal.local
 /ec_prosjekt1
 
 #Eclipse project files
