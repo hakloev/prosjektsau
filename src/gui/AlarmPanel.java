@@ -11,12 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import serverconnection.Alarm;
+
 public class AlarmPanel extends JPanel{
 
 	private ProgramFrame programFrame;
 	
-	private JList list;
-	private DefaultListModel alarmList;
+	private JList<Alarm> list;
+	private DefaultListModel<Alarm> alarmList;
 	private JScrollPane listScrollPane;
 	
 	private JLabel sheepIdText;
@@ -46,9 +48,9 @@ public class AlarmPanel extends JPanel{
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-        alarmList = new DefaultListModel();
+        alarmList = new DefaultListModel<Alarm>();
         
-		list = new JList(alarmList);
+		list = new JList<Alarm>(alarmList);
 		listScrollPane = new JScrollPane(list);
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
@@ -105,6 +107,14 @@ public class AlarmPanel extends JPanel{
 				)
 			)
 		);
+		
+	}
+	
+	/**
+	 * 
+	 * @param alarm
+	 */
+	public void addAlarm(Alarm alarm) {
 		
 	}
 
