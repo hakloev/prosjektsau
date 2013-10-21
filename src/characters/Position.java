@@ -3,16 +3,16 @@ package characters;
 public class Position {
 
 	private double latitude;
-	private double longtidude;
+	private double longitude;
 	
 	public Position(double latitude, double longtidude) {
 		this.latitude = latitude;
-		this.longtidude = longtidude;
+		this.longitude = longtidude;
 	}
 	
 	public void editLocation(double latitude, double longtidude) {
 		this.latitude = latitude;
-		this.longtidude = longtidude;
+		this.longitude = longtidude;
 	}
 
 	public double getLatitude() {
@@ -20,7 +20,7 @@ public class Position {
 	}
 
 	public double getLongtidude() {
-		return longtidude;
+		return longitude;
 	}
 
 }
