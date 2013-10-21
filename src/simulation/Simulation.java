@@ -9,7 +9,7 @@ import characters.Sheep;
 /**
  * A simulation of sheep movement and attacks
  * 
- * @author.
+ * @author Max Melander
  */
 
 public class Simulation {
@@ -38,24 +38,28 @@ public class Simulation {
 		previousUpdateTime = timeNow;
 
 			for (Sheep currentSheep : sheepList){
+				if (currentSheep.isDead()){
+					continue;
+				}
 				sheepLocation = currentSheep.getLocation();
 				
 				sign = rand.nextInt(2);
 				if (sign == NEGATIVE){
-					double latrads = (rand.nextDouble() * 10) / EARTHRADIUS;
-					double longrads = (rand.nextDouble() * 10) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * 100) / EARTHRADIUS;
+					double longrads = (rand.nextDouble() * 100) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
 				}
 				else{
-					double latrads = (rand.nextDouble() * 10) / EARTHRADIUS;
-					double longrads = ((rand.nextDouble() * 10)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * 100) / EARTHRADIUS;
+					double longrads = ((rand.nextDouble() * 100)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
 				}												
 				//waits until enough time has passed
 				while (timeNow - previousUpdateTime <= updateInterval){
 					timeNow = System.currentTimeMillis() % MSINDAY;
 				}
-				previousUpdateTime = timeNow;		
+				previousUpdateTime = timeNow;	
+
 			}
 			
 			//check if a sheep attack should occur
@@ -69,7 +73,7 @@ public class Simulation {
 	}
 	
 	public void sheepAttack(){
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < sheepList.size(); i++){
 			int sheepIndex = rand.nextInt(sheepList.size());
 			if (sheepList.get(i).getPulse() != 0){
 				if (rand.nextInt(100) < 50){
