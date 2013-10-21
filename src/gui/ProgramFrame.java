@@ -10,6 +10,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * 
+ * @author Andreas Lynbgy
+ *
+ */
+
 public class ProgramFrame extends JFrame{
 	
 	//St���rrelsesvariabler for vinduet
@@ -109,6 +115,13 @@ public class ProgramFrame extends JFrame{
 		jTabPane.add("Map Panel", mapPanel);
 		jTabPane.add("Alarm Panel", alarmPanel);
 		jTabPane.add("Log Panel", logPanel);
+		
+		// Disable all panes until user is logged in
+		jTabPane.setEnabledAt(1, false);
+		jTabPane.setEnabledAt(2, false);
+		jTabPane.setEnabledAt(3, false);
+		jTabPane.setEnabledAt(4, false);
+
 		this.add(jTabPane);
 	}
 

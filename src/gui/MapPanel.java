@@ -26,10 +26,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebViewBuilder;
 
-
 /**
  * Class to generate map-panel
- 
  * @author Håkon Ødegård Løvdal
  */
 public class MapPanel extends JPanel {
@@ -97,7 +95,6 @@ public class MapPanel extends JPanel {
 	 * @param lat
 	 * @param lng
 	 */
-	
 	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {
 			
@@ -108,6 +105,10 @@ public class MapPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Deletes all markers from the map, by calling a JavaScript in map.html
+	 * 
+	 */
 	protected void deleteMarkers() {
 		Platform.runLater(new Runnable() {
 			
@@ -118,6 +119,11 @@ public class MapPanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Main method for testing 
+	 * 
+	 * @param String[] args
+	 */
 //	public static void main(String[] args) {
 //		SwingUtilities.invokeLater(new Runnable() {
 //		

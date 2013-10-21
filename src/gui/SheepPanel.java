@@ -36,6 +36,11 @@ import javax.swing.event.ListSelectionListener;
 import serverconnection.GetAndParseJson;
 import characters.Sheep;
 
+/**
+ * 
+ * @author Andreas Lyngby
+ *
+ */
 
 public class SheepPanel extends JPanel implements ItemListener{
 	
@@ -171,7 +176,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
 		
-		// Listeners for everything
+		// Listeners for every button in the sheep panel
 		list.addListSelectionListener(new ListListener());
 		showMap.addActionListener(new ShowInMapListener());
 		deleteMap.addActionListener(new DeleteMapListener());
@@ -312,6 +317,16 @@ public class SheepPanel extends JPanel implements ItemListener{
 		);
 	}
 	
+	@Override
+	public void itemStateChanged(ItemEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Method called when user is logged in, adds all the sheep that the current user owns
+	 * Should take a parameter userId or something like that.
+	 */
 	public void initUserSheeps() {
 		// skal spørre etter alle sauer, her henter den standard sauen fra test json
 		// for loop ellerno lignende
@@ -321,16 +336,17 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepList.addElement(new GetAndParseJson(testSau2).getSheep());
 	}
 	
-	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	/**
+	 * Method used to update the edited sheep to the database
+	 */
 	private void updateSheep() {
 		// oppdater sau-objektet i lista og send til server
 	}
 	
+	/**
+	 * Method that sets sheep editable or not by what the parameter is. Also sets the textareas to standard text
+	 * @param bool
+	 */
 	private void setEditable(boolean bool) {
 		sheepId.setEditable(false); // id må genereres selv
 		sheepNick.setEditable(bool);
@@ -344,7 +360,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepWeight.setText("Vekt");
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
 	}
-	
+	/**
+	 * Method that sets sheep etidable or not by what the parameter is. Sets the textareas to the sheep info currently displayed
+	 * @param bool
+	 */
 	private void setEditableWithSheepInfo(boolean bool) {
 		sheepId.setEditable(false); // id må genereres selv
 		sheepNick.setEditable(bool);
@@ -353,6 +372,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepPos.setEditable(bool);
 	}
 	
+	// All the button listeners, implemented as classes with listener-interfaces
+	
+	/**
+	 * 
+	 * Listener for what sheep is currently marked in the sheepList
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
 	class ListListener implements ListSelectionListener {
 
 		@Override
@@ -373,6 +400,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * 
+	 * Listener for the "Vis på kart"-button
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class ShowInMapListener implements ActionListener {
 		
 		@Override
@@ -401,6 +433,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Slett alle på kart"-button 
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class DeleteMapListener implements ActionListener {
 
 		@Override
@@ -409,6 +445,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Ny sau"-button
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
 	class newSheepListener implements ActionListener {
 
 		@Override
@@ -417,6 +458,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Legg til ny sau"-button
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
 	class addNewSheepListener implements ActionListener {
 
 		@Override
@@ -438,6 +484,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Oppdater sau"-button
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
+	
 	class EditSheepInfoListener implements ActionListener {
 
 		@Override
@@ -456,6 +508,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Oppdateringsmodus"-button
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
 	class UpdateModeListener implements ActionListener {
 
 		@Override
@@ -472,6 +529,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
+	/**
+	 * Listener for the "Infomodus"-button
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
 	class InfoModeListener implements ActionListener {
 
 		@Override

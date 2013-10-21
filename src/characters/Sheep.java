@@ -1,5 +1,12 @@
 package characters;
 
+/**
+ * 
+ * @author Håkon Ødegård Løvdal
+ * @author Max Melander
+ *
+ */
+
 public class Sheep {
 	
 	private final int sheepId;
