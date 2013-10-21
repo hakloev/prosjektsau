@@ -22,6 +22,7 @@ import javax.swing.border.TitledBorder;
 
 import characters.Farmer;
 import serverconnection.GetAndParseJson;
+import serverconnection.NetHandler;
 
 /**
  * 
@@ -53,8 +54,11 @@ public class UserPanel extends JPanel {
 	private JTextField lastName;
 	private JTextField farmerId;
 	
+	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
+	private final String wrongPw = "ERROR=Feil passord!";
 	private boolean loggedIn;
 	private Farmer farmer;
+	
 	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -148,11 +152,14 @@ public class UserPanel extends JPanel {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (validUser(usernameField.getText(), passwordField.getPassword())) {
+			String result = programFrame.getNetHandler().login(
+					usernameField.getText(), new String(passwordField.getPassword()));
+			if (validUser(result)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
 				loggedIn = true;
+				// parse result json to create farmer
 				String testFarmer = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
 				farmer = new GetAndParseJson(testFarmer).getFarmer();
 				
@@ -167,10 +174,7 @@ public class UserPanel extends JPanel {
 
 				// Set panel to SheepPanel
 				programFrame.getJTabbedPane().setSelectedIndex(1); 
-			} else {
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn eller passord!\nPrøv på nytt", 
-						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
-			}
+			} 
 		}
 		
 		/**
@@ -180,13 +184,19 @@ public class UserPanel extends JPanel {
 		 * @param password
 		 * @return boolean
 		 */
-		private boolean validUser(String text, char[] password) {
+		private boolean validUser(String loginStatus) {
 			// sjekk mot database
-			// for nå kun sjekk lokalt
-			if (text.equalsIgnoreCase("sau") && "123".equalsIgnoreCase(new String(password))) {
+			if (loginStatus.equals(wrongPw)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil passord!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else if (loginStatus.equals(wrongUser)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else {
 				return true;
 			}
-			return false;
 		}
 		
 	}

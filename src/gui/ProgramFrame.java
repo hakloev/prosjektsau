@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Dimension;
 
+import serverconnection.NetHandler;
 import utils.Constants;
 
 import javax.swing.JFrame;
@@ -31,9 +32,13 @@ public class ProgramFrame extends JFrame{
 	private LogPanel logPanel;
 	private JTabbedPane jTabPane;
 	
+	//Init a NetHandler
+	private NetHandler handler;
+	
 	public ProgramFrame() {
 		initFrame();
 		initGuiTabs();
+		handler = new NetHandler("Handler");
 		//jTabPane.setEnabled(false);
 	}
 	/**
@@ -48,6 +53,10 @@ public class ProgramFrame extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(windowSize);
 		setTitle(Constants.title);
+	}
+	
+	public NetHandler getNetHandler() {
+		return handler;
 	}
 	
 	/**

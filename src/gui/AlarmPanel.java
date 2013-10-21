@@ -1,16 +1,22 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import characters.Sheep;
 import serverconnection.Alarm;
 
 public class AlarmPanel extends JPanel{
@@ -37,7 +43,6 @@ public class AlarmPanel extends JPanel{
 	
 	public AlarmPanel(ProgramFrame programFrame){
 		this.programFrame = programFrame;
-		
 		initElements();
 		initDesign();
 	}
@@ -74,6 +79,10 @@ public class AlarmPanel extends JPanel{
 		alarmPos.setMaximumSize(new Dimension(2000,20));
 		
 		deleteAlarm = new JButton("Slett alarm");
+		
+		// Listener for buttons and list
+		deleteAlarm.addActionListener(new DeleteAlarmListener());
+		list.addListSelectionListener(new ShowAlarmListener());
 	}
 	
 	private void initDesign() {
@@ -115,7 +124,41 @@ public class AlarmPanel extends JPanel{
 	 * @param alarm
 	 */
 	public void addAlarm(Alarm alarm) {
+		alarmList.addElement(alarm);
+	}
+	
+	class DeleteAlarmListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (list.isSelectionEmpty()) {
+				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en alarm for å slette", 
+						"Alarmfeil", JOptionPane.WARNING_MESSAGE);
+			} else {
+				list.remove(list.getSelectedIndex());
+				sheepId.setText("ID");
+				alarmTime.setText("Tid");
+				alarmDesc.setText("Beskrivelse");
+				alarmPos.setText("Posisjon");
+			}
+		}
 		
+	}
+	
+	class ShowAlarmListener implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					Alarm alarm = list.getSelectedValue();
+					sheepId.setText(alarm.getSheepId());
+					alarmTime.setText(alarm.getAlarmDate());
+					alarmDesc.setText(alarm.getAlarmDescription());
+					alarmPos.setText(alarm.getAlarmPostition());
+				} else {
+				
+			}
+		}
 	}
 
 }

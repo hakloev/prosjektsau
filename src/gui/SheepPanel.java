@@ -6,14 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-
-
-
-
-import java.util.ArrayList;
-
-import javafx.application.Platform;
-
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
@@ -29,7 +21,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -185,6 +176,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep.addActionListener(new EditSheepInfoListener());
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
+		// deleteSheep listner
 		
 		
 	}
@@ -418,7 +410,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());					
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());	
+						programFrame.getJTabbedPane().setSelectedIndex(2);
 					} else {
 						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
 								"Kartfeil", JOptionPane.WARNING_MESSAGE);
@@ -428,6 +421,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 						Sheep sheep = list.getModel().getElementAt(i);
 						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 					}
+					programFrame.getJTabbedPane().setSelectedIndex(2);
 				}
 			}
 		}

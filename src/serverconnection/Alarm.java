@@ -28,6 +28,10 @@ public class Alarm {
 		return description;
 	}
 	
+	public String getSheepId() {
+		return "" + this.sheep.getIdNr();
+	}
+	
 	@Override
 	public String toString() {
 		return "ID: " + sheep.getIdNr();
