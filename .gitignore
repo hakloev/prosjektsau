@@ -2,6 +2,8 @@
 /bin
 *.class
 
+/ec_prosjekt1
+
 #Eclipse project files
 .classpath
 .project
