@@ -5,14 +5,14 @@ public class Position {
 	private double latitude;
 	private double longitude;
 	
-	public Position(double latitude, double longtidude) {
+	public Position(double latitude, double longitude) {
 		this.latitude = latitude;
-		this.longitude = longtidude;
+		this.longitude = longitude;
 	}
 	
-	public void editLocation(double latitude, double longtidude) {
+	public void editLocation(double latitude, double longitude) {
 		this.latitude = latitude;
-		this.longitude = longtidude;
+		this.longitude = longitude;
 	}
 
 	public double getLatitude() {

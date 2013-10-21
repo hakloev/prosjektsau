@@ -17,7 +17,7 @@ public class Alarm {
 	}
 	
 	public String getAlarmPostition() {
-		return sheep.getLocation().getLatitude() + ", " + sheep.getLocation().getLongtidude();
+		return sheep.getLocation().getLatitude() + ", " + sheep.getLocation().getLongitude();
 	}
 	
 	public String getAlarmDate() {

@@ -391,7 +391,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					sheepNick.setText(sheep.getNick());
 					sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
 					sheepWeight.setText("Vi bruker ikke vekt, right?");
-					sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongtidude());
+					sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
 				}
 			} else {
 				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus", 
@@ -418,7 +418,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongtidude());					
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());					
 					} else {
 						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
 								"Kartfeil", JOptionPane.WARNING_MESSAGE);
@@ -426,7 +426,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				} else {
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongtidude());
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 					}
 				}
 			}

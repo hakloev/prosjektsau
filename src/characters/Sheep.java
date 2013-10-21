@@ -14,6 +14,7 @@ public class Sheep {
 	private int birthYear;
 	private Farmer farmer;
 	private Position location = null;
+	private int pulse;
 	
 	/**
 	 * 
@@ -110,6 +111,23 @@ public class Sheep {
 	@Override
 	public String toString() {
 		return nick + ": " + sheepId;
+	}
+	
+	public void setPulse(int pulse){
+		this.pulse = pulse;
+	}
+	
+	public int getPulse(){
+		return pulse;
+	}
+	
+	public boolean isDead(){
+		if (pulse < 1){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 }

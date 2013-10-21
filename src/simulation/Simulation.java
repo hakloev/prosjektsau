@@ -1,58 +1,86 @@
 package simulation;
 
 import java.util.ArrayList;
+import java.util.Random;
+
+import characters.Position;
+import characters.Sheep;
+
 /**
- * Klasse for aa simulere sauenes posisjonendringer
+ * A simulation of sheep movement and attacks
  * 
- * @author Max er best, Thomas er en god nummer to.
+ * @author.
  */
 
-
 public class Simulation {
-	private long previousUpdateTime = System.currentTimeMillis();
+	private ArrayList<Sheep> sheepList;
+	private long previousUpdateTime = 0;
 	private long timeNow;
+	private Random rand;
+	private Position sheepLocation;
+	public static final int EARTHRADIUS = 6378137;
+	public static final int MSINDAY = 86400000;
+	public static final int NUMBEROFUPDATESPERDAY = 100000;
+	public static final int NEGATIVE = 0;
+	public static final int POSITIVE = 1;
 
-	public Simulation() {
-		boolean running = true;
-		int updateIntervalLimit = 1000; // tid i MS som sier hvor ofte sau skal oppdateres.
-		ArrayList<Integer> sheepIdList = new ArrayList<>();  //faar alle saueID som liste
-		//
-		////kode for å hente id fra DB for legge dem i liste
-		//
-
-		while (running){
-			timeNow = System.currentTimeMillis();
-
-			for (int sheepID : sheepIdList){
-				//
-				////kode for å sende inkrementering/dekrementering for sauePOS til DB
-				//
-				System.out.println("sheep " + sheepID + " updated." );
-
-
-				//klokka nå minus hva klokka var istad = timePassed siden forrige update
-				while (timeNow - previousUpdateTime <= updateIntervalLimit){ 
-					//vent med å gaa videre til det er tid for neste update.
-				
-				}//while wait for neste udpdate
-			}//for sheep
-		}//while running
-	}//simulation
-
-
-
-
-
-
-
-
-
-	// metode som tar inn en sau og oppdaterer en posisjon til denne. 
-	private void updateSheep (int sheepId){
-
-
-		previousUpdateTime = System.currentTimeMillis();
-
+	public Simulation(ArrayList<Sheep> sheepList) {
+		rand = new Random();
+		this.sheepList = sheepList;
 	}
 
+	public void runSimulation(){
+		boolean running = true;
+		long updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
+		int sign;
+		
+		while (running){
+		previousUpdateTime = timeNow;
+
+			for (Sheep currentSheep : sheepList){
+				sheepLocation = currentSheep.getLocation();
+				
+				sign = rand.nextInt(2);
+				if (sign == NEGATIVE){
+					double latrads = (rand.nextDouble() * 10) / EARTHRADIUS;
+					double longrads = (rand.nextDouble() * 10) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+				}
+				else{
+					double latrads = (rand.nextDouble() * 10) / EARTHRADIUS;
+					double longrads = ((rand.nextDouble() * 10)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+				}												
+				//waits until enough time has passed
+				while (timeNow - previousUpdateTime <= updateInterval){
+					timeNow = System.currentTimeMillis() % MSINDAY;
+				}
+				previousUpdateTime = timeNow;		
+			}
+			
+			//check if a sheep attack should occur
+			if (rand.nextInt(100) < 10){
+				sheepAttack();
+			}
+			previousUpdateTime = timeNow;
+			
+			//update sheep in database	
+		}
+	}
+	
+	public void sheepAttack(){
+		for (int i = 0; i < 5; i++){
+			int sheepIndex = rand.nextInt(sheepList.size());
+			if (sheepList.get(i).getPulse() != 0){
+				if (rand.nextInt(100) < 50){
+					killSheep(sheepList.get(sheepIndex));
+					return;
+				}
+			}
+		}
+	}
+
+	public void killSheep(Sheep sheep){
+		sheep.setPulse(0);
+	}
 }

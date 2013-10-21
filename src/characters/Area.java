@@ -68,7 +68,7 @@ public class Area {
 	 */
 	public void createPoly(){
 		for (Position pos : polyPoints){
-			areaPoly.addPoint((int)(pos.getLongtidude() * DOUBLEDESTROYER), (int)(pos.getLatitude() * DOUBLEDESTROYER));
+			areaPoly.addPoint((int)(pos.getLongitude() * DOUBLEDESTROYER), (int)(pos.getLatitude() * DOUBLEDESTROYER));
 		}
 	}
 	
