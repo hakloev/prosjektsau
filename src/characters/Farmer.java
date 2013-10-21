@@ -6,7 +6,7 @@ public class Farmer
 	private final int farmerId;
 	private final String farmerHash;
 	private String userName;
-	private String email;
+	//private String email;
 	
 	/**
 	 * 
@@ -17,29 +17,29 @@ public class Farmer
 	public Farmer(int farmerId, String farmerHash, String userName, String email) {
 		this.farmerId = farmerId;
 		this.farmerHash = farmerHash;
-		setEmail(email);
+		//setEmail(email);
 		this.userName = userName;
 	}
 	
-	/**
-	 * 
-	 * @return returns the farmer's Email
-	 */
-	public String getEmail() {
-		return email;
-	}
-	
-	/**
-	 * sets the farmer's Email address
-	 * 
-	 * @param email
-	 */
-	//Trenger exception handler
-	private void setEmail(String email) {
-		if(email.contains("@")){
-			this.email = email;
-		}
-	}
+//	/**
+//	 * 
+//	 * @return returns the farmer's Email
+//	 */
+//	public String getEmail() {
+//		return email;
+//	}
+//	
+//	/**
+//	 * sets the farmer's Email address
+//	 * 
+//	 * @param email
+//	 */
+//	//Trenger exception handler
+//	private void setEmail(String email) {
+//		if(email.contains("@")){
+//			this.email = email;
+//		}
+//	}
 	
 	/**
 	 * 
@@ -57,14 +57,14 @@ public class Farmer
 		return farmerId;
 	}
 	
-	private String getHash() {
+	public String getHash() {
 		return farmerHash;
 	}
 
 	@Override
 	public String toString() {
 		return "Farmer [farmerId=" + farmerId + ", farmerHash=" + farmerHash
-				+ ", userName=" + userName + ", email=" + email + "]";
+				+ ", userName=" + userName + "]";
 	}
 	
 }

@@ -12,14 +12,12 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * 
  * @author Andreas Lynbgy
- *
  */
 
 public class ProgramFrame extends JFrame{
 	
-	//St���rrelsesvariabler for vinduet
+	//Størrelsesvariabler for vinduet
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
@@ -38,7 +36,7 @@ public class ProgramFrame extends JFrame{
 	public ProgramFrame() {
 		initFrame();
 		initGuiTabs();
-		handler = new NetHandler("Handler");
+		handler = new NetHandler();
 		//jTabPane.setEnabled(false);
 	}
 	/**
@@ -55,13 +53,16 @@ public class ProgramFrame extends JFrame{
 		setTitle(Constants.title);
 	}
 	
+	/**
+	 * Return NetHandler-object
+	 * @return handler
+	 */
 	public NetHandler getNetHandler() {
 		return handler;
 	}
 	
 	/**
 	 * Henter brukerpanelet userPanel.
-	 * 
 	 * @return JPanel
 	 */
 	public UserPanel getUserPanel(){
@@ -79,7 +80,6 @@ public class ProgramFrame extends JFrame{
 	
 	/**
 	 * Henter kartpanelet mapPanel.
-	 * 
 	 * @return JPanel
 	 */
 	public MapPanel getMapPanel(){
@@ -88,7 +88,6 @@ public class ProgramFrame extends JFrame{
 	
 	/**
 	 * Henter alarmpanelet alarmPanel.
-	 * 
 	 * @return JPanel
 	 */
 	public AlarmPanel getAlarmPanel(){
@@ -97,13 +96,16 @@ public class ProgramFrame extends JFrame{
 	
 	/**
 	 * Henter loggpanelet logPanel.
-	 * 
 	 * @return JPanel
 	 */
 	public LogPanel getLogPanel(){
 		return logPanel;
 	}
 	
+	/**
+	 * Returns jTabPane
+	 * @return jTabPane
+	 */
 	public JTabbedPane getJTabbedPane() {
 		return jTabPane;
 	}
@@ -119,11 +121,11 @@ public class ProgramFrame extends JFrame{
 		logPanel = new LogPanel(this);
 		
 		jTabPane = new JTabbedPane();
-		jTabPane.add("User Panel", userPanel);
-		jTabPane.add("Sheep Panel", sheepPanel);
-		jTabPane.add("Map Panel", mapPanel);
-		jTabPane.add("Alarm Panel", alarmPanel);
-		jTabPane.add("Log Panel", logPanel);
+		jTabPane.add("Bruker", userPanel);
+		jTabPane.add("Sauer", sheepPanel);
+		jTabPane.add("Kart", mapPanel);
+		jTabPane.add("Alarmer", alarmPanel);
+		jTabPane.add("Logg", logPanel);
 		
 		// Disable all panes until user is logged in
 		jTabPane.setEnabledAt(1, false);
@@ -135,6 +137,7 @@ public class ProgramFrame extends JFrame{
 	}
 
 	/**
+	 * Main method for the client-application
 	 * @param args
 	 */
 	public static void main(String[] args) {

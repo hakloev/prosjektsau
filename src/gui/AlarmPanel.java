@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -41,10 +42,14 @@ public class AlarmPanel extends JPanel{
 	
 	private GroupLayout layout;
 	
+	// Used to deactivate listselectionlistner when deleting a sheep
+	private boolean changing;
+	
 	public AlarmPanel(ProgramFrame programFrame){
 		this.programFrame = programFrame;
 		initElements();
 		initDesign();
+		changing = false;
 	}
 
 	private void initElements() {
@@ -56,6 +61,7 @@ public class AlarmPanel extends JPanel{
         alarmList = new DefaultListModel<Alarm>();
         
 		list = new JList<Alarm>(alarmList);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listScrollPane = new JScrollPane(list);
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
@@ -83,6 +89,10 @@ public class AlarmPanel extends JPanel{
 		// Listener for buttons and list
 		deleteAlarm.addActionListener(new DeleteAlarmListener());
 		list.addListSelectionListener(new ShowAlarmListener());
+		
+		// Alarms for testing
+		addAlarm(new Alarm(new Sheep(16, "Knut", 1994, this.programFrame.getUserPanel().getFarmer(), 64.2555, 11.44334), "Killed in Iraq"));
+		addAlarm(new Alarm(new Sheep(15, "Link", 1992, this.programFrame.getUserPanel().getFarmer(), 63.2555, 10.44334), "Killed in Action"));
 	}
 	
 	private void initDesign() {
@@ -120,13 +130,31 @@ public class AlarmPanel extends JPanel{
 	}
 	
 	/**
-	 * 
+	 * Method for adding an alarm, takes the Alarm-object as paramteter
 	 * @param alarm
 	 */
 	public void addAlarm(Alarm alarm) {
 		alarmList.addElement(alarm);
+		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
+		//programFrame.getJTabbedPane().setSelectedIndex(4); // Must not be wile init
 	}
 	
+	/**
+	 * Method for reseting alarm-textfields to the standard text
+	 */
+	private void clearAlarmSections() {
+		sheepId.setText("ID");
+		alarmTime.setText("Tid");
+		alarmDesc.setText("Beskrivelse");
+		alarmPos.setText("Posisjon");
+	}
+	
+	// Classes for listners to ListSelection and DeleteAlarmButton
+	
+	/**
+	 * Listener for the "Slett alarm"-button
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class DeleteAlarmListener implements ActionListener {
 
 		@Override
@@ -135,28 +163,35 @@ public class AlarmPanel extends JPanel{
 				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en alarm for å slette", 
 						"Alarmfeil", JOptionPane.WARNING_MESSAGE);
 			} else {
-				list.remove(list.getSelectedIndex());
-				sheepId.setText("ID");
-				alarmTime.setText("Tid");
-				alarmDesc.setText("Beskrivelse");
-				alarmPos.setText("Posisjon");
+				changing = true;
+				int index = list.getSelectedIndex();
+				if (index >= 0) {
+					alarmList.remove(index);
+					list.clearSelection();
+					clearAlarmSections();
+					changing = false;
+				} // ELSE HERE? TO RETURN
 			}
 		}
 		
 	}
 	
+	/**
+	 * Class for showing the selected alarm
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class ShowAlarmListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			if (!changing) { // Check if this event is called from DeleteAlarmListener
 				if (!e.getValueIsAdjusting()) {
 					Alarm alarm = list.getSelectedValue();
 					sheepId.setText(alarm.getSheepId());
 					alarmTime.setText(alarm.getAlarmDate());
 					alarmDesc.setText(alarm.getAlarmDescription());
 					alarmPos.setText(alarm.getAlarmPostition());
-				} else {
-				
+				} // No need for ELSE?
 			}
 		}
 	}

@@ -110,7 +110,7 @@ public class Sheep {
 	
 	@Override
 	public String toString() {
-		return nick + ": " + sheepId;
+		return "Sau-ID: " + sheepId + " (" + nick + ")";
 	}
 	
 	public void setPulse(int pulse){

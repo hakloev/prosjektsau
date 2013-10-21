@@ -19,13 +19,14 @@ public class NetHandler {
 	private static 	String 	GET_URL 	= null;
 	private static 	String 	POST_URL 	= null;
 	private 		String 	userCode	= null;
+	private 		boolean userCodeSet;
 	private 		String 	lastError 	= null;
 	private final 	String 	USER_AGENT 	= "Mozilla/5.0";
 	
-	public NetHandler(String userCode) {
-		setUserCode(userCode);
-		GET_URL = "http://org.ntnu.no/it1901h13g11/public_html/client_services.php?ucg="+userCode;
-		POST_URL = "http://org.ntnu.no/it1901h13g11/public_html/client_services.php?ucp="+userCode;
+	public NetHandler() {
+		GET_URL = "http://org.ntnu.no/it1901h13g11/public_html/client_services.php?ucg=";
+		POST_URL = "http://org.ntnu.no/it1901h13g11/public_html/client_services.php?ucp=";
+		userCodeSet = false;
 	}
 
 	//==================================================//
@@ -198,6 +199,22 @@ public class NetHandler {
 	  return haystack.toLowerCase().contains( needle.toLowerCase() );
     }
     
-	private void setUserCode(String code) 	{ this.userCode = code; }
+	public void setUserCode(String code) {
+		if (!userCodeSet) {
+			this.userCode = code;
+			this.userCodeSet = true;
+			GET_URL += code;
+			POST_URL += code;
+		}
+	}
+	
 	public String getLastError() 			{ return lastError; }
+	
+	// Main for testing
+//	public static void main(String[] args) {
+//
+//		NetHandler net 	= new NetHandler();
+//		String res 		= net.login("mads", "mads");
+//		System.out.println("Resultat: " + res);
+//	}
 }

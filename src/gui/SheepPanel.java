@@ -24,13 +24,12 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import serverconnection.GetAndParseJson;
+import serverconnection.JsonHandler;
 import characters.Sheep;
 
 /**
- * 
+ * Class to show and edit sheeps
  * @author Andreas Lyngby
- *
  */
 
 public class SheepPanel extends JPanel implements ItemListener{
@@ -312,7 +311,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		// WHAT DOES IT DO
 	}
 	
 	/**
@@ -322,10 +321,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	public void initUserSheeps() {
 		// skal spørre etter alle sauer, her henter den standard sauen fra test json
 		// for loop ellerno lignende
-		String testSau1 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
-		String testSau2 = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"987654321\",\"nick\":\"Zelda\",\"birthYear\":\"1992\",\"lat\":\"62.39123\",\"long\":\"9.26864\"}}}";
-		sheepList.addElement(new GetAndParseJson(testSau1).getSheep());
-		sheepList.addElement(new GetAndParseJson(testSau2).getSheep());
+		// ADD ALL SHEEPS TO SHEEPLIST
 	}
 	
 	/**
@@ -333,6 +329,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	private void updateSheep() {
 		// oppdater sau-objektet i lista og send til server
+		// UPDATE AND SEND SHEEP TO SERVER, MUST BE DONE ASAP WHEN ONE CHARACTHER IS EDITED
 	}
 	
 	/**
@@ -376,6 +373,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			// Må nok ha en bool changing her, akkurat som i alarm-panelklassen
 			if (!updateMode.isSelected()) {
 				if (!e.getValueIsAdjusting()) {
 					Sheep sheep = list.getSelectedValue();
@@ -393,7 +391,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * 
 	 * Listener for the "Vis på kart"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
@@ -442,7 +439,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Listener for the "Ny sau"-button
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	class newSheepListener implements ActionListener {
 
@@ -455,7 +451,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Listener for the "Legg til ny sau"-button
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	class addNewSheepListener implements ActionListener {
 
@@ -481,9 +476,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Listener for the "Oppdater sau"-button
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
-	
 	class EditSheepInfoListener implements ActionListener {
 
 		@Override
@@ -505,7 +498,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Listener for the "Oppdateringsmodus"-button
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	class UpdateModeListener implements ActionListener {
 
@@ -526,13 +518,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Listener for the "Infomodus"-button
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	class InfoModeListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// kan nå gå fra oppdatering til info uten å lagre endringer.. 
+			// må gjøres noe med
 			setEditableWithSheepInfo(false);
 			infoMode.setSelected(true);
 			radioGroup1.setSelected(infoMode.getModel(), true);
