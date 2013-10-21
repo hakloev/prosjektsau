@@ -32,8 +32,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
  
 		  function initialize() {
 		    var mapOptions = {
-		      zoom: 5,
-		      center: new google.maps.LatLng(63.3, 10.3),
+		      zoom: 9,
+		      center: new google.maps.LatLng(62.32000, 9.06686),
 			  streetViewControl: false,
 		      mapTypeControlOptions: {
 		        mapTypeIds: ['topo2', 'topo2graatone'],
@@ -43,7 +43,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
  
 		    map.mapTypes.set('topo2',new StatkartMapType("Topografisk", "topo2"));
-		    map.mapTypes.set('topo2graatone',new StatkartMapType("Topgrafisk gråtone", "topo2graatone"));
+		    map.mapTypes.set('topo2graatone',new StatkartMapType("Topgrafisk gr��tone", "topo2graatone"));
 		    map.setMapTypeId('topo2');
             
 		  }

@@ -4,6 +4,7 @@ public class Farmer
 {
 
 	private final int farmerId;
+	private final String farmerHash;
 	private String userName;
 	private String email;
 	
@@ -13,12 +14,11 @@ public class Farmer
 	 * @param userName the farmer's user name
 	 * @param email the farmers Email address
 	 */
-	public Farmer(int farmerId, String userName, String email) {
+	public Farmer(int farmerId, String farmerHash, String userName, String email) {
 		this.farmerId = farmerId;
+		this.farmerHash = farmerHash;
 		setEmail(email);
 		this.userName = userName;
-		
-		
 	}
 	
 	/**
@@ -55,6 +55,16 @@ public class Farmer
 	 */
 	public int getFarmerId() {
 		return farmerId;
+	}
+	
+	private String getHash() {
+		return farmerHash;
+	}
+
+	@Override
+	public String toString() {
+		return "Farmer [farmerId=" + farmerId + ", farmerHash=" + farmerHash
+				+ ", userName=" + userName + ", email=" + email + "]";
 	}
 	
 }

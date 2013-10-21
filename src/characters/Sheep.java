@@ -1,11 +1,18 @@
 package characters;
 
+/**
+ * 
+ * @author Håkon Ødegård Løvdal
+ * @author Max Melander
+ *
+ */
+
 public class Sheep {
 	
-	private final int idNr;
+	private final int sheepId;
 	private String nick;
 	private int birthYear;
-	private int ownerId;
+	private Farmer farmer;
 	private Position location = null;
 	
 	/**
@@ -15,11 +22,12 @@ public class Sheep {
 	 * @param birthYear
 	 * @param ownerId
 	 */
-	public Sheep(int idNr, String nick, int birthYear, int ownerId) {
-		this.idNr = idNr;
+	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longtidude) {
+		this.sheepId = sheepId;
 		setNick(nick);
 		setBirthYear(birthYear);
-		setOwnerId(ownerId);
+		this.farmer = farmer;
+		setLocation(latitude, longtidude);
 	}
 	/**
 	 * Sets the sheep's location
@@ -28,11 +36,11 @@ public class Sheep {
 	 * @param longtidude
 	 * @param height
 	 */
-	public void setLocation(double latitude, double longtidude, double height) {
+	public void setLocation(double latitude, double longtidude) {
 		if (location == null) {
-			location = new Position(latitude, longtidude, height);
+			location = new Position(latitude, longtidude);
 		} else {
-			location.editLocation(latitude, longtidude, height);
+			location.editLocation(latitude, longtidude);
 		}	
 	}
 	/**
@@ -45,12 +53,11 @@ public class Sheep {
 	
 	/**
 	 * 
-	 * @param birthYear
 	 * @return returns the sheep's birthyear
 	 */
-	public int getAgeOfSheep(int birthYear){
+	public int getAgeOfSheep(){
 		int year = 2013;
-		return year - birthYear;
+		return year - this.birthYear;
 	}
 	
 	//Trenger exception handler
@@ -58,17 +65,8 @@ public class Sheep {
 	 * 
 	 * @param ownerId
 	 */
-	private void setOwnerId(int ownerId){
-		if (ownerId < 1000000){
-			this.ownerId = ownerId;
-		}
-	}
-	/**
-	 * 
-	 * @return returns the owner's ID number
-	 */
-	public int getOwnerId() {
-		return ownerId;
+	public Farmer getFarmer() {
+		return farmer;
 	}
 	
 	/**
@@ -92,7 +90,7 @@ public class Sheep {
 	 * @return returns the sheep's ID
 	 */
 	public int getIdNr() {
-		return idNr;
+		return sheepId;
 	}
 	/**
 	 * 
@@ -109,8 +107,9 @@ public class Sheep {
 		return birthYear;
 	}
 	
+	@Override
 	public String toString() {
-		return "idNR" + idNr;
+		return nick + ": " + sheepId;
 	}
 
 }

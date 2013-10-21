@@ -4,18 +4,15 @@ public class Position {
 
 	private double latitude;
 	private double longtidude;
-	private double height;
 	
-	public Position(double latitude, double longtidude, double height) {
+	public Position(double latitude, double longtidude) {
 		this.latitude = latitude;
 		this.longtidude = longtidude;
-		this.height = height;
 	}
 	
-	public void editLocation(double latitude, double longtidude, double height) {
+	public void editLocation(double latitude, double longtidude) {
 		this.latitude = latitude;
 		this.longtidude = longtidude;
-		this.height = height;
 	}
 
 	public double getLatitude() {
@@ -26,11 +23,4 @@ public class Position {
 		return longtidude;
 	}
 
-	public double getHeight() {
-		return height;
-	}
-
-	
-	
-	
 }
