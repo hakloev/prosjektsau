@@ -1,5 +1,9 @@
 package characters;
 
+/**
+ * Class holding information about the farmer currently logged in
+ * @author Andreas Lønes
+ */
 public class Farmer 
 {
 
@@ -9,8 +13,8 @@ public class Farmer
 	//private String email;
 	
 	/**
-	 * 
-	 * @param ownerID the farmer's owner ID
+	 * @param farmerHash the farmers unique hash-identification given by database
+	 * @param farmerId the farmers identification number
 	 * @param userName the farmer's user name
 	 * @param email the farmers Email address
 	 */

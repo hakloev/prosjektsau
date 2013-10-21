@@ -5,11 +5,7 @@ import java.awt.Dimension;
 import serverconnection.NetHandler;
 import utils.Constants;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 /**
  * @author Andreas Lynbgy
@@ -48,14 +44,14 @@ public class ProgramFrame extends JFrame{
 		setPreferredSize(windowSize);
 		setMinimumSize(minWindowSize);
 		setMaximumSize(maxWindowSize);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(windowSize);
 		setTitle(Constants.title);
 	}
 	
 	/**
 	 * Return NetHandler-object
-	 * @return handler
+	 * @return NetHandler-object
 	 */
 	public NetHandler getNetHandler() {
 		return handler;
@@ -138,7 +134,7 @@ public class ProgramFrame extends JFrame{
 
 	/**
 	 * Main method for the client-application
-	 * @param args
+	 * @param args commandline input args
 	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

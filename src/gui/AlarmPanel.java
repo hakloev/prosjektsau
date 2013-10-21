@@ -42,7 +42,7 @@ public class AlarmPanel extends JPanel{
 	
 	private GroupLayout layout;
 	
-	// Used to deactivate listselectionlistner when deleting a sheep
+	// Used to deactivate listSelectionListner when deleting a sheep
 	private boolean changing;
 	
 	public AlarmPanel(ProgramFrame programFrame){
@@ -130,8 +130,8 @@ public class AlarmPanel extends JPanel{
 	}
 	
 	/**
-	 * Method for adding an alarm, takes the Alarm-object as paramteter
-	 * @param alarm
+	 * Method for adding an alarm
+	 * @param alarm Takes in an alarm-object
 	 */
 	public void addAlarm(Alarm alarm) {
 		alarmList.addElement(alarm);
@@ -170,7 +170,7 @@ public class AlarmPanel extends JPanel{
 					list.clearSelection();
 					clearAlarmSections();
 					changing = false;
-				} // ELSE HERE? TO RETURN
+				} // ELSE HERE? TO RETURN  IF DONE??
 			}
 		}
 		

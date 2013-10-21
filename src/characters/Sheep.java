@@ -18,53 +18,50 @@ public class Sheep {
 	
 	/**
 	 * 
-	 * @param idNr
-	 * @param nick
-	 * @param birthYear
-	 * @param ownerId
+	 * @param sheepId Sheeps identification number
+	 * @param nick Sheeps nickname
+	 * @param birthYear Sheeps birthyear
+	 * @param farmer Sheeps owner, farmer-object
+	 * @param latitude Latitude position of the sheep
+	 * @param longtiude Longtiude position of the sheep
 	 */
-	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longtidude) {
+	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longtiude) {
 		this.sheepId = sheepId;
 		setNick(nick);
 		setBirthYear(birthYear);
 		this.farmer = farmer;
-		setLocation(latitude, longtidude);
+		setLocation(latitude, longtiude);
 	}
 	/**
 	 * Sets the sheep's location
 	 * 
-	 * @param latitude 
-	 * @param longtidude
-	 * @param height
+	 * @param latitude Lat-position of sheep
+	 * @param longtiude Long-postition of the sheep
 	 */
-	public void setLocation(double latitude, double longtidude) {
+	public void setLocation(double latitude, double longtiude) {
 		if (location == null) {
-			location = new Position(latitude, longtidude);
+			location = new Position(latitude, longtiude);
 		} else {
-			location.editLocation(latitude, longtidude);
+			location.editLocation(latitude, longtiude);
 		}	
 	}
 	/**
-	 * 
-	 * @return returns the Sheep's location
+	 * @return location returns the Sheep's location-object
 	 */
 	public Position getLocation() {
 		return location;
 	}
 	
 	/**
-	 * 
-	 * @return returns the sheep's birthyear
+	 * @return birthYear returns the sheep's birthyear
 	 */
 	public int getAgeOfSheep(){
 		int year = 2013;
 		return year - this.birthYear;
 	}
 	
-	//Trenger exception handler
 	/**
-	 * 
-	 * @param ownerId
+	 * @return sheeps-farmer object
 	 */
 	public Farmer getFarmer() {
 		return farmer;
@@ -73,7 +70,7 @@ public class Sheep {
 	/**
 	 * Sets the sheep's nick
 	 * 
-	 * @param nick
+	 * @param nick set sheeps nickname
 	 */
 	public void setNick(String nick) {
 		this.nick = nick;
@@ -95,7 +92,7 @@ public class Sheep {
 	}
 	/**
 	 * 
-	 * @param birthYear
+	 * @param birthYear sets the birthYear
 	 */
 	private void setBirthYear(int birthYear){
 		this.birthYear = birthYear;
@@ -121,13 +118,8 @@ public class Sheep {
 		return pulse;
 	}
 	
-	public boolean isDead(){
-		if (pulse < 1){
-			return true;
-		}
-		else{
-			return false;
-		}
+	public boolean isDead() {
+		return (pulse < 1);
 	}
 
 }

@@ -30,6 +30,7 @@ import characters.Sheep;
 /**
  * Class to show and edit sheeps
  * @author Andreas Lyngby
+ * @author Håkon Ødegård Løvdal
  */
 
 public class SheepPanel extends JPanel implements ItemListener{
@@ -334,7 +335,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	/**
 	 * Method that sets sheep editable or not by what the parameter is. Also sets the textareas to standard text
-	 * @param bool
+	 * @param bool boolean declaring if the user can edit the sheep
 	 */
 	private void setEditable(boolean bool) {
 		sheepId.setEditable(false); // id må genereres selv
@@ -351,7 +352,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	/**
 	 * Method that sets sheep etidable or not by what the parameter is. Sets the textareas to the sheep info currently displayed
-	 * @param bool
+	 * @param bool boolean declaring if the user can edit the sheep
 	 */
 	private void setEditableWithSheepInfo(boolean bool) {
 		sheepId.setEditable(false); // id må genereres selv

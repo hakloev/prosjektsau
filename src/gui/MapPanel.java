@@ -80,7 +80,7 @@ public class MapPanel extends JPanel {
 	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
 	 * 
-	 * @param url
+	 * @param url URL path to the map.html-file
 	 */
 	private void buildWebEngine(String url) {
 	    webEngine = webView.getEngine();
@@ -91,9 +91,9 @@ public class MapPanel extends JPanel {
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
 	 * 
-	 * @param title
-	 * @param lat
-	 * @param lng
+	 * @param title Sheeps nickname
+	 * @param lat latiude position
+	 * @param lng longtiude position
 	 */
 	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {

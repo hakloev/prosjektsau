@@ -10,9 +10,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * 
- * @author maxmelander
- *
+ * Class for sending email
+ * @author Max Melander
  */
 public class GMail {
 	private String username = "sauer.er.konge@gmail.com" ;
