@@ -9,7 +9,7 @@ import characters.Sheep;
 /**
  * A simulation of sheep movement and wolf attacks
  * 
- * @author Max Melander
+ * @author maxmelander
  */
 
 public class Simulation {
