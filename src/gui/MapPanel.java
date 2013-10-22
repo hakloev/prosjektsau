@@ -49,6 +49,7 @@ public class MapPanel extends JPanel {
 		add(fxPanel);
 		setSize(600, 400);
 		setVisible(true);
+		
 	}
 	
 	/**
@@ -74,6 +75,7 @@ public class MapPanel extends JPanel {
 	    webEngine = webView.getEngine();
 	    webEngine.javaScriptEnabledProperty().set(true); 
 		webEngine.load(MapPanel.class.getResource(url).toExternalForm());
+		
 	}
 	
 	/**
@@ -92,6 +94,20 @@ public class MapPanel extends JPanel {
 			}
 		});
 	}
+	
+	
+	public void addPoly() {
+		Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				webEngine.executeScript("addPoly()");
+			}
+		});
+	}
+	
+
+	
 	
 	/**
 	 * Deletes all markers from the map, by calling a JavaScript in map.html

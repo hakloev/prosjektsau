@@ -418,6 +418,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
 						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						map.addPoly();
 					}
 					programFrame.getJTabbedPane().setSelectedIndex(2);
 				}
