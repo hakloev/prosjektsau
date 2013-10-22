@@ -47,6 +47,6 @@ public class JsonHandler {
 			e.printStackTrace();
 		}
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
-				farmerMap.get("username").getTextValue(), "default@default.com");
+				farmerMap.get("username").getTextValue(), "hakloev@gmail.com");
 	}
 }

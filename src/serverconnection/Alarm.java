@@ -36,6 +36,10 @@ public class Alarm {
 	public String getAlarmDescription() {
 		return description;
 	}
+
+	public Sheep getSheep() {
+		return this.sheep;
+	}
 	
 	public String getSheepId() {
 		return "Sau-ID: " + this.sheep.getIdNr() + "  //  Nick: " + this.sheep.getNick();

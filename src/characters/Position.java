@@ -1,7 +1,7 @@
 package characters;
 
 /**
- * Class holding position-data
+ * Class holding positioning data
  * @author Håkon Ødegård Løvdal
  */
 public class Position {

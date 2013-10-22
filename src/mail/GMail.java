@@ -37,7 +37,7 @@ public class GMail {
 	 * @param text		the mail's body text
 	 * 
 	 */
-	public void sendMail(String recipient, String subject, String text){
+	public boolean sendMail(String recipient, String subject, String text){
 		
 		Session session = Session.getInstance(props,
 				  new javax.mail.Authenticator() {
@@ -58,9 +58,11 @@ public class GMail {
 					Transport.send(message);
 		 
 					System.out.println("Done");
-		 
+
+					return true;
+
 				} catch (MessagingException e) {
-					throw new RuntimeException(e);
+					return false;
 				}
 	}
 }

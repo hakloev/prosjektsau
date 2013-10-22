@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -18,6 +19,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import characters.Sheep;
+import mail.GMail;
 import serverconnection.Alarm;
 
 public class AlarmPanel extends JPanel{
@@ -39,6 +41,8 @@ public class AlarmPanel extends JPanel{
 	private JTextArea alarmPos;
 	
 	private JButton deleteAlarm;
+	private JButton showAlarm;
+	private JButton sendAlarm;
 	
 	private GroupLayout layout;
 	
@@ -85,9 +89,13 @@ public class AlarmPanel extends JPanel{
 		alarmPos.setMaximumSize(new Dimension(2000,20));
 		
 		deleteAlarm = new JButton("Slett alarm");
+		showAlarm = new JButton("Vis alarm på kart");
+		sendAlarm = new JButton("Send alarm som epost");
 		
 		// Listener for buttons and list
 		deleteAlarm.addActionListener(new DeleteAlarmListener());
+		showAlarm.addActionListener(new ShowAlarmInMapListener());
+		sendAlarm.addActionListener(new SendMailListener());
 		list.addListSelectionListener(new ShowAlarmListener());
 		
 		// Alarms for testing
@@ -99,15 +107,17 @@ public class AlarmPanel extends JPanel{
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addComponent(listScrollPane)
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(sheepIdText)
-				.addComponent(sheepId)
-				.addComponent(alarmTimeText)
-				.addComponent(alarmTime)
-				.addComponent(alarmDescText)
-				.addComponent(alarmDesc)
-				.addComponent(alarmPosText)
-				.addComponent(alarmPos)
-				.addComponent(deleteAlarm)
+					.addComponent(sheepIdText)
+					.addComponent(sheepId)
+					.addComponent(alarmTimeText)
+					.addComponent(alarmTime)
+					.addComponent(alarmDescText)
+					.addComponent(alarmDesc)
+					.addComponent(alarmPosText)
+					.addComponent(alarmPos)
+					.addComponent(deleteAlarm)
+					.addComponent(showAlarm)
+					.addComponent(sendAlarm)
 			)
 		);
 		layout.setVerticalGroup(layout.createSequentialGroup()
@@ -123,6 +133,8 @@ public class AlarmPanel extends JPanel{
 					.addComponent(alarmPosText)
 					.addComponent(alarmPos)
 					.addComponent(deleteAlarm)
+					.addComponent(showAlarm)
+					.addComponent(sendAlarm)
 				)
 			)
 		);
@@ -196,4 +208,45 @@ public class AlarmPanel extends JPanel{
 		}
 	}
 
+	class ShowAlarmInMapListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			MapPanel map = programFrame.getMapPanel();
+			if (!list.isSelectionEmpty()) {
+				map.deleteMarkers();
+				Alarm alarm = list.getSelectedValue();
+				map.addMarker("ALARM: " + alarm.getSheep().getNick(), alarm.getSheep().getLocation().getLatitude(), alarm.getSheep().getLocation().getLongitude());
+					programFrame.getJTabbedPane().setSelectedIndex(2);
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en alarm for å legge den til",
+						"Kartfeil", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+
+	class SendMailListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    if (!list.isSelectionEmpty()) {
+			    Alarm alarm = list.getSelectedValue();
+			    GMail sender = new GMail();
+			    String recipient = programFrame.getUserPanel().getFarmer().getEmail();
+			    String subject = "ALARM: " + alarm.getSheep().toString();
+			    String text = "Du har bedt om å få tilsendt en epost med informasjon om alarmen til " + alarm.getSheep().toString()
+					    + "\n\nTid: " + alarm.getAlarmDate() + "\nBeskrivelse: " + alarm.getAlarmDescription()
+			            + "\nPosisjon: " + alarm.getAlarmPostition();
+			    boolean sendStatus = sender.sendMail(recipient, subject, text);
+			    if (sendStatus) {
+				    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Epost ble sendt! Mottaker: " + programFrame.getUserPanel().getFarmer().getEmail(),
+						    "Epost", JOptionPane.INFORMATION_MESSAGE);
+			    } else {
+				    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Vi klarte dessverre ikke å sende eposten!\nMottaker: " + programFrame.getUserPanel().getFarmer().getEmail(),
+						    "Epostfeil", JOptionPane.WARNING_MESSAGE);
+			    }
+		    }
+
+		}
+	}
 }
