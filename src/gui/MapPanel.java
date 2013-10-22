@@ -112,7 +112,7 @@ public class MapPanel extends JPanel {
 
 
 	/**
-	 * Removes polygon from map, by calling a JavaScript in map.html
+	 * Removes polygon from map by calling a JavaScript in map.html
 	 * 
 	 * @author Thomas
 	 */

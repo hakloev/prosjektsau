@@ -452,7 +452,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * Listener for the "Vis område"-button 
+	 * Listener for the "Vis-område"-button 
 	 * @author Thomas Mathisen
 	 */
 	class showAreaListener implements ActionListener {
