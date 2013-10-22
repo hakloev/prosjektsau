@@ -1,27 +1,15 @@
 package gui;
 
-import java.awt.EventQueue;
-import java.security.Principal;
-import java.util.Enumeration;
-
-import sun.net.www.content.text.plain;
 import utils.Constants;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.sun.javafx.application.PlatformImpl;
-import com.sun.media.jfxmediaimpl.platform.PlatformManager;
 
-import utils.Constants;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebViewBuilder;
@@ -80,7 +68,7 @@ public class MapPanel extends JPanel {
 	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
 	 * 
-	 * @param url
+	 * @param url URL path to the map.html-file
 	 */
 	private void buildWebEngine(String url) {
 	    webEngine = webView.getEngine();
@@ -91,9 +79,9 @@ public class MapPanel extends JPanel {
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
 	 * 
-	 * @param title
-	 * @param lat
-	 * @param lng
+	 * @param title Sheeps nickname
+	 * @param lat latiude position
+	 * @param lng longtiude position
 	 */
 	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {

@@ -14,6 +14,10 @@ prosjektsau.iml
 .classpath
 .project
 
+#IntelliJ project files
+.idea
+prosjektsau.iml
+
 .settings
 
 #For all who hates DS_Store

@@ -1,5 +1,9 @@
 package characters;
 
+/**
+ * Class holding information about the farmer currently logged in
+ * @author Andreas Lønes
+ */
 public class Farmer 
 {
 
@@ -10,8 +14,8 @@ public class Farmer
 	private Area area;
 	
 	/**
-	 * 
-	 * @param ownerID the farmer's owner ID
+	 * @param farmerHash the farmers unique hash-identification given by database
+	 * @param farmerId the farmers identification number
 	 * @param userName the farmer's user name
 	 * @param email the farmers Email address
 	 */
@@ -23,27 +27,27 @@ public class Farmer
 	}
 	
 	/**
-	 * 
+	 * Get the farmer's email address
 	 * @return returns the farmer's Email
 	 */
 	public String getEmail() {
 		return email;
 	}
-	
+
 	/**
-	 * sets the farmer's Email address
-	 * 
-	 * @param email
+	 * Sets the farmer's Email address
+	 * @param email set the email-address
 	 */
 	//Trenger exception handler
 	private void setEmail(String email) {
 		if(email.contains("@")){
+			System.out.println("email satt");
 			this.email = email;
 		}
 	}
 	
 	/**
-	 * 
+	 * Get the farmer's username
 	 * @return returns the farmer's username
 	 */
 	public String getUserName() {
@@ -51,21 +55,30 @@ public class Farmer
 	}
 
 	/**
-	 * 
+	 * Get the farmers identification number
 	 * @return returns the farmer's owner ID
 	 */
 	public int getFarmerId() {
 		return farmerId;
 	}
-	
-	private String getHash() {
+
+	/**
+	 * Get the farmers unique hashcode
+	 * @return returns the farmers hash-code
+	 */
+	public String getHash() {
 		return farmerHash;
 	}
 
+	/**
+	 * Override the toString method
+	 * @override
+	 * @return Returns the farmer's information as a string
+	 */
 	@Override
 	public String toString() {
 		return "Farmer [farmerId=" + farmerId + ", farmerHash=" + farmerHash
-				+ ", userName=" + userName + ", email=" + email + "]";
+				+ ", userName=" + userName + "]";
 	}
 	
 	/**
