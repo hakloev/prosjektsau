@@ -254,7 +254,6 @@ public class AlarmPanel extends JPanel{
 						    "Epostfeil", JOptionPane.WARNING_MESSAGE);
 			    }
 		    }
-
 		}
 	}
 }
