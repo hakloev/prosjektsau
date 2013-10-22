@@ -513,7 +513,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String posInput = sheepPos.getText();
-			if (posInput.matches("[0-9.,]*")) {
+			if (posInput.matches("[0-9]{2}\\.[0-9]{6},[0-9]{2}\\.[0-9]{6}")) {  // RegEx that checks if it is correct position format
 				String[] pos = posInput.split(",");
 				// generete id funksjon? Hash?
 				
