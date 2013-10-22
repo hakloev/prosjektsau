@@ -208,6 +208,10 @@ public class AlarmPanel extends JPanel{
 		}
 	}
 
+	/**
+	 * Class to show alarm in map
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class ShowAlarmInMapListener implements ActionListener {
 
 		@Override
@@ -225,6 +229,10 @@ public class AlarmPanel extends JPanel{
 		}
 	}
 
+	/**
+	 * Class to send alarm as mail
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class SendMailListener implements ActionListener {
 
 		@Override
