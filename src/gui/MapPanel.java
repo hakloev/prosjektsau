@@ -19,12 +19,12 @@ import javafx.scene.web.WebViewBuilder;
  * @author Håkon Ødegård Løvdal
  */
 public class MapPanel extends JPanel {
-	
+
 	private ProgramFrame programFrame;
 	private JFXPanel fxPanel;
 	private WebEngine webEngine;
 	private WebView webView;
-	
+
 	public MapPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initAndShowMap();
@@ -37,21 +37,21 @@ public class MapPanel extends JPanel {
 	 */
 	private void initAndShowMap() {
 		fxPanel = new JFXPanel();
-		
+
 		PlatformImpl.startup(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				initFX();
 			}
 		});
-		
+
 		add(fxPanel);
 		setSize(600, 400);
 		setVisible(true);
-		
+
 	}
-	
+
 	/**
 	 * Initiates the JavaFX-panel
 	 * 
@@ -63,8 +63,8 @@ public class MapPanel extends JPanel {
 		buildWebEngine(Constants.pathToHtml);
 		root.getChildren().add(webView);
 		fxPanel.setScene(scene);
-    }
-	
+	}
+
 	/**
 	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
@@ -72,12 +72,12 @@ public class MapPanel extends JPanel {
 	 * @param url URL path to the map.html-file
 	 */
 	private void buildWebEngine(String url) {
-	    webEngine = webView.getEngine();
-	    webEngine.javaScriptEnabledProperty().set(true); 
+		webEngine = webView.getEngine();
+		webEngine.javaScriptEnabledProperty().set(true); 
 		webEngine.load(MapPanel.class.getResource(url).toExternalForm());
-		
+
 	}
-	
+
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
 	 * 
@@ -87,56 +87,76 @@ public class MapPanel extends JPanel {
 	 */
 	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				webEngine.executeScript("addMarker('" + title + "', " + lat + ", " + lng + ")");
 			}
 		});
 	}
-	
-	
+
+	/**
+	 * Adds a polygon to the map, by calling a JavaScript in map.html
+	 * 
+	 * @author Thomas
+	 */
 	public void addPoly() {
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				webEngine.executeScript("addPoly()");
 			}
 		});
 	}
-	
 
-	
-	
+
+	/**
+	 * Removes polygon from map by calling a JavaScript in map.html
+	 * 
+	 * @author Thomas
+	 */
+	public void removePoly() {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				webEngine.executeScript("removePoly()");
+			}
+		});
+	}
+
+
 	/**
 	 * Deletes all markers from the map by calling a JavaScript in map.html
 	 * 
 	 */
 	protected void deleteMarkers() {
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
-			webEngine.executeScript("deleteMarkers()");
+				webEngine.executeScript("deleteMarkers()");
 			}
 		});
 	}
-	
+
+
+
 	/**
 	 * Main method for testing 
 	 * 
 	 * @param String[] args
 	 */
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//		
-//		@Override
-//		public void run() {
-//			MapPanel p = new MapPanel();
-//		}
-//	});
-//   }
+	//	public static void main(String[] args) {
+	//		SwingUtilities.invokeLater(new Runnable() {
+	//		
+	//		@Override
+	//		public void run() {
+	//			MapPanel p = new MapPanel();
+	//		}
+	//	});
+	//   }
 
 }
 

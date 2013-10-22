@@ -1,4 +1,3 @@
-<html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAQC_3rf-2R1pVOfVSdGAadARtd7q2-NMg&sensor=false"></script>
@@ -8,6 +7,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
  
 </style>
 <script type="text/javascript">
+
+		  var farmerArea;
  
 		  function StatkartMapType(name, layer) {
 			  this.layer = layer
@@ -50,12 +51,9 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 			
 			
 		 function addPoly(){
-		 	var bermudaTriangle;
-
-
-  			// Define the LatLng coordinates for the polygon's path.
+			// Define the LatLng coordinates for the polygon's path.
   			var triangleCoords = [
-   			new google.maps.LatLng(62.219955, 9.555144),
+   			new google.maps.LatLng(62.219955, 9.555143),
     		new google.maps.LatLng(62.075598, 9.139037),
     		new google.maps.LatLng(61.828282, 9.518065),
     		new google.maps.LatLng(62.134708, 10.005584),
@@ -63,18 +61,23 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
   			];
 
   			// Construct the polygon.
-  			bermudaTriangle = new google.maps.Polygon({
+  			farmerArea = new google.maps.Polygon({
   			paths: triangleCoords,
     		strokeColor: '#FF0000',
     		strokeOpacity: 0.8,
     		strokeWeight: 2,
     		fillColor: '#FF0000',
-    		fillOpacity: 0.35
+    		fillOpacity: 0.15
   			});
 
-  			bermudaTriangle.setMap(map);
+  			farmerArea.setMap(map);
 		 
-		 	}		
+		 }		
+		 	
+		 	
+		 function removePoly(){
+		 	farmerArea.setMap(null);
+		 }
 	
 	
 		 function addMarker(title, lat, lng) {
