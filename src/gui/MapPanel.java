@@ -110,7 +110,7 @@ public class MapPanel extends JPanel {
 	
 	
 	/**
-	 * Deletes all markers from the map, by calling a JavaScript in map.html
+	 * Deletes all markers from the map by calling a JavaScript in map.html
 	 * 
 	 */
 	protected void deleteMarkers() {

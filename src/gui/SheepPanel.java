@@ -451,7 +451,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * Listener for the "Legg til ny sau"-button
+	 * Listener for "Legg til ny sau"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
 	class addNewSheepListener implements ActionListener {
