@@ -160,6 +160,14 @@ public class AlarmPanel extends JPanel{
 		alarmDesc.setText("Beskrivelse");
 		alarmPos.setText("Posisjon");
 	}
+
+	/**
+	 * Method to get alarmList
+	 * @return DefaultListModel holding alarms
+	 */
+	public DefaultListModel<Alarm> getAlarmList() {
+		return alarmList;
+	}
 	
 	// Classes for listners to ListSelection and DeleteAlarmButton
 	

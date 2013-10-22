@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionListener;
 
 import serverconnection.JsonHandler;
 import characters.Sheep;
+import serverconnection.Alarm;
 
 /**
  * Class to show and edit sheeps
@@ -113,7 +114,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
 		
 		sheepListText = new JLabel("Saueliste");
-		hasAlarm = new JLabel("Har alarm: Nei");
+		hasAlarm = new JLabel("Har alarm: NEI");
 		
 		sheepIdText = new JLabel("ID:");
 		sheepAgeText = new JLabel("Alder:");
@@ -168,8 +169,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep = new JButton("Oppdater sau");
 		showMap = new JButton("Vis på kart");
 		deleteMap = new JButton("Slett alle på kart");
-		showArea = new JButton("Vis omraade paa kart");
-		hideArea = new JButton("Skjul omraade");
+		showArea = new JButton("Vis område på kart");
+		hideArea = new JButton("Skjul område");
 		
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
@@ -235,9 +236,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 											.addComponent(mapSelected)
 											.addComponent(mapAll)
 											.addComponent(deleteMap)
+										)
+										.addGroup(layout.createSequentialGroup()
 											.addComponent(showArea)
 											.addComponent(hideArea)
-										) 
+										)
+
 									)
 								)
 								.addComponent(designSeperator2)
@@ -301,9 +305,11 @@ public class SheepPanel extends JPanel implements ItemListener{
                         		.addComponent(mapAll)
                         		.addComponent(mapSelected)
                         		.addComponent(deleteMap)
-                        		.addComponent(showArea)
-                        		.addComponent(hideArea)
 	                        )
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+									.addComponent(showArea)
+									.addComponent(hideArea)
+							)
 	                        .addGap(20)
 	                        .addComponent(designSeperator2)
 	                        .addGap(20)
@@ -362,6 +368,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepAge.setText("Tast inn fødselsår");
 		sheepWeight.setText("Vekt");
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
+		hasAlarm.setText("Har Alarm: NEI");
 	}
 	/**
 	 * Method that sets sheep etidable or not by what the parameter is. Sets the textareas to the sheep info currently displayed
@@ -390,12 +397,21 @@ public class SheepPanel extends JPanel implements ItemListener{
 			// Må nok ha en bool changing her, akkurat som i alarm-panelklassen
 			if (!updateMode.isSelected()) {
 				if (!e.getValueIsAdjusting()) {
+					AlarmPanel alarm = programFrame.getAlarmPanel();
 					Sheep sheep = list.getSelectedValue();
 					sheepId.setText(Integer.toString(sheep.getIdNr())); 
 					sheepNick.setText(sheep.getNick());
 					sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
 					sheepWeight.setText("Vi bruker ikke vekt, right?");
 					sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
+					if (alarm.getAlarmList().size() >= 0) {
+						for (int i = 0; i < alarm.getAlarmList().size(); i++) {
+							Alarm a = alarm.getAlarmList().get(i);
+							if (a.getSheepId().equals(Integer.toString(sheep.getIdNr()))) {
+								hasAlarm.setText("Har alarm: JA");  // Her må nok noe gjøres, får ikke testa før sauene er der
+							}
+						}
+					}
 				}
 			} else {
 				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus", 
@@ -421,7 +437,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());	
+						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						programFrame.getJTabbedPane().setSelectedIndex(2);
 					} else {
 						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
@@ -440,7 +456,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * Listener for the "hide omr�de"-button 
+	 * Listener for the "hide omr�de"-button 
 	 * @author Thomas Mathisen
 	 */
 	class hideAreaListener implements ActionListener {
@@ -452,7 +468,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * Listener for the "Vis-omr�de"-button 
+	 * Listener for the "Vis-omr�de"-button 
 	 * @author Thomas Mathisen
 	 */
 	class showAreaListener implements ActionListener {
@@ -460,6 +476,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			programFrame.getMapPanel().addPoly();
+			programFrame.getJTabbedPane().setSelectedIndex(2);
 		}
 	}
 	
@@ -570,3 +587,4 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 }
+
