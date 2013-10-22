@@ -1,10 +1,9 @@
 package characters;
 
 /**
- * 
+ * Class holding information about a sheep
  * @author Håkon Ødegård Løvdal
  * @author Max Melander
- *
  */
 
 public class Sheep {
@@ -18,53 +17,54 @@ public class Sheep {
 	
 	/**
 	 * 
-	 * @param idNr
-	 * @param nick
-	 * @param birthYear
-	 * @param ownerId
+	 * @param sheepId Sheep's identification number
+	 * @param nick Sheep's nickname
+	 * @param birthYear Sheep's birthyear
+	 * @param farmer Sheep's owner, farmer-object
+	 * @param latitude Latitude position of the sheep
+	 * @param longitude Longitude position of the sheep
 	 */
-	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longtidude) {
+	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longitude) {
 		this.sheepId = sheepId;
 		setNick(nick);
 		setBirthYear(birthYear);
 		this.farmer = farmer;
-		setLocation(latitude, longtidude);
+		setLocation(latitude, longitude);
 	}
+
 	/**
 	 * Sets the sheep's location
-	 * 
-	 * @param latitude 
-	 * @param longtidude
-	 * @param height
+	 * @param latitude Lat-position of sheep
+	 * @param longitude Long-postition of the sheep
 	 */
-	public void setLocation(double latitude, double longtidude) {
+	public void setLocation(double latitude, double longitude) {
 		if (location == null) {
-			location = new Position(latitude, longtidude);
+			location = new Position(latitude, longitude);
 		} else {
-			location.editLocation(latitude, longtidude);
+			location.editLocation(latitude, longitude);
 		}	
 	}
+
 	/**
-	 * 
-	 * @return returns the Sheep's location
+	 * Get sheep's location object
+	 * @return Returns the Sheep's location-object
 	 */
 	public Position getLocation() {
 		return location;
 	}
 	
 	/**
-	 * 
-	 * @return returns the sheep's birthyear
+	 * Get the sheep's age
+	 * @return Returns the sheep's birth year
 	 */
 	public int getAgeOfSheep(){
 		int year = 2013;
 		return year - this.birthYear;
 	}
 	
-	//Trenger exception handler
 	/**
-	 * 
-	 * @param ownerId
+	 * Get sheep's farmer-object
+	 * @return sheep's Farmer-object
 	 */
 	public Farmer getFarmer() {
 		return farmer;
@@ -72,14 +72,14 @@ public class Sheep {
 	
 	/**
 	 * Sets the sheep's nick
-	 * 
-	 * @param nick
+	 * @param nick sets sheep's nickname
 	 */
 	public void setNick(String nick) {
 		this.nick = nick;
 	}
+
 	/**
-	 * 
+	 * Get the sheep'a nickname
 	 * @return returns the sheep's nick
 	 */
 	public String getNick() {
@@ -87,47 +87,59 @@ public class Sheep {
 	}
 	
 	/**
-	 * 
+	 * Get the sheep's identification number
 	 * @return returns the sheep's ID
 	 */
 	public int getIdNr() {
 		return sheepId;
 	}
 	/**
-	 * 
-	 * @param birthYear
+	 * Set the sheep's birth year
+	 * @param birthYear sets the birthYear
 	 */
 	private void setBirthYear(int birthYear){
 		this.birthYear = birthYear;
 	}
 	/**
-	 * 
+	 * Get the sheep's birth year
 	 * @return returns the sheep's year of birth
 	 */
 	public int getBirthYear(){
 		return birthYear;
 	}
-	
-	@Override
-	public String toString() {
-		return nick + ": " + sheepId;
-	}
-	
+
+	/**
+	 * Set the sheep's pulse
+	 * @param pulse int current pulse
+	 */
 	public void setPulse(int pulse){
 		this.pulse = pulse;
 	}
-	
+
+	/**
+	 * Returns sheep's pulse
+	 * @return a int, pulse
+	 */
 	public int getPulse(){
 		return pulse;
 	}
-	
-	public boolean isDead(){
-		if (pulse < 1){
-			return true;
-		}
-		else{
-			return false;
-		}
+
+	/**
+	 * Check if sheep is dead
+	 * @return boolean pulse > 0
+	 */
+	public boolean isDead() {
+		return (pulse < 1);
 	}
 
+	/**
+	 * Used to print sheep identification in sheep list (Sheep Panel)
+	 *
+	 * @override overrides toString
+	 * @return a string of sheep identification and nickname
+	 */
+	@Override
+	public String toString() {
+		return "Sau-ID: " + sheepId + " (" + nick + ")";
+	}
 }

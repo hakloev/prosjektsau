@@ -46,6 +46,9 @@ public class Simulation {
 		previousUpdateTime = timeNow;
 
 			for (Sheep currentSheep : sheepList){
+				if (currentSheep.isDead()){
+					continue;
+				}
 				sheepLocation = currentSheep.getLocation();
 				
 				sign = rand.nextInt(2);
@@ -63,7 +66,8 @@ public class Simulation {
 				while (timeNow - previousUpdateTime <= updateInterval){
 					timeNow = System.currentTimeMillis() % MSINDAY;
 				}
-				previousUpdateTime = timeNow;		
+				previousUpdateTime = timeNow;	
+
 			}
 			
 			//checks if a sheep attack should occur
@@ -80,7 +84,7 @@ public class Simulation {
 	 * The wolf tries to kill 5 sheep. Stops after 1 successful kill.  
 	 */
 	public void sheepAttack(){
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < sheepList.size(); i++){
 			int sheepIndex = rand.nextInt(sheepList.size());
 			if (!sheepList.get(sheepIndex).isDead()){
 				if (rand.nextInt(100) < 50){

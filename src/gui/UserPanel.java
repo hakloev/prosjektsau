@@ -21,7 +21,8 @@ import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 
 import characters.Farmer;
-import serverconnection.GetAndParseJson;
+import serverconnection.JsonHandler;
+import serverconnection.NetHandler;
 
 /**
  * 
@@ -53,12 +54,14 @@ public class UserPanel extends JPanel {
 	private JTextField lastName;
 	private JTextField farmerId;
 	
-	private boolean loggedIn;
+	private NetHandler handler;
+	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
+	private final String wrongPw = "ERROR=Feil passord!";
 	private Farmer farmer;
+	
 	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
-		this.loggedIn = false;
 		initElements();
 		initDesign();
 	}
@@ -119,42 +122,38 @@ public class UserPanel extends JPanel {
 	
 	/**
 	 * Method that returns the farmer-object currently logged in
-	 * 
 	 * @return farmer
 	 */
 	public Farmer getFarmer() {
 		return this.farmer;
 	}
 	
-	/**
-	 * Method that returns the current logged in status
-	 * @return bool
-	 */
-	public boolean getLoggedInStatus() {
-		return loggedIn;
-	}
-	
 	// All listeners is implemented as classes that implements the ActionListener-interface
 	
 	/**
-	 * 
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
 	 */
 	class LoginListener implements ActionListener {
 		
 		/**
-		 * loginButton, actionPerformed-method
+		 * Method that checks if user is valid and logs in
+		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (validUser(usernameField.getText(), passwordField.getPassword())) {
+			handler = programFrame.getNetHandler();
+			String loginResult = handler.login(usernameField.getText(), 
+					new String(passwordField.getPassword()));
+			if (validUser(loginResult)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
-				loggedIn = true;
-				String testFarmer = "{\"Farmer\":{\"farmerId\":\"1243556\",\"farmerHash\":\"aslfkewj234HÅKONølk324jl2\",\"farmerUsername\":\"hakloev\",\"farmerEmail\":\"hakloev@derp.com\",\"SheepObject\":{\"sheepId\":\"123456789\",\"nick\":\"Link\",\"birthYear\":\"1986\",\"lat\":\"62.38123\",\"long\":\"9.16686\"}}}";
-				farmer = new GetAndParseJson(testFarmer).getFarmer();
+				
+				// parse result json to create farmer
+				// set user hash
+				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+				handler.setUserCode(farmer.getHash());
 				
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps();
@@ -167,26 +166,27 @@ public class UserPanel extends JPanel {
 
 				// Set panel to SheepPanel
 				programFrame.getJTabbedPane().setSelectedIndex(1); 
-			} else {
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn eller passord!\nPrøv på nytt", 
-						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
-			}
+			} 
 		}
 		
 		/**
 		 * Method to check with database that user is valid
 		 * 
-		 * @param text
-		 * @param password
+		 * @param loginStatus
 		 * @return boolean
 		 */
-		private boolean validUser(String text, char[] password) {
-			// sjekk mot database
-			// for nå kun sjekk lokalt
-			if (text.equalsIgnoreCase("sau") && "123".equalsIgnoreCase(new String(password))) {
+		private boolean validUser(String loginStatus) {
+			if (loginStatus.equals(wrongPw)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil passord!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else if (loginStatus.equals(wrongUser)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else {
 				return true;
 			}
-			return false;
 		}
 		
 	}
