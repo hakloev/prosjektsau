@@ -20,7 +20,7 @@ public class Simulation {
 	private Position sheepLocation;
 	public static final int EARTHRADIUS = 6378137;
 	public static final int MSINDAY = 86400000;
-	public static final int NUMBEROFUPDATESPERDAY = 100000;
+	public static final int NUMBEROFUPDATESPERDAY = 50000;
 	public static final int NEGATIVE = 0;
 	public static final int POSITIVE = 1;
 	
@@ -46,6 +46,11 @@ public class Simulation {
 		previousUpdateTime = timeNow;
 
 			for (Sheep currentSheep : sheepList){
+				//waits until enough time has passed
+				while (timeNow - previousUpdateTime <= updateInterval){
+					timeNow = System.currentTimeMillis() % MSINDAY;
+				}
+				
 				if (currentSheep.isDead()){
 					continue;
 				}
@@ -53,25 +58,24 @@ public class Simulation {
 				
 				sign = rand.nextInt(2);
 				if (sign == NEGATIVE){
-					double latrads = (rand.nextDouble() * 100) / EARTHRADIUS;
-					double longrads = (rand.nextDouble() * 100) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * 1000) / EARTHRADIUS;
+					double longrads = (rand.nextDouble() * 1000) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
 				}
 				else{
-					double latrads = (rand.nextDouble() * 100) / EARTHRADIUS;
-					double longrads = ((rand.nextDouble() * 100)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * 1000) / EARTHRADIUS;
+					double longrads = ((rand.nextDouble() * 1000)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
 				}												
-				//waits until enough time has passed
-				while (timeNow - previousUpdateTime <= updateInterval){
-					timeNow = System.currentTimeMillis() % MSINDAY;
-				}
 				previousUpdateTime = timeNow;	
 
+				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude());
 			}
+			System.out.println("");
 			
 			//checks if a sheep attack should occur
 			if (rand.nextInt(100) < 10){
+				System.out.println("Wolf attack");
 				sheepAttack();
 			}
 			previousUpdateTime = timeNow;
@@ -81,19 +85,25 @@ public class Simulation {
 	}
 	
 	/**
-	 * The wolf tries to kill 5 sheep. Stops after 1 successful kill.  
+	 * The wolf tries to kill 5 sheep. 90% chance of stopping after every kill.  
 	 */
 	public void sheepAttack(){
 		for (int i = 0; i < sheepList.size(); i++){
 			int sheepIndex = rand.nextInt(sheepList.size());
 			if (!sheepList.get(sheepIndex).isDead()){
-				if (rand.nextInt(100) < 50){
+				if (rand.nextInt(100) < 20){
+					System.out.println("Kill success on sheep: " + sheepIndex);
 					killSheep(sheepList.get(sheepIndex));
-					return;
+					
+					//10% chance of trying to kill another sheep
+					if (rand.nextInt(10) != 0){
+						return;
+					}
 				}
 			}
 		}
 	}
+	
 	/**
 	 * Kills a sheep
 	 * @param sheep Sheep that should be killed
