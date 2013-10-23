@@ -35,11 +35,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		  function initialize() {
 		    var mapOptions = {
 		      zoom: 9,
-<<<<<<< HEAD
 		      center: new google.maps.LatLng(62.00745, 9.56686),
-=======
-		      center: new google.maps.LatLng(61.981558,9.758177),
->>>>>>> master
 			  streetViewControl: false,
 		      mapTypeControlOptions: {
 		        mapTypeIds: ['topo2', 'topo2graatone'],
@@ -86,37 +82,38 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 	
 	
 		 function addMarker(title, lat, lng) {
-            //var marker = new google.maps.Marker({
-            //position: new google.maps.LatLng(lat, lng),
-            //map: map,
-            //title: title
-            //});
-            //markers.push(marker);
+            var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            title: title
+            });
+            markers.push(marker);
             ////////////thomas fikser noe her senere//////
-
-            var image = {
-    		url: '../../resources/sheep_icon_pointy.gif',
-    		// This marker is 27 pixels wide by 28 pixels tall.
-    		size: new google.maps.Size(27, 28),
-    		// The origin for this image is 0,0.
-    		origin: new google.maps.Point(0,0),
-    		// The anchor for this image is the point of the arrow
-    		anchor: new google.maps.Point(15, 28)
-  			};
+			
+            //var image = {
+    		//url: '../../resources/sheep_icon_pointy.gif',
+    		//// This marker is 27 pixels wide by 28 pixels tall.
+    		///size: new google.maps.Size(27, 28),
+    		//// The origin for this image is 0,0.
+    		//origin: new google.maps.Point(0,0),
+    		//// The anchor for this image is the point of the arrow
+    		//anchor: new google.maps.Point(15, 28)
+  			//};
   			
   			//var shape = {Clickable area on icon.
-  			shape = {
-      		coord: [15,28, 6,19, 6,13, 0,4, 4,0, 10,2, 23,3, 27,7, 23,19, 15,28],
-      		type: 'poly'
-  			};
+  			//shape = {
+      		//coord: [15,28, 6,19, 6,13, 0,4, 4,0, 10,2, 23,3, 27,7, 23,19, 15,28],
+      		//type: 'poly'
+  			//};
   			
-  			var marker = new google.maps.Marker({
-        	position: new google.maps.LatLng(lat, lng),
-        	map: map,
-        	icon: image,
-        	shape: shape,
-    		});
-    		markers.push(marker);
+  			//var marker = new google.maps.Marker({
+        	//position: new google.maps.LatLng(lat, lng),
+        	//map: map,
+        	//icon: image,
+        	//shape: shape,
+        	//title: title;
+    		//});
+    		//markers.push(marker);
   			
         }
         

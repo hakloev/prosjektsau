@@ -131,11 +131,32 @@ public class UserPanel extends JPanel {
 	// All listeners is implemented as classes that implements the ActionListener-interface
 	
 	/**
+	 * Listener for the EnterButton
+	 * @author Thomas Mathisen
+	 * 
+
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	
+	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
+	 * 
 	 */
-	class LoginListener implements ActionListener {
-		
+	class LoginListener implements ActionListener {		
 		/**
 		 * Method that checks if user is valid and logs in
 		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
