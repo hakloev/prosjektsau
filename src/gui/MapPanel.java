@@ -141,6 +141,21 @@ public class MapPanel extends JPanel {
 		});
 	}
 
+	
+	/**
+	 * Deletes all markers from the map by calling a JavaScript in map.html
+	 * 
+	 */
+	public void addTestSheep() {///////////////////////////////////////////////////KUN TIL TEST////////////////////////
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				webEngine.executeScript("addTestSheep()");
+			}
+		});
+	}
+
 
 
 	/**

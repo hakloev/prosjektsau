@@ -53,8 +53,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JButton updateSheep;
 	private JButton showMap;
 	private JButton deleteMap;
-	private JButton showArea;
-	private JButton hideArea;
 	
 	private JRadioButton infoMode;
 	private JRadioButton updateMode;
@@ -80,6 +78,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JTextArea sheepWeight;
 	
 	private GroupLayout layout;
+
 
 	
 	public SheepPanel(ProgramFrame programFrame) {
@@ -168,8 +167,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep = new JButton("Oppdater sau");
 		showMap = new JButton("Vis på kart");
 		deleteMap = new JButton("Slett alle på kart");
-		showArea = new JButton("Vis omraade paa kart");
-		hideArea = new JButton("Skjul omraade");
 		
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
@@ -183,8 +180,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep.addActionListener(new EditSheepInfoListener());
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
-		showArea.addActionListener(new showAreaListener());
-		hideArea.addActionListener(new hideAreaListener());
 		// deleteSheep listner
 		
 		
@@ -235,8 +230,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 											.addComponent(mapSelected)
 											.addComponent(mapAll)
 											.addComponent(deleteMap)
-											.addComponent(showArea)
-											.addComponent(hideArea)
 										) 
 									)
 								)
@@ -301,8 +294,6 @@ public class SheepPanel extends JPanel implements ItemListener{
                         		.addComponent(mapAll)
                         		.addComponent(mapSelected)
                         		.addComponent(deleteMap)
-                        		.addComponent(showArea)
-                        		.addComponent(hideArea)
 	                        )
 	                        .addGap(20)
 	                        .addComponent(designSeperator2)
@@ -460,6 +451,18 @@ public class SheepPanel extends JPanel implements ItemListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			programFrame.getMapPanel().addPoly();
+		}
+	}
+	
+	/**
+	 * Listener for the "test-sau-@-dovre"-button 
+	 * @author Thomas Mathisen
+	 */
+	class testSheepListener implements ActionListener {/////////////////////////////////KUN TIL TEST////////////
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			programFrame.getMapPanel().addTestSheep();
 		}
 	}
 	
