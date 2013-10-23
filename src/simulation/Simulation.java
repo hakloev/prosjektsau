@@ -66,10 +66,14 @@ public class Simulation {
 					double latrads = (rand.nextDouble() * 1000) / EARTHRADIUS;
 					double longrads = ((rand.nextDouble() * 1000)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
-				}												
+				}
+				
+				if (currentSheep.getPulse() < 100 && !currentSheep.isDead()){
+					currentSheep.setPulse(currentSheep.getPulse() + 10);
+				}
 				previousUpdateTime = timeNow;	
 
-				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude());
+				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse());
 			}
 			System.out.println("");
 			
@@ -88,17 +92,23 @@ public class Simulation {
 	 * The wolf tries to kill 5 sheep. 90% chance of stopping after every kill.  
 	 */
 	public void sheepAttack(){
+		Sheep currentSheep = null;
 		for (int i = 0; i < sheepList.size(); i++){
 			int sheepIndex = rand.nextInt(sheepList.size());
-			if (!sheepList.get(sheepIndex).isDead()){
+			currentSheep = sheepList.get(sheepIndex);
+			if (!currentSheep.isDead()){
 				if (rand.nextInt(100) < 20){
 					System.out.println("Kill success on sheep: " + sheepIndex);
-					killSheep(sheepList.get(sheepIndex));
+					killSheep(currentSheep);
 					
 					//10% chance of trying to kill another sheep
 					if (rand.nextInt(10) != 0){
 						return;
 					}
+				}
+				//Hurts a sheep if it is not killed
+				else{
+					currentSheep.setPulse(currentSheep.getPulse() - 50);
 				}
 			}
 		}
