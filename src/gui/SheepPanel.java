@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionListener;
 
 import serverconnection.JsonHandler;
 import characters.Sheep;
+import serverconnection.Alarm;
 
 /**
  * Class to show and edit sheeps
@@ -79,11 +80,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private GroupLayout layout;
 
+	private boolean changing;
 
 	
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
-		
+		this.changing = false;
 		initElements();
 		initDesign();
 		/* Bare for testing
@@ -112,7 +114,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
 		
 		sheepListText = new JLabel("Saueliste");
-		hasAlarm = new JLabel("Har alarm: Nei");
+		hasAlarm = new JLabel("Har alarm: NEI");
 		
 		sheepIdText = new JLabel("ID:");
 		sheepAgeText = new JLabel("Alder:");
@@ -180,6 +182,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep.addActionListener(new EditSheepInfoListener());
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
+		deleteSheep.addActionListener(new DeleteSheepListener());
 		// deleteSheep listner
 		
 		
@@ -328,6 +331,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 		// for loop ellerno lignende
 		// ADD ALL SHEEPS TO SHEEPLIST
 	}
+
+	public void addSheep(Sheep sheep) {
+		sheepList.addElement(sheep);
+	}
 	
 	/**
 	 * Method used to update the edited sheep to the database
@@ -353,6 +360,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepAge.setText("Tast inn fødselsår");
 		sheepWeight.setText("Vekt");
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
+		hasAlarm.setText("Har Alarm: NEI");
 	}
 	/**
 	 * Method that sets sheep etidable or not by what the parameter is. Sets the textareas to the sheep info currently displayed
@@ -378,19 +386,26 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// Må nok ha en bool changing her, akkurat som i alarm-panelklassen
-			if (!updateMode.isSelected()) {
-				if (!e.getValueIsAdjusting()) {
-					Sheep sheep = list.getSelectedValue();
-					sheepId.setText(Integer.toString(sheep.getIdNr())); 
-					sheepNick.setText(sheep.getNick());
-					sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
-					sheepWeight.setText("Vi bruker ikke vekt, right?");
-					sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
-				}
-			} else {
-				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus", 
+			if (!changing) {
+				if (!updateMode.isSelected()) {
+					if (!e.getValueIsAdjusting()) {
+						AlarmPanel alarm = programFrame.getAlarmPanel();
+						Sheep sheep = list.getSelectedValue();
+						sheepId.setText(Integer.toString(sheep.getIdNr()));
+						sheepNick.setText(sheep.getNick());
+						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
+						sheepWeight.setText("Vi bruker ikke vekt, right?");
+						sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
+						if (sheep.getAlarmStatus()) {
+							hasAlarm.setText("Har alarm: JA");
+						}  else {
+							hasAlarm.setText("Har alarm: NEI");
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus",
 						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		}
 	}
@@ -412,7 +427,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());	
+						if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else {
+							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						}
 						programFrame.getJTabbedPane().setSelectedIndex(2);
 					} else {
 						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
@@ -421,7 +440,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 				} else {
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
-						map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else {
+							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						}
 						map.addPoly();
 					}
 					programFrame.getJTabbedPane().setSelectedIndex(2);
@@ -451,7 +474,15 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			changing = true;
+			list.clearSelection();
+			if (infoMode.isSelected()) {
+				updateMode.setSelected(true);
+				infoMode.setSelected(false);
+				radioGroup1.setSelected(updateMode.getModel(), true);
+			}
 			setEditable(true);
+			changing = false;
 		}
 	}
 	
@@ -464,12 +495,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String posInput = sheepPos.getText();
-			if (posInput.matches("[0-9.,]*")) {
+			if (posInput.matches("[0-9]{2}\\.[0-9]{6},[0-9]{2}\\.[0-9]{6}")) {  // RegEx that checks if it is correct position format
 				String[] pos = posInput.split(",");
 				// generete id funksjon? Hash?
 				
 				// genere sauer i en lignede metode som updateSheep()??
-				Sheep sheep = new Sheep(555555, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), 
+				Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()),
 				programFrame.getUserPanel().getFarmer(), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
 				sheepList.addElement(sheep);	
 			} else {
@@ -477,6 +508,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 						"Posisjonsfeil", JOptionPane.WARNING_MESSAGE);
 			}
 			setEditable(false);
+			updateMode.setSelected(false);
+			infoMode.setSelected(true);
+			radioGroup1.setSelected(infoMode.getModel(), true);
 		}
 	}
 	
@@ -537,4 +571,25 @@ public class SheepPanel extends JPanel implements ItemListener{
 			radioGroup1.setSelected(infoMode.getModel(), true);
 		}
 	}
+
+	class DeleteSheepListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (list.isSelectionEmpty()) {
+				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en sau for å slette",
+						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
+			} else {
+				changing = true;
+				int index = list.getSelectedIndex();
+				if (index >= 0) {
+					sheepList.remove(index);
+					list.clearSelection();
+					setEditable(false);
+					changing = false;
+				} // ELSE HERE? TO RETURN  IF DONE??
+			}
+		}
+	}
 }
+
