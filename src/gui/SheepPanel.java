@@ -430,41 +430,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
-	/**
-	 * Listener for the "hide område"-button 
-	 * @author Thomas Mathisen
-	 */
-	class hideAreaListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			programFrame.getMapPanel().removePoly();
-		}
-	}
-	
-	/**
-	 * Listener for the "Vis-område"-button 
-	 * @author Thomas Mathisen
-	 */
-	class showAreaListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			programFrame.getMapPanel().addPoly();
-		}
-	}
-	
-	/**
-	 * Listener for the "test-sau-@-dovre"-button 
-	 * @author Thomas Mathisen
-	 */
-	class testSheepListener implements ActionListener {/////////////////////////////////KUN TIL TEST////////////
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			programFrame.getMapPanel().addTestSheep();
-		}
-	}
 	
 	/**
 	 * Listener for the "Slett alle pÃ¥ kart"-button 
