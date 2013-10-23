@@ -82,9 +82,18 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 	
 	
 		 function addMarker(title, lat, lng) {
+		 	var image = {
+    		url: '../../resources/sheep_icon_pointy.gif',
+    		// This marker is 27 pixels wide by 28 pixels tall.
+    		size: new google.maps.Size(27, 28),
+    		// The anchor for this image is the point of the arrow
+    		anchor: new google.maps.Point(15, 28)
+  			};
+  			
             var marker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
             map: map,
+            icon: image,
             title: title
             });
             markers.push(marker);
