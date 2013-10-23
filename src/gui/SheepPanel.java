@@ -54,8 +54,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JButton updateSheep;
 	private JButton showMap;
 	private JButton deleteMap;
-	private JButton showArea;
-	private JButton hideArea;
 	
 	private JRadioButton infoMode;
 	private JRadioButton updateMode;
@@ -171,8 +169,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep = new JButton("Oppdater sau");
 		showMap = new JButton("Vis på kart");
 		deleteMap = new JButton("Slett alle på kart");
-		showArea = new JButton("Vis område på kart");
-		hideArea = new JButton("Skjul område");
 		
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
@@ -186,8 +182,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateSheep.addActionListener(new EditSheepInfoListener());
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
-		showArea.addActionListener(new showAreaListener());
-		hideArea.addActionListener(new hideAreaListener());
 		deleteSheep.addActionListener(new DeleteSheepListener());
 		// deleteSheep listner
 		
@@ -199,133 +193,124 @@ public class SheepPanel extends JPanel implements ItemListener{
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(layout.createSequentialGroup()
-										.addComponent(sheepListText)
-								)
-								.addGroup(layout.createSequentialGroup()
-										.addComponent(listScrollPane)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(designSeperator)
-												.addGroup(layout.createSequentialGroup()
-														.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																.addGroup(layout.createSequentialGroup()
-																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																				.addComponent(sheepIdText)
-																				.addComponent(sheepNickText)
-																				.addComponent(sheepAgeText)
-																				.addComponent(sheepWeightText)
-																				.addComponent(sheepPosText)
-																		)
-																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																				.addComponent(sheepId)
-																				.addComponent(sheepNick)
-																				.addComponent(sheepAge)
-																				.addComponent(sheepWeight)
-																				.addComponent(sheepPos)
-																		)
-																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																						.addComponent(getSheepInfo)
-																						.addComponent(updateSheep)
-																				)
-																				.addComponent(infoMode)
-																				.addComponent(updateMode)
-																		)
-																)
-																.addComponent(hasAlarm)
-																.addGroup(layout.createSequentialGroup()
-																		.addComponent(showMap)
-																		.addComponent(mapSelected)
-																		.addComponent(mapAll)
-																		.addComponent(deleteMap)
-																)
-																.addGroup(layout.createSequentialGroup()
-																		.addComponent(showArea)
-																		.addComponent(hideArea)
-																)
-
-														)
-												)
-												.addComponent(designSeperator2)
-												.addGroup(layout.createSequentialGroup()
-														.addComponent(newSheep)
-														.addComponent(addSheep)
-														.addComponent(deleteSheep)
-												)
-										)
-
-								)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(sheepListText)
 						)
-						.addContainerGap()
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(listScrollPane)
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(designSeperator)
+								.addGroup(layout.createSequentialGroup()
+									.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addGroup(layout.createSequentialGroup()
+											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addComponent(sheepIdText)
+												.addComponent(sheepNickText)
+												.addComponent(sheepAgeText)
+												.addComponent(sheepWeightText)
+												.addComponent(sheepPosText)
+											)
+											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addComponent(sheepId)
+												.addComponent(sheepNick)
+												.addComponent(sheepAge)
+												.addComponent(sheepWeight)
+												.addComponent(sheepPos)
+											)
+											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+													.addComponent(getSheepInfo)
+													.addComponent(updateSheep)
+												)
+												.addComponent(infoMode)
+												.addComponent(updateMode)
+											)
+										)
+										.addComponent(hasAlarm)
+										.addGroup(layout.createSequentialGroup()
+											.addComponent(showMap)
+											.addComponent(mapSelected)
+											.addComponent(mapAll)
+											.addComponent(deleteMap)
+										) 
+									)
+								)
+								.addComponent(designSeperator2)
+								.addGroup(layout.createSequentialGroup()
+										.addComponent(newSheep)
+										.addComponent(addSheep)
+										.addComponent(deleteSheep)
+								)
+							)
+							
+						)
+					)
+					.addContainerGap()
 				)
 			)
 		);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(sheepListText)
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(layout.createSequentialGroup()
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-														.addComponent(sheepIdText)
-														.addComponent(sheepId)
-												)
-												.addComponent(infoMode, GroupLayout.Alignment.TRAILING)
-										)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-												.addComponent(sheepNickText)
-												.addComponent(sheepNick)
-												.addComponent(updateMode)
-										)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-												.addComponent(sheepAgeText)
-												.addComponent(sheepAge)
-												.addComponent(updateSheep)
-										)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-												.addComponent(sheepWeightText)
-												.addComponent(sheepWeight)
-												.addComponent(getSheepInfo)
-										)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-												.addComponent(sheepPosText)
-												.addComponent(sheepPos)
-										)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(designSeperator)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(hasAlarm)
-										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(showMap)
-												.addComponent(mapAll)
-												.addComponent(mapSelected)
-												.addComponent(deleteMap)
-										)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(showArea)
-												.addComponent(hideArea)
-										)
-										.addGap(20)
-										.addComponent(designSeperator2)
-										.addGap(20)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(newSheep)
-												.addComponent(addSheep)
-												.addComponent(deleteSheep)
-										)
-										.addGap(0, 300, Short.MAX_VALUE)
+					.addContainerGap()
+					.addComponent(sheepListText)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+									.addComponent(sheepIdText)
+									.addComponent(sheepId)
 								)
-								.addComponent(listScrollPane)
+								.addComponent(infoMode,GroupLayout.Alignment.TRAILING)
+							)
+							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(sheepNickText)
+								.addComponent(sheepNick)
+								.addComponent(updateMode)
+							)
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        		.addComponent(sheepAgeText)
+                        		.addComponent(sheepAge)
+                        		.addComponent(updateSheep)
+	                        )
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        		.addComponent(sheepWeightText)
+                        		.addComponent(sheepWeight)
+                        		.addComponent(getSheepInfo)
+	                        )
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        		.addComponent(sheepPosText)
+                        		.addComponent(sheepPos)
+	                        )
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(designSeperator)
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(hasAlarm)
+	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        		.addComponent(showMap)
+                        		.addComponent(mapAll)
+                        		.addComponent(mapSelected)
+                        		.addComponent(deleteMap)
+	                        )
+	                        .addGap(20)
+	                        .addComponent(designSeperator2)
+	                        .addGap(20)
+	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+	                        		.addComponent(newSheep)
+	                        		.addComponent(addSheep)
+	                        		.addComponent(deleteSheep)
+	                        )
+	                        .addGap(0, 300, Short.MAX_VALUE)
 						)
-						.addContainerGap()
+						.addComponent(listScrollPane)
+					)
+					.addContainerGap()
 				)
 			)
 		);
@@ -468,30 +453,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
-	/**
-	 * Listener for the "hide omr�de"-button 
-	 * @author Thomas Mathisen
-	 */
-	class hideAreaListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			programFrame.getMapPanel().removePoly();
-		}
-	}
-	
-	/**
-	 * Listener for the "Vis-omr�de"-button 
-	 * @author Thomas Mathisen
-	 */
-	class showAreaListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			programFrame.getMapPanel().addPoly();
-			programFrame.getJTabbedPane().setSelectedIndex(2);
-		}
-	}
 	
 	/**
 	 * Listener for the "Slett alle på kart"-button 

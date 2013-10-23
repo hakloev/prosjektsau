@@ -9,7 +9,6 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 <script type="text/javascript">
 
 		  var farmerArea;
-		  
  
 		  function StatkartMapType(name, layer) {
 			  this.layer = layer
@@ -35,11 +34,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		  function initialize() {
 		    var mapOptions = {
 		      zoom: 9,
-<<<<<<< HEAD
-		      center: new google.maps.LatLng(62.00745, 9.56686),
-=======
-		      center: new google.maps.LatLng(61.981558,9.758177),
->>>>>>> master
+		      center: new google.maps.LatLng(62.32000, 9.06686),
 			  streetViewControl: false,
 		      mapTypeControlOptions: {
 		        mapTypeIds: ['topo2', 'topo2graatone'],
@@ -68,11 +63,11 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
   			// Construct the polygon.
   			farmerArea = new google.maps.Polygon({
   			paths: triangleCoords,
-    		strokeColor: '#212FFF',
+    		strokeColor: '#FF0000',
     		strokeOpacity: 0.8,
     		strokeWeight: 2,
-    		fillColor: '#21AAFF',
-    		fillOpacity: 0.1
+    		fillColor: '#FF0000',
+    		fillOpacity: 0.15
   			});
 
   			farmerArea.setMap(map);
@@ -86,73 +81,13 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 	
 	
 		 function addMarker(title, lat, lng) {
-            //var marker = new google.maps.Marker({
-            //position: new google.maps.LatLng(lat, lng),
-            //map: map,
-            //title: title
-            //});
-            //markers.push(marker);
-            ////////////thomas fikser noe her senere//////
-
-            var image = {
-    		url: '../../resources/sheep_icon_pointy.gif',
-    		// This marker is 27 pixels wide by 28 pixels tall.
-    		size: new google.maps.Size(27, 28),
-    		// The origin for this image is 0,0.
-    		origin: new google.maps.Point(0,0),
-    		// The anchor for this image is the point of the arrow
-    		anchor: new google.maps.Point(15, 28)
-  			};
-  			
-  			//var shape = {Clickable area on icon.
-  			shape = {
-      		coord: [15,28, 6,19, 6,13, 0,4, 4,0, 10,2, 23,3, 27,7, 23,19, 15,28],
-      		type: 'poly'
-  			};
-  			
-  			var marker = new google.maps.Marker({
-        	position: new google.maps.LatLng(lat, lng),
-        	map: map,
-        	icon: image,
-        	shape: shape,
-    		});
-    		markers.push(marker);
-  			
+            var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            title: title
+            });
+            markers.push(marker);
         }
-        
-        
-      	function addTestSheep(){//////////////////////////////KUN TIL TEST///////////////
-        ////////////thomas fikser noe her senere//////
-       		
-       		//var image2 = '../../resources/sheep_icon_pointy.gif';
-       		var image2 = {
-    		url: '../../resources/sheep_icon_pointy.gif',
-    		// This marker is 27 pixels wide by 28 pixels tall.
-    		size: new google.maps.Size(27, 28),
-    		// The origin for this image is 0,0.
-    		origin: new google.maps.Point(0,0),
-    		// The anchor for this image is the point of the arrow
-    		anchor: new google.maps.Point(15, 28)
-  			};
-  			
-  			//var shape = {Clickable area on icon.
-  			shape = {
-      		coord: [15,28, 6,19, 6,13, 0,4, 4,0, 10,2, 23,3, 27,7, 23,19, 15,28],
-      		type: 'poly'
-  			};
-
-       		
-  			var sheepLatlng = new google.maps.LatLng(61.914897,9.851125);
- 			var sheepMarker = new google.maps.Marker({
-      		position: sheepLatlng,
-      		map: map,
-      		shape: shape,
-      		icon: image2
-  			});
-  			markers.push(sheepMarker);
-        }
-    
-        
 
 
 
@@ -183,9 +118,6 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     <div id="panel">
         <input onclick="showMarkers();" type=button value="Vis alle sauer">
         <input onclick="clearMarkers();" type=button value="Skjul alle sauer">
-        <input onclick="addPoly();" type=button value="Vis område">
-        <input onclick="removePoly();" type=button value="Skjul område">
-        <input onclick="addTestSheep();" type=button value="vis testsau @ Rondeslottet :)">
     </div>
   <div id="map_canvas" style="width:600px; height:400px"></div>
   <div style="width:600px;text-align:right"><a href="http://www.statkart.no">Statens kartverk</a>, 
