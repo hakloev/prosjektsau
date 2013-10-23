@@ -98,9 +98,15 @@ public class AlarmPanel extends JPanel{
 		sendAlarm.addActionListener(new SendMailListener());
 		list.addListSelectionListener(new ShowAlarmListener());
 		
-		// Alarms for testing
-		addAlarm(new Alarm(new Sheep(16, "Knut", 1994, this.programFrame.getUserPanel().getFarmer(), 64.2555, 11.44334), "Killed in Iraq"));
-		addAlarm(new Alarm(new Sheep(15, "Link", 1992, this.programFrame.getUserPanel().getFarmer(), 63.2555, 10.44334), "Killed in Action"));
+		// Alarms and sheeps for testing
+		Sheep sheep1 = new Sheep(16, "Knut", 1994, this.programFrame.getUserPanel().getFarmer(), 62.10745, 9.76686);
+		Sheep sheep2 = new Sheep(15, "Link", 1992, this.programFrame.getUserPanel().getFarmer(), 61.99745, 9.46686);
+		programFrame.getSheepPanel().addSheep(sheep1);
+		programFrame.getSheepPanel().addSheep(sheep2);
+		addAlarm(new Alarm(sheep1, "Killed in Action"));
+		addAlarm(new Alarm(sheep2, "Killed by a tourist bus from Germany"));
+		sheep1.setAlarmStatus(true);
+		sheep2.setAlarmStatus(true);
 	}
 	
 	private void initDesign() {
@@ -186,6 +192,7 @@ public class AlarmPanel extends JPanel{
 				changing = true;
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
+					alarmList.getElementAt(index).getSheep().setAlarmStatus(false);
 					alarmList.remove(index);
 					list.clearSelection();
 					clearAlarmSections();

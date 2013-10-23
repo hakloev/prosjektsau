@@ -14,6 +14,7 @@ public class Sheep {
 	private Farmer farmer;
 	private Position location = null;
 	private int pulse;
+	private boolean alarm;
 	
 	/**
 	 * 
@@ -30,6 +31,7 @@ public class Sheep {
 		setBirthYear(birthYear);
 		this.farmer = farmer;
 		setLocation(latitude, longitude);
+		this.alarm = false;
 	}
 
 	/**
@@ -130,6 +132,14 @@ public class Sheep {
 	 */
 	public boolean isDead() {
 		return (pulse < 1);
+	}
+
+	public void setAlarmStatus(boolean bool) {
+		alarm = bool;
+	}
+
+	public boolean getAlarmStatus() {
+		return alarm;
 	}
 
 	/**
