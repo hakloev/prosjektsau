@@ -439,7 +439,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 						JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må velge en sau for å legge den til", 
 								"Kartfeil", JOptionPane.WARNING_MESSAGE);
 					}
-				} else {
+				} else if (mapAll.isSelected() && (!sheepList.isEmpty())) {
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
 						if (sheep.getAlarmStatus()) {
@@ -450,6 +450,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 						map.addPoly();
 					}
 					programFrame.getJTabbedPane().setSelectedIndex(2);
+				} else {
+					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du har ingen sauer å vise i kartet!",
+							"Kartfeil", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		}
