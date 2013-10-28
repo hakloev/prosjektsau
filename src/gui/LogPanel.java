@@ -36,10 +36,12 @@ public class LogPanel extends JPanel{
 
 	public LogPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
-		
+
 		initElements();
 		initDesign();
 	}
+
+
 
 	private void initElements() {
 		layout = new GroupLayout(this);
@@ -114,5 +116,4 @@ public class LogPanel extends JPanel{
 				)
 		);	
 	}
-
 }
