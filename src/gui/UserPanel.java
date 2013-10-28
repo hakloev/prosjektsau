@@ -1,18 +1,34 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
+
+import characters.Farmer;
+import serverconnection.JsonHandler;
+import serverconnection.NetHandler;
+
+/**
+ * 
+ * @author Andreas Lyngby
+ * @author Håkon Ødegård Løvdal
+ */
 
 public class UserPanel extends JPanel {
 
@@ -37,6 +53,12 @@ public class UserPanel extends JPanel {
 	private JTextField firstName;
 	private JTextField lastName;
 	private JTextField farmerId;
+	
+	private NetHandler handler;
+	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
+	private final String wrongPw = "ERROR=Feil passord!";
+	private Farmer farmer;
+	
 	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -64,7 +86,11 @@ public class UserPanel extends JPanel {
 		passwordField.setMaximumSize(new Dimension(1000,20));
 		
 		js = new JSeparator();
+		
+		// Listeners
+		loginButton.addActionListener(new LoginListener());
 	}
+
 	
 	public void initDesign(){
 		layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -91,5 +117,98 @@ public class UserPanel extends JPanel {
 			.addComponent(loginButton)
 			.addComponent(js)
 		);
+	}
+	
+	
+	/**
+	 * Method that returns the farmer-object currently logged in
+	 * @return farmer
+	 */
+	public Farmer getFarmer() {
+		return this.farmer;
+	}
+	
+	// All listeners is implemented as classes that implements the ActionListener-interface
+	
+	/**
+	 * Listener for the EnterButton
+	 * @author Thomas Mathisen
+	 * 
+
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	
+	/**
+	 * Listener for the loginButton
+	 * @author Håkon Ødegård Løvdal
+	 * 
+	 */
+	class LoginListener implements ActionListener {		
+		/**
+		 * Method that checks if user is valid and logs in
+		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			handler = programFrame.getNetHandler();
+			String loginResult = handler.login(usernameField.getText(), 
+					new String(passwordField.getPassword()));
+			if (validUser(loginResult)) {
+				loginButton.setEnabled(false);
+				usernameField.setEditable(false);
+				passwordField.setEditable(false);
+				
+				// parse result json to create farmer
+				// set user hash
+				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+				handler.setUserCode(farmer.getHash());
+				
+				// Initiate sheeps
+				programFrame.getSheepPanel().initUserSheeps();
+				
+				// Activate other tabs
+				programFrame.getJTabbedPane().setEnabledAt(1, true);
+				programFrame.getJTabbedPane().setEnabledAt(2, true);
+				programFrame.getJTabbedPane().setEnabledAt(3, true);
+				programFrame.getJTabbedPane().setEnabledAt(4, true);
+
+				// Set panel to SheepPanel
+				programFrame.getJTabbedPane().setSelectedIndex(1); 
+			} 
+		}
+		
+		/**
+		 * Method to check with database that user is valid
+		 * 
+		 * @param loginStatus
+		 * @return boolean
+		 */
+		private boolean validUser(String loginStatus) {
+			if (loginStatus.equals(wrongPw)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil passord!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else if (loginStatus.equals(wrongUser)) {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn!\nPrøv på nytt", 
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
 	}
 }

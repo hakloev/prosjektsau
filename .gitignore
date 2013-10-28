@@ -1,9 +1,24 @@
 # Java class filer
 /bin
 *.class
+/out
+
+#IntelliJ project files
+.idea
+prosjektsau.iml
+
+# Eclipse workspace on loevdal.local
+/ec_prosjekt1
 
 #Eclipse project files
 .classpath
 .project
 
+#IntelliJ project files
+.idea
+prosjektsau.iml
+
 .settings
+
+#For all who hates DS_Store
+.DS_Store

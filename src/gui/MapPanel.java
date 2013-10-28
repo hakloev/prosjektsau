@@ -1,31 +1,30 @@
 package gui;
 
+import utils.Constants;
+
 import javax.swing.JPanel;
 
-import utils.Constants;
+import com.sun.javafx.application.PlatformImpl;
+
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebViewBuilder;
 
-
 /**
  * Class to generate map-panel
- * 
  * @author Håkon Ødegård Løvdal
  */
 public class MapPanel extends JPanel {
-	
+
 	private ProgramFrame programFrame;
+	private JFXPanel fxPanel;
 	private WebEngine webEngine;
 	private WebView webView;
-	
+
 	public MapPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initAndShowMap();
@@ -37,104 +36,142 @@ public class MapPanel extends JPanel {
 	 * 
 	 */
 	private void initAndShowMap() {
-		final JFXPanel fxPanel = new JFXPanel();
+		fxPanel = new JFXPanel();
+
+		PlatformImpl.startup(new Runnable() {
+
+			@Override
+			public void run() {
+				initFX();
+			}
+		});
+
 		add(fxPanel);
 		setSize(600, 400);
 		setVisible(true);
-		
-		Platform.runLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				initFX(fxPanel);
-			}
-		});
+
 	}
-	
+
 	/**
-	 * Initiates the JavaFX-panel. Takes the panel as an argument
+	 * Initiates the JavaFX-panel
 	 * 
-	 * @param fxPanel
 	 */
-	private void initFX(JFXPanel fxPanel) {
-		Scene scene = createScene();
+	private void initFX() {
+		Group root = new Group();
+		Scene scene = new Scene(root, 698, 500);
+		webView = WebViewBuilder.create().prefHeight(698).prefWidth(1500).build();
+		buildWebEngine(Constants.pathToHtml);
+		root.getChildren().add(webView);
 		fxPanel.setScene(scene);
-    }
-   
+	}
+
 	/**
-	 * Returns the scene inside the JavaFX-panel
-	 * 
-	 * @return scene
-	 */
-	private Scene createScene() {
-    	return new Scene(buildWebView(Constants.pathToHtml), 698, 450, Color.WHITE);
-    }
-	
-	/**
-	 * Builds and returns the WebEngine and WebView
+	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
 	 * 
-	 * @param url
-	 * @return webView
+	 * @param url URL path to the map.html-file
 	 */
-	private WebView buildWebView(String url) {
-	    webView = WebViewBuilder.create().prefHeight(480).prefWidth(640).build();
-	    webView.getEngine().javaScriptEnabledProperty().set(true); 
-		webView.getEngine().load(MapPanel.class.getResource(url).toExternalForm());
+	private void buildWebEngine(String url) {
 		webEngine = webView.getEngine();
-	    return webView;
+		webEngine.javaScriptEnabledProperty().set(true); 
+		webEngine.load(MapPanel.class.getResource(url).toExternalForm());
+
 	}
-	
+
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
 	 * 
-	 * @param title
-	 * @param lat
-	 * @param lng
+	 * @param title Sheeps nickname
+	 * @param lat latiude position
+	 * @param lng longtiude position
 	 */
-	protected void addMarker(final String title,final double lat, final double lng){
+	public void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				webEngine.getLoadWorker().stateProperty().addListener(
-						new ChangeListener<State>(){
-							public void changed(ObservableValue ov, State oldState, State newState){
-								if(newState == State.SUCCEEDED){
-									webEngine.executeScript("addMarker('" + title + "', " + lat + ", " + lng + ")");
-								}
-							}
-						}
-					);
+				webEngine.executeScript("addMarker('" + title + "', " + lat + ", " + lng + ")");
 			}
 		});
 	}
-	
+
+	/**
+	 * Adds a polygon to the map, by calling a JavaScript in map.html
+	 * 
+	 * @author Thomas
+	 */
+	public void addPoly() {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				webEngine.executeScript("addPoly()");
+			}
+		});
+	}
+
+
+	/**
+	 * Removes polygon from map by calling a JavaScript in map.html
+	 * 
+	 * @author Thomas
+	 */
+	public void removePoly() {
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				webEngine.executeScript("removePoly()");
+			}
+		});
+	}
+
+
+	/**
+	 * Deletes all markers from the map by calling a JavaScript in map.html
+	 * 
+	 */
 	protected void deleteMarkers() {
 		Platform.runLater(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				webEngine.getLoadWorker().stateProperty().addListener(
-						new ChangeListener<State>(){
-							public void changed(ObservableValue ov, State oldState, State newState){
-								if(newState == State.SUCCEEDED){
-									webEngine.executeScript("deleteMarkers()");
-								}
-							}
-						}
-						);
+				webEngine.executeScript("deleteMarkers()");
 			}
 		});
 	}
+
 	
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//		
-//		@Override
-//		public void run() {
-//			MapPanel p = new MapPanel();
-//		}
-//	});
- //  }
+	/**
+	 * Deletes all markers from the map by calling a JavaScript in map.html
+	 * 
+	 */
+	public void addTestSheep() {///////////////////////////////////////////////////KUN TIL TEST////////////////////////
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				webEngine.executeScript("addTestSheep()");
+			}
+		});
+	}
+
+
+
+	/**
+	 * Main method for testing 
+	 * 
+	 * @param String[] args
+	 */
+	//	public static void main(String[] args) {
+	//		SwingUtilities.invokeLater(new Runnable() {
+	//		
+	//		@Override
+	//		public void run() {
+	//			MapPanel p = new MapPanel();
+	//		}
+	//	});
+	//   }
+
 }
+
