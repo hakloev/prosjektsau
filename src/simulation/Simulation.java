@@ -83,7 +83,7 @@ public class Simulation {
 				}
 				
 				//Check if current sheep should get infected
-				if (!currentSheep.isInfected() && simHasDisease){
+				if (!currentSheep.isInfected() && simHasDisease && !currentSheep.isDead()){
 					ArrayList<Sheep> newlyInfected = new ArrayList<Sheep>();
 					for (Sheep infSheep : infectedSheep){
 						if ((distanceBetween(currentSheep, infSheep) < currentDisease.getSpreadDistance()) && (rand.nextInt(100) < currentDisease.getSpreadChance())){
@@ -174,6 +174,14 @@ public class Simulation {
 		daysOfDisease = 0;
 		currentDisease = new Disease(rand.nextDouble(), rand.nextInt(20), rand.nextInt(10), rand.nextInt(5), rand.nextInt(20));
 		int breakoutSheepIndex = rand.nextInt(sheepList.size());
+		int numberoftries = 0;
+		while (sheepList.get(breakoutSheepIndex).isDead() && numberoftries < 10){
+			breakoutSheepIndex = rand.nextInt(sheepList.size());
+			numberoftries ++;
+			if (numberoftries >= 10){
+				return;
+			}
+		}
 		infectedSheep.add(sheepList.get(breakoutSheepIndex));
 		infectSheep(breakoutSheepIndex, currentDisease);
 	}
