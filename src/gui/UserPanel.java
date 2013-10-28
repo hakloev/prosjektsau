@@ -6,21 +6,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 
 import characters.Farmer;
+import characters.Sheep;
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 
@@ -34,9 +40,13 @@ public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
 	
-	private static DefaultListModel test2 = null;
-
+	private ArrayList<ArrayList<Integer[]>> areaList;
+	private JComboBox areaBox;
+	private JLabel areaBoxText;
+	
 	private JButton loginButton;
+	private JButton addArea;
+	private JButton editArea;
 	
 	private JTextField usernameField;
 	private JPasswordField passwordField;
@@ -45,20 +55,23 @@ public class UserPanel extends JPanel {
 	private GroupLayout layout;
 	
 	private JSeparator js;
+	private JSeparator js1;
 	
 	private JLabel firstNameText;
 	private JLabel lastNameText;
 	private JLabel farmerIdText;
+	private JLabel farmerEmailText;
 	
 	private JTextField firstName;
 	private JTextField lastName;
 	private JTextField farmerId;
+	private JTextField farmerEmail;
 	
 	private NetHandler handler;
 	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
 	private final String wrongPw = "ERROR=Feil passord!";
 	private Farmer farmer;
-	
+
 	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -74,6 +87,8 @@ public class UserPanel extends JPanel {
         layout.setAutoCreateContainerGaps(true);
 		
 		loginButton = new JButton("Logg inn");
+		addArea = new JButton("Legg til område");
+		editArea = new JButton("Endre område");
 		
 		usernameText = new JLabel("Brukernavn:");
 		passwordText = new JLabel("Password:");
@@ -86,6 +101,20 @@ public class UserPanel extends JPanel {
 		passwordField.setMaximumSize(new Dimension(1000,20));
 		
 		js = new JSeparator();
+		js1 = new JSeparator();
+		
+		areaBoxText = new JLabel("Områder:");
+		areaList = new ArrayList<ArrayList<Integer[]>>();
+		
+		areaBox = new JComboBox(areaList.toArray());
+		areaBox.setMinimumSize(new Dimension(120,20));
+		areaBox.setMaximumSize(new Dimension(120,20));
+		
+		farmerEmailText = new JLabel("E-mail:");
+		farmerEmail = new JTextField();
+		farmerEmail.setMinimumSize(new Dimension(100,20));
+		farmerEmail.setPreferredSize(new Dimension(100,20));
+		farmerEmail.setMaximumSize(new Dimension(200,20));
 		
 		// Listeners
 		loginButton.addActionListener(new LoginListener());
@@ -104,21 +133,64 @@ public class UserPanel extends JPanel {
 					.addComponent(passwordText)
 					.addComponent(passwordField)
 				)
-				.addComponent(js)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(js)
+				)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addComponent(farmerEmailText)
+						.addComponent(farmerEmail)
+						
+					)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(js1)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addGroup(layout.createSequentialGroup()
+						.addComponent(areaBoxText)
+						.addComponent(areaBox)
+						.addComponent(editArea)
+						.addComponent(addArea)
+					)
+				)
 			)
 		);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-				.addComponent(usernameText)
-				.addComponent(usernameField)
-				.addComponent(passwordText)
-				.addComponent(passwordField)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(usernameText)
+						.addComponent(usernameField)
+						.addComponent(passwordText)
+						.addComponent(passwordField)
+					)
+					.addComponent(loginButton)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(js)
+					)
+					.addGroup(layout.createParallelGroup()
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(farmerEmailText)
+							.addComponent(farmerEmail)
+						)
+					)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(js1)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addGroup(layout.createSequentialGroup()
+							.addComponent(areaBoxText)
+							.addComponent(areaBox)
+						)
+						.addComponent(editArea)
+						.addComponent(addArea)
+					)
+					.addContainerGap()
+				)
 			)
-			.addComponent(loginButton)
-			.addComponent(js)
 		);
 	}
-	
 	
 	/**
 	 * Method that returns the farmer-object currently logged in
@@ -176,6 +248,8 @@ public class UserPanel extends JPanel {
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
 				handler.setUserCode(farmer.getHash());
 				
+				//Get farmer info
+				farmerEmail.setText(farmer.getEmail());
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps();
 				
