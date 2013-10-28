@@ -83,7 +83,7 @@ public class Simulation {
 				}
 				
 				//Check if current sheep should get infected
-				if (!currentSheep.isInfected() && simHasDisease && !currentSheep.isDead()){
+				if (!currentSheep.isInfected() && simHasDisease){
 					ArrayList<Sheep> newlyInfected = new ArrayList<Sheep>();
 					for (Sheep infSheep : infectedSheep){
 						if ((distanceBetween(currentSheep, infSheep) < currentDisease.getSpreadDistance()) && (rand.nextInt(100) < currentDisease.getSpreadChance())){
