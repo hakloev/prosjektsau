@@ -73,8 +73,8 @@ public class NetHandler {
 
 			data = getStringFromResponse(response);
 		} 
-	    catch (ClientProtocolException e) 	{ e.printStackTrace(); } 
-	    catch (IOException e) 				{ e.printStackTrace(); }
+	    catch (ClientProtocolException e) 	{ e.printStackTrace();  }
+	    catch (IOException e) 				{ e.printStackTrace();  }
 
 		return data;
 	}

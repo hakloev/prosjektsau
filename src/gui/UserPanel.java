@@ -55,8 +55,8 @@ public class UserPanel extends JPanel {
 	private JTextField farmerId;
 	
 	private NetHandler handler;
-	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
-	private final String wrongPw = "ERROR=Feil passord!";
+	private final String wrongUser = "Brukernavnet eksisterer ikke.";
+	private final String wrongPw = "Feil passord.";
 	private Farmer farmer;
 	
 	
@@ -166,6 +166,7 @@ public class UserPanel extends JPanel {
 			handler = programFrame.getNetHandler();
 			String loginResult = handler.login(usernameField.getText(), 
 					new String(passwordField.getPassword()));
+			System.out.println(loginResult);
 			if (validUser(loginResult)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
