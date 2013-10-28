@@ -41,7 +41,6 @@ public class Farmer
 	//Trenger exception handler
 	private void setEmail(String email) {
 		if(email.contains("@")){
-			System.out.println("email satt");
 			this.email = email;
 		}
 	}

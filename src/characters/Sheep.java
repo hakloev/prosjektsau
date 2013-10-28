@@ -1,5 +1,7 @@
 package characters;
 
+import simulation.Disease;
+
 /**
  * Class holding information about a sheep
  * @author Håkon Ødegård Løvdal
@@ -15,6 +17,7 @@ public class Sheep {
 	private Position location = null;
 	private int pulse;
 	private boolean alarm;
+	private boolean infected;
 	
 	/**
 	 * 
@@ -32,6 +35,7 @@ public class Sheep {
 		this.farmer = farmer;
 		setLocation(latitude, longitude);
 		this.alarm = false;
+		this.infected = false;
 	}
 
 	/**
@@ -152,4 +156,17 @@ public class Sheep {
 	public String toString() {
 		return "Sau-ID: " + sheepId + " (" + nick + ")";
 	}
+	
+	public boolean isInfected(){
+		return infected;
+	}
+	
+	public void innfect(){
+		infected = true;
+	}
+	
+	public void cure(){
+		infected = false;
+	}
+
 }
