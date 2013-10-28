@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import characters.Farmer;
 import characters.Sheep;
 
+/**
+ * 
+ * @author maxmelander
+ *
+ */
 public class Testsim {
 	
 	public static void main(String[] args){

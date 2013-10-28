@@ -96,7 +96,7 @@ public class Simulation {
 					}
 				}
 				//Causes health decrease based of current disease
-				if (currentSheep.isInfected() && (daysOfDisease > currentDisease.getIncubationPeriode())){
+				if (currentSheep.isInfected() && (daysOfDisease > currentDisease.getIncubationPeriod())){
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				previousUpdateTime = timeNow;
@@ -172,7 +172,7 @@ public class Simulation {
 	public void generateDisease(){
 		System.out.println("Disease generated");
 		daysOfDisease = 0;
-		currentDisease = new Disease(rand.nextDouble(), rand.nextInt(20), rand.nextInt(3), rand.nextInt(5), rand.nextInt(20));
+		currentDisease = new Disease(rand.nextDouble(), rand.nextInt(20), rand.nextInt(10), rand.nextInt(5), rand.nextInt(20));
 		int breakoutSheepIndex = rand.nextInt(sheepList.size());
 		infectedSheep.add(sheepList.get(breakoutSheepIndex));
 		infectSheep(breakoutSheepIndex, currentDisease);
