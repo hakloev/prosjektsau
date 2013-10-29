@@ -37,6 +37,7 @@ public class ProgramFrame extends JFrame {
 		handler = new NetHandler();
 		//jTabPane.setEnabled(false);
 	}
+	
 	/**
 	 * Initializes the program frame.
 	 */
