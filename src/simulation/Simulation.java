@@ -24,7 +24,7 @@ public class Simulation {
 	private Position sheepLocation;
 	public static final int EARTHRADIUS = 6378137;
 	public static final int MSINDAY = 86400000;
-	public static final int NUMBEROFUPDATESPERDAY = 30000;
+	public static final int NUMBEROFUPDATESPERDAY = 10000;
 	public static final int NEGATIVE = 0;
 	public static final int POSITIVE = 1;
 	private boolean simHasDisease;
@@ -38,7 +38,8 @@ public class Simulation {
 	 */
 	public Simulation() {
 		netHandler = new NetHandler();
-		//sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheep(-1));
+		netHandler.login("Simulering", "Simulering");
+		sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		rand = new Random();
 		this.infectedSheep = new ArrayList<Sheep>();
 		simHasDisease = false;
@@ -104,7 +105,7 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				previousUpdateTime = timeNow;
-				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse());
+				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() + " Name: " + currentSheep.getNick());
 			}
 			System.out.println("");
 			
