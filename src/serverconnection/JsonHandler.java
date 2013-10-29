@@ -19,7 +19,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Class to handle JsonObjects
- * @author Håkon Ødegård Løvdal
+ * @author H��kon ��deg��rd L��vdal
  */
 public class JsonHandler {
 
@@ -120,4 +120,5 @@ public class JsonHandler {
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
+
 }
