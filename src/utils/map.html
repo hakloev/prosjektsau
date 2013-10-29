@@ -51,18 +51,22 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
             
 		  }
 			
-			
-		 function addPolyFinal(arrayList){
+	
+		
+		 function addPoly(Cstring){
 			var polygonCoords = [];
-			for (var i = 0; i < arrayList.length; i+=2) {
-            	var tempCoord = new google.maps.LatLng(arrayList[i],arrayList[i+1]);
+			var array = Cstring.split(",");
+			for (var i = 0; i < array.length; i+=2) {
+				var tempLat = parseFloat(array[i]);
+				var tempLong = parseFloat(array[i+1]);
+            	var tempCoord = new google.maps.LatLng(tempLat,tempLong);
             	polygonCoords.push(tempCoord);
             }
 
   			// Construct the polygon.
   			farmerArea = new google.maps.Polygon({
   			paths: polygonCoords,
-    		strokeColor: '#212FFF',
+    		strokeColor: '#212FFF', //Orange:'#FF9300'
     		strokeOpacity: 0.8,
     		strokeWeight: 2,
     		fillColor: '#21AAFF',
@@ -72,30 +76,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		 
 		 }
 			
-		 function addPoly(){
-			// Define the LatLng coordinates for the polygon's path.
-  			var triangleCoords = [
-   			new google.maps.LatLng(62.219955, 9.555143),
-    		new google.maps.LatLng(62.075598, 9.139037),
-    		new google.maps.LatLng(61.828282, 9.518065),
-    		new google.maps.LatLng(62.134708, 10.005584),
-    		new google.maps.LatLng(62.219956, 9.555144)
-  			];
-  			// Construct the polygon.
-  			farmerArea = new google.maps.Polygon({
-  			paths: triangleCoords,
-    		strokeColor: '#FF9300',
-    		strokeOpacity: 0.9,
-    		strokeWeight: 3,
-    		fillColor: '#21AAFF',
-    		fillOpacity: 0.35
-  			});
-  			areas.push(farmerArea);
-
-		 }		
-		 
 		 function showAreas(){
-		 	addPoly();
+		 	//addPoly();
 		 	if (areas) {
     			for (i in areas) {
       			areas[i].setMap(map);
@@ -109,7 +91,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     			for (i in areas) {
     				areas[i].setMap(null);
     			}	
-    		areas.length = 0;
+    		//areas.length = 0;
   			}
 		 	//farmerArea.setMap(null);
 		 }

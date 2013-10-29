@@ -95,20 +95,27 @@ public class MapPanel extends JPanel {
 		});
 	}
 
+	
 	/**
-	 * Adds a polygon to the map, by calling a JavaScript in map.html
+	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
 	 * 
 	 * @author Thomas
 	 */
-	public void addPoly() {
+	public void addArea() {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
-				webEngine.executeScript("addPoly()");
+				
+				String yolo ="62.219955,9.555143,62.075598,9.139037,61.828282,9.518065,62.134708,10.005584,62.219956,9.555144";
+
+				webEngine.executeScript("addPoly('" + yolo + "')");
+				webEngine.executeScript("showAreas()");
 			}
 		});
 	}
+	
+	
 
 
 	/**
@@ -116,7 +123,7 @@ public class MapPanel extends JPanel {
 	 * 
 	 * @author Thomas
 	 */
-	public void removePoly() {
+	public void removePoly() {/////////////////////FUNGERER IKKE FORELØPIG, VENTER PÅ USER-P/////////////
 		Platform.runLater(new Runnable() {
 
 			@Override

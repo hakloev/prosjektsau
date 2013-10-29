@@ -452,7 +452,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
-						//map.addPoly();
+/////////////////////////////////////////////SKAL FJERNES SENERE (ADDPOLY)///////////////////////						
+						map.addArea();
 					}
 					programFrame.getJTabbedPane().setSelectedIndex(2);
 				} else {
