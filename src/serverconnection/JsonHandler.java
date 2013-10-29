@@ -24,9 +24,8 @@ public class JsonHandler {
 	
 	/**
 	 * Method to parse login-json and return a farmer object
-	 * 
 	 * @param jsonObject
-	 * @return
+	 * @return A Farmer-object
 	 */
 	public static Farmer parseJsonAndReturnUser(Response jsonObject) {
 		Map<String, JsonNode> farmerMap = new HashMap<String, JsonNode>();

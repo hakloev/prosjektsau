@@ -1,9 +1,11 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import utils.Constants;
-import serverconnection.Response;
 import serverconnection.NetHandler;
 
 import javax.swing.*;
@@ -11,8 +13,7 @@ import javax.swing.*;
 /**
  * @author Andreas Lynbgy
  */
-
-public class ProgramFrame extends JFrame{
+public class ProgramFrame extends JFrame {
 	
 	//Størrelsesvariabler for vinduet
 	public static Dimension windowSize;
@@ -45,11 +46,25 @@ public class ProgramFrame extends JFrame{
 		setPreferredSize(windowSize);
 		setMinimumSize(minWindowSize);
 		setMaximumSize(maxWindowSize);
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setSize(windowSize);
 		setTitle(Constants.title);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == 0) {
+					System.out.println("yes");
+					handler.logout();
+					System.exit(0);
+				}
+				System.out.println("no");
+			}
+		});
 	}
-	
+
+
+
 	/**
 	 * Return NetHandler-object
 	 * @return NetHandler-object
