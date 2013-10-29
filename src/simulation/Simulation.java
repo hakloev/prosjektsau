@@ -6,6 +6,9 @@ import java.util.Random;
 import characters.Position;
 import characters.Sheep;
 
+import serverconnection.JsonHandler;
+import serverconnection.NetHandler;
+
 /**
  * A simulation of sheep movement and wolf attacks
  * 
@@ -27,15 +30,16 @@ public class Simulation {
 	private boolean simHasDisease;
 	private Disease currentDisease;
 	private int daysOfDisease = 0;
+	private NetHandler netHandler;
 	
 	/**
 	 * The simulation constructor
-	 * @param sheepList The list of sheep that should be moving around and stuff
+	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
 	 */
-	public Simulation(ArrayList<Sheep> sheepList) {
-		//TODO: Getting the correct list from the database
+	public Simulation() {
+		netHandler = new NetHandler();
+		sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheepList());
 		rand = new Random();
-		this.sheepList = sheepList;
 		this.infectedSheep = new ArrayList<Sheep>();
 		simHasDisease = false;
 	}
@@ -205,5 +209,9 @@ public class Simulation {
 		else{
 			return latdist;
 		}
+	}
+	
+	public void addNewSheep(Sheep sheep){
+		sheepList.add(sheep);
 	}
 }

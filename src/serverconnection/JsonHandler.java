@@ -21,7 +21,6 @@ import org.codehaus.jackson.map.ObjectMapper;
  * Class to handle JsonObjects
  * @author Håkon Ødegård Løvdal
  */
-
 public class JsonHandler {
 
 	/**
@@ -96,9 +95,8 @@ public class JsonHandler {
 	
 	/**
 	 * Method to parse login-json and return a farmer object
-	 * 
 	 * @param jsonObject
-	 * @return a farmer-object
+	 * @return A Farmer-object
 	 */
 	public static Farmer parseJsonAndReturnUser(Response jsonObject) {
 		Map<String, JsonNode> farmerMap = new HashMap<String, JsonNode>();

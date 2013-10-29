@@ -163,7 +163,7 @@ public class UserPanel extends JPanel {
 				// Set panel to SheepPanel
 				programFrame.getJTabbedPane().setSelectedIndex(1); 
 			} else {
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), handler.getLastError() + "\nPrøv på nytt",
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
 					"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
