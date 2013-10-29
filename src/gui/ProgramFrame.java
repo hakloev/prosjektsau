@@ -2,8 +2,9 @@ package gui;
 
 import java.awt.Dimension;
 
-import serverconnection.NetHandler;
 import utils.Constants;
+import serverconnection.Response;
+import serverconnection.NetHandler;
 
 import javax.swing.*;
 

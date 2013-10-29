@@ -1,7 +1,7 @@
 package serverconnection;
 
 import characters.Farmer;
-import characters.Sheep;
+import serverconnection.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+
 
 /**
  * Class to handle JsonObjects
@@ -27,13 +28,13 @@ public class JsonHandler {
 	 * @param jsonObject
 	 * @return
 	 */
-	public static Farmer parseJsonAndReturnUser(String jsonObject) {
+	public static Farmer parseJsonAndReturnUser(Response jsonObject) {
 		Map<String, JsonNode> farmerMap = new HashMap<String, JsonNode>();
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getJsonFactory();
-			JsonParser parser = factory.createJsonParser(jsonObject);
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
 			JsonNode input = mapper.readTree(parser);
 			
 			Iterator<Entry<String, JsonNode>> nodeIterator = input.getFields();
@@ -47,6 +48,6 @@ public class JsonHandler {
 			e.printStackTrace();
 		}
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
-				farmerMap.get("username").getTextValue(), "hakloev@gmail.com");
+				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
 }

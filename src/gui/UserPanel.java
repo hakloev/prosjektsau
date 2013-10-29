@@ -3,11 +3,8 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.io.IOException;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -16,13 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
-import javax.swing.border.TitledBorder;
 
 import characters.Farmer;
-import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
+import serverconnection.Response;
+import serverconnection.JsonHandler;
 
 /**
  * 
@@ -130,26 +126,6 @@ public class UserPanel extends JPanel {
 	
 	// All listeners is implemented as classes that implements the ActionListener-interface
 	
-	/**
-	 * Listener for the EnterButton
-	 * @author Thomas Mathisen
-	 * 
-
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	
 	
 	/**
 	 * Listener for the loginButton
@@ -164,22 +140,20 @@ public class UserPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			handler = programFrame.getNetHandler();
-			String loginResult = handler.login(usernameField.getText(), 
+			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
-			System.out.println(loginResult);
-			if (validUser(loginResult)) {
+			System.out.println(loginResult.msg);
+			if (!handler.isError(loginResult.msg)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
 				
 				// parse result json to create farmer
-				// set user hash
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
-				handler.setUserCode(farmer.getHash());
 				
 				// Initiate sheeps
-				programFrame.getSheepPanel().initUserSheeps();
-				
+				//programFrame.getSheepPanel().initUserSheeps(//tar inn Response);
+
 				// Activate other tabs
 				programFrame.getJTabbedPane().setEnabledAt(1, true);
 				programFrame.getJTabbedPane().setEnabledAt(2, true);
@@ -188,28 +162,10 @@ public class UserPanel extends JPanel {
 
 				// Set panel to SheepPanel
 				programFrame.getJTabbedPane().setSelectedIndex(1); 
-			} 
-		}
-		
-		/**
-		 * Method to check with database that user is valid
-		 * 
-		 * @param loginStatus
-		 * @return boolean
-		 */
-		private boolean validUser(String loginStatus) {
-			if (loginStatus.equals(wrongPw)) {
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil passord!\nPrøv på nytt", 
-						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
-				return false;
-			} else if (loginStatus.equals(wrongUser)) {
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Feil brukernavn!\nPrøv på nytt", 
-						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
-				return false;
 			} else {
-				return true;
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), handler.getLastError() + "\nPrøv på nytt",
+					"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
-		
 	}
 }
