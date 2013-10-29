@@ -21,7 +21,7 @@ public class Testsim {
 			sheeplist.add(sheep);
 		}
 		
-		Simulation sim = new Simulation(sheeplist);
+		Simulation sim = new Simulation();
 		sim.runSimulation();
 		
 	}

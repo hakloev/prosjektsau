@@ -38,7 +38,7 @@ public class Simulation {
 	 */
 	public Simulation() {
 		netHandler = new NetHandler();
-		sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheepList());
+		//sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheep(-1));
 		rand = new Random();
 		this.infectedSheep = new ArrayList<Sheep>();
 		simHasDisease = false;
