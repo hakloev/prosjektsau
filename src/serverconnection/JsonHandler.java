@@ -49,7 +49,7 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
 				farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
 
 	}
@@ -63,6 +63,9 @@ public class JsonHandler {
 	 */
 	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject, Farmer farmer) {
 		ArrayList<Sheep> listOfSheeps = new ArrayList<Sheep>();
+		if (jsonObject.msg.equals("Sau ikke funnet: ")) {
+				return new ArrayList<Sheep>();
+		}
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -79,7 +82,7 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					sheepMap.put(entry.getKey(), entry.getValue());
 				}
-				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
 						farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
 				listOfSheeps.add(s);
 			}

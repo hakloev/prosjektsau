@@ -21,11 +21,10 @@ import serverconnection.Response;
 import serverconnection.JsonHandler;
 
 /**
- * 
+ * Class holding the user information and login
  * @author Andreas Lyngby
  * @author Håkon Ødegård Løvdal
  */
-
 public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
@@ -142,13 +141,12 @@ public class UserPanel extends JPanel {
 			handler = programFrame.getNetHandler();
 			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
-			System.out.println(loginResult.msg);
 			if (!handler.isError(loginResult.msg)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
 				
-				// parse result json to create farmer
+				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
 				
 				// Initiate sheeps

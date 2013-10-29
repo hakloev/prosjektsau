@@ -54,11 +54,9 @@ public class ProgramFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == 0) {
-					System.out.println("yes");
 					handler.logout();
 					System.exit(0);
 				}
-				System.out.println("no");
 			}
 		});
 	}

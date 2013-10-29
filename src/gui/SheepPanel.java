@@ -328,8 +328,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	public void initUserSheeps(Response listOfSheeps) {
 		ArrayList<Sheep> sheeps = JsonHandler.parseJsonAndReturnSheepList(listOfSheeps, programFrame.getUserPanel().getFarmer());
-		for (Sheep s : sheeps) {
-			addSheep(s);
+		if (!sheeps.isEmpty()) {
+			for (Sheep s : sheeps) {
+				addSheep(s);
+			}
 		}
 	}
 
@@ -398,7 +400,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
-						sheepWeight.setText("Vi bruker ikke vekt, right?");
+						sheepWeight.setText(Integer.toString(sheep.getWeight()));
 						sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
 						if (sheep.getAlarmStatus()) {
 							hasAlarm.setText("Har alarm: JA");
@@ -515,7 +517,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					// generete id funksjon? Hash?
 
 					// genere sauer i en lignede metode som updateSheep()??
-					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()),
+					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
 					sheepList.addElement(sheep);
 					creatingNewSheep = false;
