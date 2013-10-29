@@ -1,9 +1,11 @@
 package serverconnection;
 
 import characters.Farmer;
+import characters.Sheep;
 import serverconnection.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,8 +21,77 @@ import org.codehaus.jackson.map.ObjectMapper;
  * Class to handle JsonObjects
  * @author H��kon ��deg��rd L��vdal
  */
-
 public class JsonHandler {
+
+	/**
+	 * Method to parse sheep-json and return a sheep object
+	 *
+	 * @param jsonObject
+	 * @return A SheepObject
+	 */
+	public static Sheep parseJsonAndReturnSheep(Response jsonObject, Farmer farmer) {
+		Map<String, JsonNode> sheepMap = new HashMap<String, JsonNode>();
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+
+			JsonNode sheep = input.get("1");  // Get sheep from JsonObject
+			Iterator<Entry<String, JsonNode>> nodeIterator = sheep.getFields();
+			while (nodeIterator.hasNext()) {
+				Entry<String, JsonNode> entry = nodeIterator.next();
+				sheepMap.put(entry.getKey(), entry.getValue());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+				farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
+
+	}
+
+	/**
+	 * Method to parse sheep-list and return sheepObjects
+	 *
+	 * @param jsonObject
+	 * @param farmer
+	 * @return ArrayList of sheeps
+	 */
+	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject, Farmer farmer) {
+		ArrayList<Sheep> listOfSheeps = new ArrayList<Sheep>();
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+
+			int count = input.get("count").asInt();
+			for (int i = 1; i <= count; i++) {
+				Map<String, JsonNode> sheepMap = new HashMap<String, JsonNode>();
+				JsonNode sheep = input.get(Integer.toString(i));
+				Iterator<Entry<String, JsonNode>> nodeIterator = sheep.getFields();
+				while (nodeIterator.hasNext()) {
+					Entry<String, JsonNode> entry = nodeIterator.next();
+					sheepMap.put(entry.getKey(), entry.getValue());
+				}
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+						farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
+				listOfSheeps.add(s);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listOfSheeps;
+	}
+
+
 	
 	/**
 	 * Method to parse login-json and return a farmer object

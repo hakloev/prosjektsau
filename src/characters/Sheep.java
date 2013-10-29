@@ -28,11 +28,12 @@ public class Sheep {
 	 * @param latitude Latitude position of the sheep
 	 * @param longitude Longitude position of the sheep
 	 */
-	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, double latitude, double longitude) {
+	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, int pulse, double latitude, double longitude) {
 		this.sheepId = sheepId;
 		setNick(nick);
 		setBirthYear(birthYear);
 		this.farmer = farmer;
+		this.pulse = pulse;
 		setLocation(latitude, longitude);
 		this.alarm = false;
 		this.infected = false;
