@@ -34,7 +34,6 @@ import serverconnection.Response;
  * @author Andreas Lyngby
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
- * 
  */
 
 public class SheepPanel extends JPanel implements ItemListener{
@@ -378,10 +377,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	// All the button listeners, implemented as classes with listener-interfaces
 	
 	/**
-	 * 
 	 * Listener for what sheep is currently marked in the sheepList
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	class ListListener implements ListSelectionListener {
 
@@ -601,6 +598,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 
+	/**
+	 * Listener for the "Slett sau"-button
+	 * @author Håkon Ødegård Løvdal
+	 */
 	class DeleteSheepListener implements ActionListener {
 
 		@Override
