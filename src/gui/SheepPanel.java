@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import serverconnection.JsonHandler;
 import characters.Sheep;
 import serverconnection.Alarm;
+import serverconnection.Response;
 
 /**
  * Class to show and edit sheeps
@@ -324,10 +325,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Method called when user is logged in, adds all the sheep that the current user owns
 	 * Should take a parameter userId or something like that.
 	 */
-	public void initUserSheeps() {
+	public void initUserSheeps(Response listOfSheeps) {
 		// skal spørre etter alle sauer, her henter den standard sauen fra test json
 		// for loop ellerno lignende
 		// ADD ALL SHEEPS TO SHEEPLIST
+		System.out.println(listOfSheeps.msg);
 	}
 
 	public void addSheep(Sheep sheep) {
