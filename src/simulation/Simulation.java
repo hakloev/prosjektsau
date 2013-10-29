@@ -210,4 +210,8 @@ public class Simulation {
 			return latdist;
 		}
 	}
+	
+	public void addNewSheep(Sheep sheep){
+		sheepList.add(sheep);
+	}
 }
