@@ -9,6 +9,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 <script type="text/javascript">
 
 		  var farmerArea;
+		  var areas = [];
 		  
  
 		  function StatkartMapType(name, layer) {
@@ -51,6 +52,28 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		  }
 			
 			
+		 function addPolyFinal(arrayList){
+			//coordinates [];
+			var polygonCoords = [];
+			for (var i = 0; i < arrayList.length; i+=2) {
+            	var tempCoord = new google.maps.LatLng(arrayList[i],arrayList[i+1]);
+            	polygonCoords.push(tempCoord);
+            }
+
+  			// Construct the polygon.
+  			farmerArea = new google.maps.Polygon({
+  			paths: polygonCoords,
+    		strokeColor: '#212FFF',
+    		strokeOpacity: 0.8,
+    		strokeWeight: 2,
+    		fillColor: '#21AAFF',
+    		fillOpacity: 0.1
+  			});
+			
+  			farmerArea.setMap(map);
+		 
+		 }
+			
 		 function addPoly(){
 			// Define the LatLng coordinates for the polygon's path.
   			var triangleCoords = [
@@ -60,8 +83,10 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     		new google.maps.LatLng(62.134708, 10.005584),
     		new google.maps.LatLng(62.219956, 9.555144)
   			];
+  			
 
   			// Construct the polygon.
+  			
   			farmerArea = new google.maps.Polygon({
   			paths: triangleCoords,
     		strokeColor: '#212FFF',
@@ -70,13 +95,33 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     		fillColor: '#21AAFF',
     		fillOpacity: 0.1
   			});
-
-  			farmerArea.setMap(map);
+  			areas.push(farmerArea);
+			
+			
+    		
+  			
 		 
 		 }		
+		 
+		 function showAreas(){
+		 	addPoly();
+		 	if (areas) {
+    			for (i in areas) {
+      			areas[i].setMap(map);
+    			}	
+  			}
+		 }
+		 
+		
 		 	
 		 	
 		 function removePoly(){
+		 	if (areas) {
+    			for (i in areas) {
+    				areas[i].setMap(null);
+    			}	
+    		areas.length = 0;
+  			}
 		 	farmerArea.setMap(null);
 		 }
 	
@@ -189,8 +234,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     <div id="panel">
         <input onclick="showMarkers();" type=button value="Vis alle sauer">
         <input onclick="clearMarkers();" type=button value="Skjul alle sauer">
-        <input onclick="addPoly();" type=button value="Vis område">
-        <input onclick="removePoly();" type=button value="Skjul område">
+        <input onclick="showAreas();" type=button value="Vis omrï¿½de">
+        <input onclick="removePoly();" type=button value="Skjul omrï¿½de">
         <input onclick="addTestSheep();" type=button value="vis testsau @ Rondeslottet :)">
     </div>
   <div id="map_canvas" style="width:600px; height:400px"></div>
