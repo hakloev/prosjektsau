@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -325,12 +327,16 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Should take a parameter userId or something like that.
 	 */
 	public void initUserSheeps(Response listOfSheeps) {
-		// skal spørre etter alle sauer, her henter den standard sauen fra test json
-		// for loop ellerno lignende
-		// ADD ALL SHEEPS TO SHEEPLIST
-		System.out.println(listOfSheeps.msg);
+		ArrayList<Sheep> sheeps = JsonHandler.parseJsonAndReturnSheepList(listOfSheeps, programFrame.getUserPanel().getFarmer());
+		for (Sheep s : sheeps) {
+			addSheep(s);
+		}
 	}
 
+	/**
+	 * Method to add sheep to sheepList
+	 * @param sheep
+	 */
 	public void addSheep(Sheep sheep) {
 		sheepList.addElement(sheep);
 	}
@@ -510,7 +516,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 					// genere sauer i en lignede metode som updateSheep()??
 					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()),
-							programFrame.getUserPanel().getFarmer(), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
+							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
 					sheepList.addElement(sheep);
 					creatingNewSheep = false;
 					setEditable(false);

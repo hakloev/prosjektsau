@@ -152,7 +152,7 @@ public class UserPanel extends JPanel {
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
 				
 				// Initiate sheeps
-				//programFrame.getSheepPanel().initUserSheeps(//tar inn Response);
+				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
 
 				// Activate other tabs
 				programFrame.getJTabbedPane().setEnabledAt(1, true);
