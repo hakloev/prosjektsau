@@ -26,6 +26,7 @@ import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 
 import characters.Farmer;
+import characters.Node;
 import characters.Sheep;
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
@@ -40,7 +41,7 @@ public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
 	
-	private ArrayList<ArrayList<Integer[]>> areaList;
+	private ArrayList<ArrayList<Node>> areaList;
 	private JComboBox areaBox;
 	private JLabel areaBoxText;
 	
@@ -71,10 +72,10 @@ public class UserPanel extends JPanel {
 	private final String wrongUser = "ERROR=Brukernavnet eksisterer ikke.";
 	private final String wrongPw = "ERROR=Feil passord!";
 	private Farmer farmer;
-
 	
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
+		
 		initElements();
 		initDesign();
 	}
@@ -104,7 +105,7 @@ public class UserPanel extends JPanel {
 		js1 = new JSeparator();
 		
 		areaBoxText = new JLabel("Omr�der:");
-		areaList = new ArrayList<ArrayList<Integer[]>>();
+		areaList = new ArrayList<ArrayList<Node>>();
 		
 		areaBox = new JComboBox(areaList.toArray());
 		areaBox.setMinimumSize(new Dimension(120,20));
@@ -118,6 +119,8 @@ public class UserPanel extends JPanel {
 		
 		// Listeners
 		loginButton.addActionListener(new LoginListener());
+		addArea.addActionListener(new AddAreaListener(this));
+		editArea.addActionListener(new EditAreaListener(this));
 	}
 
 	
@@ -221,13 +224,55 @@ public class UserPanel extends JPanel {
 		}
 		
 	}
+	*/
 	
+	public void setAreaOpenable(boolean bool){
+		addArea.setEnabled(bool);
+		editArea.setEnabled(bool);
+	}
+	
+	public void addArea(ArrayList<Node> list){
+		areaBox.addItem(list);
+	}
+	
+	class AddAreaListener implements ActionListener{
+		
+		private UserPanel panel;
+		
+		public AddAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new AreaEditFrame(panel.programFrame, null);
+			panel.setAreaOpenable(false);
+		}
+	}
+	
+	class EditAreaListener implements ActionListener{
+		private UserPanel panel;
+		
+		public EditAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ArrayList<Node> temp = (ArrayList<Node>)panel.areaBox.getItemAt(panel.areaBox.getSelectedIndex());
+			if(panel.areaBox.getItemCount()!=0){
+				panel.areaBox.remove(panel.areaBox.getSelectedIndex());
+			}
+			new AreaEditFrame(panel.programFrame,temp);
+			panel.setAreaOpenable(false);
+		}
+	}
 	
 	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
 	 * 
-	 */
+	 */ 
 	class LoginListener implements ActionListener {		
 		/**
 		 * Method that checks if user is valid and logs in

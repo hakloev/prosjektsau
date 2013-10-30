@@ -1,6 +1,11 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -8,20 +13,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+
+import characters.Node;
 
 public class AreaEditFrame extends JFrame{
 
 
-	private JList<Integer[]> list;
-	private DefaultListModel<Integer[]> vertList;
+	private JList<Node> list;
+	private DefaultListModel<Node> vertList;
 	private JScrollPane listScrollPane;
 	
 	private JButton addToList;
 	private JButton deleteFromList;
-	private JButton addArea;
+	private JButton createArea;
 	
 	private JLabel longitudeText;
 	private JLabel latitudeText;
@@ -29,26 +36,67 @@ public class AreaEditFrame extends JFrame{
 	private JTextField latitude; //Breddegrad
 	
 	private GroupLayout layout;
+	private JPanel contentPanel;
 	
-	public AreaEditFrame() {
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	private ProgramFrame frame;
+	private ArrayList<Node> areaList;
+	
+	/*public static void main(String[] args){
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new AreaEditFrame(true, new ArrayList<Node>());
+			}
+		});
+	}*/
+	
+	
+	public AreaEditFrame(ProgramFrame frame, ArrayList<Node> list) {
+		this.frame = frame;  
+		this.areaList = list;
+		this.setVisible(true);
+		this.setResizable(false);
+		
+		this.addWindowListener(new WAdapter(this, frame));
+		
 		initElements();
 		initDisplay();
+		
+		this.pack();
 	}
 
 	private void initElements() {
-		layout = new GroupLayout(this);
-		setLayout(layout);
+		layout = new GroupLayout(this.getContentPane());
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-		vertList = new DefaultListModel<Integer[]>();
+		vertList = new DefaultListModel<Node>();
+		if(areaList != null){
+			for(Node a : areaList){
+				vertList.addElement(a);
+			}
+		}else{
+			areaList = new ArrayList<Node>();
+		}
 		list = new JList(vertList);
 		listScrollPane = new JScrollPane(list);
+		listScrollPane.setMinimumSize(new Dimension(100,100));
+		listScrollPane.setMaximumSize(new Dimension(100,300));
 		
 		addToList = new JButton("Legg til punkt");
+		addToList.setMinimumSize(new Dimension(100,20));
+		addToList.setPreferredSize(new Dimension(100,20));
+		addToList.setMaximumSize(new Dimension(200,20));
+		addToList.setName("add");
 		deleteFromList = new JButton("Slett punkt");
-		addArea = new JButton("Lag område");
+		deleteFromList.setMinimumSize(new Dimension(100,20));
+		deleteFromList.setPreferredSize(new Dimension(100,20));
+		deleteFromList.setMaximumSize(new Dimension(200,20));
+		deleteFromList.setName("delete");
+		createArea = new JButton("Lag område");
+		createArea.setMinimumSize(new Dimension(100,20));
+		createArea.setPreferredSize(new Dimension(100,20));
+		createArea.setMaximumSize(new Dimension(200,20));
+		createArea.setName("create");
 		
 		longitudeText = new JLabel("Lengdegrad:");
 		latitudeText = new JLabel("Breddegrad:");
@@ -60,15 +108,121 @@ public class AreaEditFrame extends JFrame{
 		latitude.setMinimumSize(new Dimension(100,20));
 		latitude.setPreferredSize(new Dimension(100,20));
 		latitude.setMaximumSize(new Dimension(100,20));
+		
+		addToList.addActionListener(new BAdapter(this,addToList.getName()));
+		deleteFromList.addActionListener(new BAdapter(this,deleteFromList.getName()));
+		createArea.addActionListener(new BAdapter(this,createArea.getName()));
 	}
 	
 	private void initDisplay() {
-		setLayout(layout);
+		this.getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
+			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup()
+					.addComponent(listScrollPane)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+							.addGroup(layout.createSequentialGroup()
+									.addComponent(createArea)
+							)
+							.addGroup(layout.createSequentialGroup()
+									.addComponent(latitudeText)
+									.addComponent(latitude)
+							)
+							.addGroup(layout.createSequentialGroup()
+									.addComponent(longitudeText)
+									.addComponent(longitude)
+							)
+							.addComponent(addToList)
+							.addComponent(deleteFromList)
+							.addComponent(createArea)
+					)
+				)
+			)
 		);
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
+			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				.addComponent(listScrollPane)
+				.addGroup(layout.createSequentialGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(latitudeText)
+							.addComponent(latitude)
+					)
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(longitudeText)
+							.addComponent(longitude)
+					)
+					.addComponent(addToList)
+					.addComponent(deleteFromList)
+					.addComponent(createArea)
+				)
+			)
 		);
 	}
+	
+	private class BAdapter implements ActionListener{
+		private String button;
+		private AreaEditFrame frame;
+		
+		public BAdapter(AreaEditFrame frame, String button){
+			this.button = button;
+			this.frame = frame;
+		}
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(button.equals("add")){
+				if(!latitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$") || !longitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$")){
+					
+				}else{
+					frame.vertList.addElement(new Node(frame.latitude.getText(), frame.longitude.getText()));
+				}
+			}else if(button.equals("delete")){
+				if(!frame.list.isSelectionEmpty()){
+					frame.vertList.remove(frame.list.getSelectedIndex());
+				}
+				
+			}else if(button.equals("create")){
+				if(frame.vertList.size() != 0){
+					ArrayList<Node> node = new ArrayList<Node>();
+					for(int i = 0;i<frame.vertList.getSize();i++){
+						node.add(vertList.getElementAt(i));
+					}
+					frame.frame.getUserPanel().addArea(node);
+					frame.frame.getUserPanel().setAreaOpenable(true);
+					frame.dispose();
+				}
+			}
+		}
+	}
+	
+	private class WAdapter extends WindowAdapter{
+		private ProgramFrame pframe;
+		AreaEditFrame frame;
+		
+		public WAdapter(AreaEditFrame frame, ProgramFrame pframe){
+			this.pframe = pframe;
+			this.frame = frame;  
+		}
+		
+		@Override
+		public void windowClosed(WindowEvent arg0) {
+			frame.dispose();
+		}
+
+		@Override
+		public void windowClosing(WindowEvent arg0) {
+			pframe.getUserPanel().setAreaOpenable(true);
+			if(frame.vertList.size() != 0){
+				ArrayList<Node> node = new ArrayList<Node>();
+				for(int i = 0;i<frame.vertList.getSize();i++){
+					node.add(vertList.getElementAt(i));
+				}
+				frame.frame.getUserPanel().addArea(node);
+				frame.frame.getUserPanel().setAreaOpenable(true);
+				frame.dispose();
+			}
+		}
+		
+	}
 }
