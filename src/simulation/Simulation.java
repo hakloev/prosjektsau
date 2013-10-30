@@ -137,7 +137,7 @@ public class Simulation {
 			}
 			previousUpdateTime = timeNow;
 			
-			//TODO: Add code for updating the database
+			netHandler.updateSheep(sheepList);
 			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		}
 	}
