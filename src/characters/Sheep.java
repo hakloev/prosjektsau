@@ -16,6 +16,7 @@ public class Sheep {
 	private Farmer farmer;
 	private Position location = null;
 	private int pulse;
+	private int weight;
 	private boolean alarm;
 	private boolean infected;
 	
@@ -28,10 +29,11 @@ public class Sheep {
 	 * @param latitude Latitude position of the sheep
 	 * @param longitude Longitude position of the sheep
 	 */
-	public Sheep(int sheepId, String nick, int birthYear, Farmer farmer, int pulse, double latitude, double longitude) {
+	public Sheep(int sheepId, String nick, int birthYear, int weight, Farmer farmer, int pulse, double latitude, double longitude) {
 		this.sheepId = sheepId;
 		setNick(nick);
 		setBirthYear(birthYear);
+		this.weight = weight;
 		this.farmer = farmer;
 		this.pulse = pulse;
 		setLocation(latitude, longitude);
@@ -139,12 +141,36 @@ public class Sheep {
 		return (pulse < 1);
 	}
 
+	/**
+	 * Set alarm status on sheep
+	 * @param bool boolean that gives alarmstatus
+	 */
 	public void setAlarmStatus(boolean bool) {
 		alarm = bool;
 	}
 
+	/**
+	 * Get alarm status
+	 * @return the boolean alarm status
+	 */
 	public boolean getAlarmStatus() {
 		return alarm;
+	}
+
+	/**
+	 * Set the sheep's weight
+	 * @param weight int, giving the sheep's weight
+	 */
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	/**
+	 * Get the sheep's weight
+	 * @return the sheep's weight
+	 */
+	public int getWeight() {
+		return weight;
 	}
 
 	/**

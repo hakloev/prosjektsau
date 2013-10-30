@@ -21,11 +21,10 @@ import serverconnection.Response;
 import serverconnection.JsonHandler;
 
 /**
- * 
+ * Class holding the user information and login
  * @author Andreas Lyngby
  * @author Håkon Ødegård Løvdal
  */
-
 public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
@@ -51,8 +50,6 @@ public class UserPanel extends JPanel {
 	private JTextField farmerId;
 	
 	private NetHandler handler;
-	private final String wrongUser = "Brukernavnet eksisterer ikke.";
-	private final String wrongPw = "Feil passord.";
 	private Farmer farmer;
 	
 	
@@ -72,7 +69,7 @@ public class UserPanel extends JPanel {
 		loginButton = new JButton("Logg inn");
 		
 		usernameText = new JLabel("Brukernavn:");
-		passwordText = new JLabel("Password:");
+		passwordText = new JLabel("Passord:");
 		
 		usernameField = new JTextField(10);
 		usernameField.setMaximumSize(new Dimension(1000,20));
@@ -125,8 +122,6 @@ public class UserPanel extends JPanel {
 	}
 	
 	// All listeners is implemented as classes that implements the ActionListener-interface
-	
-	
 	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
@@ -142,13 +137,12 @@ public class UserPanel extends JPanel {
 			handler = programFrame.getNetHandler();
 			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
-			System.out.println(loginResult.msg);
 			if (!handler.isError(loginResult.msg)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
 				
-				// parse result json to create farmer
+				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
 				
 				// Initiate sheeps

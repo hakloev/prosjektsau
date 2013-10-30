@@ -328,8 +328,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	public void initUserSheeps(Response listOfSheeps) {
 		ArrayList<Sheep> sheeps = JsonHandler.parseJsonAndReturnSheepList(listOfSheeps, programFrame.getUserPanel().getFarmer());
-		for (Sheep s : sheeps) {
-			addSheep(s);
+		if (!sheeps.isEmpty()) {
+			for (Sheep s : sheeps) {
+				addSheep(s);
+			}
 		}
 	}
 
@@ -398,7 +400,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
-						sheepWeight.setText("Vi bruker ikke vekt, right?");
+						sheepWeight.setText(Integer.toString(sheep.getWeight()));
 						sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
 						if (sheep.getAlarmStatus()) {
 							hasAlarm.setText("Har alarm: JA");
@@ -510,13 +512,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 				String posInput = sheepPos.getText();
 				boolean posRegEx = posInput.matches("[0-9]{2}\\.[0-9]{6},[0-9]{2}\\.[0-9]{6}");
 				boolean yearRegEx = sheepAge.getText().matches("[2][0]([0][0-9]|[1][0-3])");
-				boolean nameReqEx = sheepNick.getText().matches("[a-zA-Z]+");
+				boolean nameReqEx = sheepNick.getText().matches("[a-zA-Z\\s]+");
 				if ((posRegEx) && (yearRegEx) && (nameReqEx)) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
 					// generete id funksjon? Hash?
 
 					// genere sauer i en lignede metode som updateSheep()??
-					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()),
+					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
 					sheepList.addElement(sheep);
 					creatingNewSheep = false;
@@ -525,7 +527,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					infoMode.setSelected(true);
 					radioGroup1.setSelected(infoMode.getModel(), true);
 				} else {
-					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345,10.435\nDu kan ha opptil seks desimaler" +
+					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 							"\n\nAlder angis på formen 2000\n" +
 							"Du kan ha alder fra 2000-2013\n\n" +
 							"Kallenavn kan kun inneholde bokstaver",

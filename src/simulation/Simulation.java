@@ -10,27 +10,27 @@ import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 
 /**
- * A simulation of sheep movement and wolf attacks
+ * A simulation of sheep movement, wolf attacks, and disease
  * 
  * @author maxmelander
  */
 
 public class Simulation {
-	private ArrayList<Sheep> sheepList;
-	private ArrayList<Sheep> infectedSheep;
-	private long previousUpdateTime = 0;
-	private long timeNow;
-	private Random rand;
-	private Position sheepLocation;
-	public static final int EARTHRADIUS = 6378137;
-	public static final int MSINDAY = 86400000;
-	public static final int NUMBEROFUPDATESPERDAY = 10000;
-	public static final int NEGATIVE = 0;
-	public static final int POSITIVE = 1;
-	private boolean simHasDisease;
-	private Disease currentDisease;
-	private int daysOfDisease = 0;
-	private NetHandler netHandler;
+	private 				ArrayList<Sheep> 	sheepList;
+	private 				ArrayList<Sheep> 	infectedSheep;
+	private 				long 				previousUpdateTime 		= 0;
+	private 				long 				timeNow;
+	private 				Random 				rand;
+	private 				Position 			sheepLocation;
+	public static final 	int 				EARTHRADIUS 			= 6378137;
+	public static final 	int 				MSINDAY 				= 86400000;
+	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 7000;
+	public static final 	int 				NEGATIVE 				= 0;
+	public static final 	int 				POSITIVE 				= 1;
+	private 				boolean 			simHasDisease;
+	private 				Disease 			currentDisease;
+	private 				int 				daysOfDisease 			= 0;
+	private 				NetHandler 			netHandler;
 	
 	/**
 	 * The simulation constructor
@@ -105,7 +105,9 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				previousUpdateTime = timeNow;
-				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() + " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() + " Name: " + currentSheep.getNick());
+				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
+									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
+									+ " Name: " + currentSheep.getNick());
 			}
 			System.out.println("");
 			
@@ -135,7 +137,8 @@ public class Simulation {
 			}
 			previousUpdateTime = timeNow;
 			
-			//TODO: Add code for updating the database	
+			//TODO: Add code for updating the database
+			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		}
 	}
 	
