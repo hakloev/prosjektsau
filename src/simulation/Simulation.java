@@ -4,6 +4,7 @@ import java.util.Random;
 
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
+import serverconnection.NetMain;
 import characters.Position;
 import characters.Sheep;
 
@@ -23,7 +24,7 @@ public class Simulation {
 	private 				Disease 			currentDisease;
 	private 				int 				daysOfDisease 			= 0;
 	private 				NetHandler 			netHandler;
-	
+	private					NetMain				netMain;
 	/**
 	 * The simulation constructor
 	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
@@ -100,6 +101,8 @@ public class Simulation {
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
 									+ " Name: " + currentSheep.getNick());
+				netHandler.updateSheep(sheepList);
+
 			}
 			System.out.println("");
 			
@@ -129,7 +132,6 @@ public class Simulation {
 			}
 			previousUpdateTime = timeNow;
 			
-			netHandler.updateSheep(sheepList);
 			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		}
 	}
