@@ -57,6 +57,7 @@ public class Simulation {
 				}
 				
 				if (currentSheep.isDead()){
+					netHandler.updateSheep(currentSheep);
 					continue;
 				}
 				sheepLocation = currentSheep.getLocation();
@@ -102,7 +103,7 @@ public class Simulation {
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
 									+ " Name: " + currentSheep.getNick());
-				response = netHandler.updateSheep(currentSheep);
+				netHandler.updateSheep(currentSheep);
 				//System.out.println(response.msg);
 			}
 			System.out.println("");
@@ -127,7 +128,7 @@ public class Simulation {
 			}
 			
 			//checks if a new disease should be generated
-			if (rand.nextInt(100) < 0 && simHasDisease == false){
+			if (rand.nextInt(100) < 20 && simHasDisease == false){
 				generateDisease();
 				simHasDisease = true;
 			}
