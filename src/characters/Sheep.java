@@ -11,6 +11,7 @@ import simulation.Disease;
 public class Sheep {
 	
 	private final int sheepId;
+	private int farmID;
 	private String nick;
 	private int birthYear;
 	private Farmer farmer;
@@ -168,6 +169,14 @@ public class Sheep {
 	
 	public void cure(){
 		infected = false;
+	}
+
+	public int getFarmID() {
+		return farmID;
+	}
+
+	public void setFarmID(int farmID) {
+		this.farmID = farmID;
 	}
 
 }
