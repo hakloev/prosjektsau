@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import utils.Constants;
 import serverconnection.NetHandler;
@@ -55,11 +54,9 @@ public class ProgramFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == 0) {
-					System.out.println("yes");
 					handler.logout();
 					System.exit(0);
 				}
-				System.out.println("no");
 			}
 		});
 	}
@@ -161,7 +158,7 @@ public class ProgramFrame extends JFrame {
 				ProgramFrame program = new ProgramFrame();
 			}
 		});
-		
+
 		windowSize = new Dimension(800,600);
 		minWindowSize = new Dimension(600, 500);
 		maxWindowSize = new Dimension(1200,900);

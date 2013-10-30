@@ -104,8 +104,8 @@ public class AlarmPanel extends JPanel{
 		list.addListSelectionListener(new ShowAlarmListener());
 		
 		// Alarms and sheeps for testing
-		Sheep sheep1 = new Sheep(16, "Knut", 1994, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686);
-		Sheep sheep2 = new Sheep(15, "Link", 1992, this.programFrame.getUserPanel().getFarmer(), 100, 61.99745, 9.46686);
+		Sheep sheep1 = new Sheep(16, "Knut", 1994, 10000, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686);
+		Sheep sheep2 = new Sheep(15, "Link", 1992, 1023421, this.programFrame.getUserPanel().getFarmer(), 100, 61.99745, 9.46686);
 		addAlarm(new Alarm(sheep1, "Killed in Action"));
 		addAlarm(new Alarm(sheep2, "Killed by a tourist bus from Germany"));
 		sheep1.setAlarmStatus(true);
@@ -170,6 +170,7 @@ public class AlarmPanel extends JPanel{
 	 */
 	public void addAlarm(Alarm alarm) {
 		alarmList.addElement(alarm);
+		alarm.getSheep().setAlarmStatus(true);
 		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
 		//programFrame.getJTabbedPane().setSelectedIndex(4); // Must not be wile init
 	}
