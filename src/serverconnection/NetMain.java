@@ -1,5 +1,10 @@
 package serverconnection;
 
+import java.util.ArrayList;
+
+import characters.Farmer;
+import characters.Sheep;
+
 public class NetMain {
 
 	public static void main(String[] args) {
@@ -9,27 +14,53 @@ public class NetMain {
 		// Example 1) Login to service:
 		Response response;
 		response = net.login("mads", "mads");
-		
 		response.consoletime();
 
 		// - Check if response given from server is an error or not.
 		// - Check errors for each response, not just login.
 		if(net.isError(response.msg)) 
 		{ 
-			System.out.println("Feil under p�logging: " + net.getLastError());
+			System.out.println("Feil under pålogging: " + net.getLastError());
 		}
 		// Now you're logged in, do main things in here.
 		else if(net.isLoggedIn())
 		{
 			// Response on login from server:
 			System.out.println(response.msg);
+			JsonHandler json = new JsonHandler();
 			
-			// Create debug sheep
+			// Get all sheep
+			response = net.getSheep(-1);
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke hente sau: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); }	
+			
+			// Update a sheep.
+			Farmer f = json.parseJsonAndReturnUser(net.getUser());
+			System.out.println("farmer: "  + f.getUserName());
+			ArrayList<Sheep> sheepList = json.parseJsonAndReturnSheepList(response, f);
+			Sheep sheep = sheepList.get(0);
+			System.out.println("has sheep: " + sheep.getIdNr());
+			sheep.setPulse(666);
+			response = net.updateSheep(sheep);
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke oppdatere sau: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); }	
+			
+			
+			/*
 			response = net.makeDebugSheep(net.getFarmCode(), 100);
 			if(net.isError(response.msg)) { 
 				System.out.println("Kunne ikke opprette sauer: " + net.getLastError());
-			} else { System.out.println("Svar fra server: " + response.msg); }	
-			
+			} else { System.out.println("Svar fra server: " + response.msg); response.consoletime(); }	
+			*/
+			// Create debug sheep
+			/*
+			response = net.makeDebugSheep(net.getFarmCode(), 100);
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke opprette sauer: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); response.consoletime(); }	
+			*/
 			// Get system vars:
 			/*
 			response = net.getSystem();
@@ -46,14 +77,16 @@ public class NetMain {
 				System.out.println("Kunne ikke sende opprette g�rdinstans: " + net.getLastError());
 			} else { System.out.println("Svar fra server: " + response.msg); }
 			*/
+
 			
+			/*
 			// Change farm share code
 			response = net.newFarmShareCode();
 			if(net.isError(response.msg)) { 
 				System.out.println("Kunne ikke endre koden: " + net.getLastError());
 			} else { System.out.println("Svar fra server: " + response.msg); }	
 			
-			/*
+			
 			// Send SMS message through PHPserver:
 			response = net.sendSMS("91882850", net.SMS_CARRIER_TELENOR, "test melding 123.");
 			if(net.isError(response)) { 

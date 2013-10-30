@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -19,6 +18,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import characters.Sheep;
 
 // Oppgavekrav til tid:
 //  Responstid p� foresp�rsler fra b�nder skal maksimalt ta 2 sekunder.
@@ -61,9 +62,9 @@ public class NetHandler {
 	// Constructor initiates the httpclient.
 	public NetHandler() {
 		//m_client    = HttpClientBuilder.create().build();  (causes Content-Length=-1)
-		m_client	= new DefaultHttpClient();
-		m_post 		= new HttpPost();
-		m_hasConnection = ping() ? true : false;;
+		m_client		= new DefaultHttpClient();
+		m_post 			= new HttpPost();
+		m_hasConnection = ping() ? true : false;
 	}
 
 	public enum MailType { SHEEP_ESCAPE, SHEEP_HIGH_PULSE,  SHEEP_DEAD }
@@ -235,7 +236,58 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke oppdatere."; e.printStackTrace(); }
 	    return null;
 	}
-
+	
+	private List<NameValuePair> getSheepPostParameters(List<NameValuePair> parameters, Sheep s) {
+	    // get id, name, position.. etc
+	    parameters.add(new BasicNameValuePair("id", ""+s.getIdNr() ) );
+	    parameters.add(new BasicNameValuePair("farm_id", ""+s.getFarmID() ) );
+	    parameters.add(new BasicNameValuePair("current_pulse", ""+s.getPulse() ) );
+	    parameters.add(new BasicNameValuePair("nickname", ""+s.getNick() ) ); 
+	    parameters.add(new BasicNameValuePair("latitude", ""+s.getLocation().getLatitude() ) ); 
+	    parameters.add(new BasicNameValuePair("longitude", ""+s.getLocation().getLongitude() ) );
+	    //parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    
+	    //parameters.add(new BasicNameValuePair("description", ""+s.getDescription() ) );    
+	    //parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );  
+	    return parameters;
+	}
+	
+	// Update arraylist of sheep.
+	public Response updateSheep(ArrayList<Sheep> als) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("SHEEP_UPDATE_MANY", m_userCode));
+		parameters.add(new BasicNameValuePair("count", ""+als.size()));
+		
+		for(int i = 0; i < als.size(); i++) {
+			parameters.add(new BasicNameValuePair("number", ""+i));
+			parameters = getSheepPostParameters(parameters, als.get(i));
+		}
+		
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+	    return null;	
+	}
+	
+	// Update a single sheep.
+	public Response createSheep(Sheep s) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("SHEEP_CREATE", m_userCode));
+		parameters = getSheepPostParameters(parameters, s);
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}
+	
+	// Update a single sheep.
+	public Response updateSheep(Sheep s) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("SHEEP_UPDATE", m_userCode));
+		parameters = getSheepPostParameters(parameters, s);
+		
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}
+	
 	// Create a farm instance.
 	public Response makeDebugSheep(String farmcode, int amount) {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
@@ -318,6 +370,7 @@ public class NetHandler {
 	// GET JSON STRING FROM REQUEST			  //
 	//=======================================//
 	
+	// Get system variables.
 	public Response getSystem() {
 		if(m_isDebugging) { System.out.println("[GET] system"); }
 		try { return _get("&rid=0", null);
@@ -338,6 +391,14 @@ public class NetHandler {
 	public Response getSheep(int id) {
 		if(m_isDebugging) { System.out.println("[GET] sheep " + id); }
 		try { return _get("&rid=2&f="+id, null);
+		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
+		return null;
+	}
+	
+	// -1 means all sheep.
+	public Response getSimulatorSheep(int id) {
+		if(m_isDebugging) { System.out.println("[GET] sheep " + id); }
+		try { return _get("&rid="+_sha1("allsheep")+"&f="+id, null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
@@ -395,7 +456,7 @@ public class NetHandler {
 		URL url = null;
 		if(altURL != null) 	{ url = new URL(altURL + query);  } 
 		else 				{ url = new URL(GET_URL + query); }
-		if(m_isDebugging) 	{ System.out.println("[GET] " + url); }
+		//if(m_isDebugging) 	{ System.out.println("[GET] " + url); }
 		
         // Start download stream.
         BufferedReader in = new BufferedReader(
