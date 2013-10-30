@@ -2,7 +2,6 @@ package serverconnection;
 
 import characters.Farmer;
 import characters.Sheep;
-import serverconnection.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,9 +48,8 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
 				farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
-
 	}
 
 	/**
@@ -62,6 +60,39 @@ public class JsonHandler {
 	 * @return ArrayList of sheeps
 	 */
 	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject, Farmer farmer) {
+		ArrayList<Sheep> listOfSheeps = new ArrayList<Sheep>();
+		if (jsonObject.msg.equals("Sau ikke funnet: ")) {
+				return new ArrayList<Sheep>();
+		}
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+
+			int count = input.get("count").asInt();
+			for (int i = 1; i <= count; i++) {
+				Map<String, JsonNode> sheepMap = new HashMap<String, JsonNode>();
+				JsonNode sheep = input.get(Integer.toString(i));
+				Iterator<Entry<String, JsonNode>> nodeIterator = sheep.getFields();
+				while (nodeIterator.hasNext()) {
+					Entry<String, JsonNode> entry = nodeIterator.next();
+					sheepMap.put(entry.getKey(), entry.getValue());
+				}
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
+						farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
+				listOfSheeps.add(s);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listOfSheeps;
+	}
+	
+	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject) {
 		ArrayList<Sheep> listOfSheeps = new ArrayList<Sheep>();
 
 		try {
@@ -79,8 +110,8 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					sheepMap.put(entry.getKey(), entry.getValue());
 				}
-				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
-						farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
+						new Farmer(1, "besthashever", "bestfarmerever", "bestemailever@email.com"), sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
 				listOfSheeps.add(s);
 			}
 		} catch (IOException e) {
@@ -120,5 +151,4 @@ public class JsonHandler {
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
-
 }

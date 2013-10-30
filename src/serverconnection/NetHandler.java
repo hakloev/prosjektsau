@@ -22,8 +22,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import characters.Sheep;
 
 // Oppgavekrav til tid:
-//  Responstid p� foresp�rsler fra b�nder skal maksimalt ta 2 sekunder.
-//  Responstid p� innleggelse av lokaliseringsinformasjon om en sau skal maksimalt ta 0,5 sekund.
+//  Responstid p��� foresp���rsler fra b���nder skal maksimalt ta 2 sekunder.
+//  Responstid p��� innleggelse av lokaliseringsinformasjon om en sau skal maksimalt ta 0,5 sekund.
 
 /* *** M A N U A L ***
  * GET requests are used with the combination of ID
@@ -113,7 +113,7 @@ public class NetHandler {
 			HttpResponse response 	= m_client.execute(m_post);
 			int statuscode = response.getStatusLine().getStatusCode();
 			if(statuscode != 200) { System.out.println("Svar: " + response.toString() );
-			m_lastError = "Server kunne ikke ta i mot foresp�rselen akkurat n�"; }
+			m_lastError = "Server kunne ikke ta i mot foresp���rselen akkurat n���"; }
 			
 			// Get the server response message.
 			serverResponse.msg = _getStringFromResponse(response);
@@ -161,7 +161,7 @@ public class NetHandler {
 				HttpResponse response = m_client.execute(m_post);
 				int statuscode = response.getStatusLine().getStatusCode();
 				if(statuscode != 200) { System.out.println("Svar: " + response.toString() ); 
-				m_lastError = "Server kunne ikke ta i mot foresp�rselen akkurat n�"; }
+				m_lastError = "Server kunne ikke ta i mot foresp���rselen akkurat n���"; }
 				serverResponse.msg = _getStringFromResponse(response);
 				m_isLoggedIn = false;
 				m_userCode = null;
@@ -185,15 +185,15 @@ public class NetHandler {
 	//=======================================//
 	// Send SMS through mail testing.
 	public Response sendSMS(String phoneNumber, String carrier, String message) {
-		System.out.println("MERK: Funksjonen � videresende e-post som SMS sl�s p� fra operat�rens nettsider.");
-		System.out.println("Pr�ver � sende SMS til " + phoneNumber+""+carrier);
+		System.out.println("MERK: Funksjonen ��� videresende e-post som SMS sl���s p��� fra operat���rens nettsider.");
+		System.out.println("Pr���ver ��� sende SMS til " + phoneNumber+""+carrier);
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 	    parameters.add(new BasicNameValuePair("SEND_SMS", m_userCode));
 	    parameters.add(new BasicNameValuePair("phonenumber", phoneNumber));
 	    parameters.add(new BasicNameValuePair("carrier", carrier));
 	    parameters.add(new BasicNameValuePair("message", message));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -203,7 +203,7 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("SEND_MAIL_TO_FARM", farmID));
 	    parameters.add(new BasicNameValuePair("mailtype", type.toString()));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -223,7 +223,7 @@ public class NetHandler {
 	    	parameters.add(new BasicNameValuePair("regardingIDs", regardingIDs[i]));
 	    
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -295,7 +295,7 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("farmcode", ""+farmcode));
 	    parameters.add(new BasicNameValuePair("amount", ""+amount));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -304,7 +304,7 @@ public class NetHandler {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 	    parameters.add(new BasicNameValuePair("CREATE_FARM", m_userCode));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -314,7 +314,7 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("NEW_FARM_CODE", m_userCode));
 
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp�rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
 	    return null;
 	}
 	

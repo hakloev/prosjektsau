@@ -4,8 +4,7 @@ package characters;
  * Class holding information about the farmer currently logged in
  * @author Andreas Lønes
  */
-public class Farmer 
-{
+public class Farmer {
 
 	private final int farmerId;
 	private final String farmerHash;
@@ -89,8 +88,7 @@ public class Farmer
 	public void setArea(Area area) {
 		this.area = area;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return returns the farmer's are
