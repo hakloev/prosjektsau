@@ -5,6 +5,7 @@ import java.util.Random;
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 import serverconnection.NetMain;
+import serverconnection.Response;
 import characters.Position;
 import characters.Sheep;
 
@@ -24,7 +25,7 @@ public class Simulation {
 	private 				Disease 			currentDisease;
 	private 				int 				daysOfDisease 			= 0;
 	private 				NetHandler 			netHandler;
-	private					NetMain				netMain;
+	private					Response			response;
 	/**
 	 * The simulation constructor
 	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
@@ -101,8 +102,8 @@ public class Simulation {
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
 									+ " Name: " + currentSheep.getNick());
-				netHandler.updateSheep(sheepList);
-
+				response = netHandler.updateSheep(currentSheep);
+				//System.out.println(response.msg);
 			}
 			System.out.println("");
 			
@@ -126,7 +127,7 @@ public class Simulation {
 			}
 			
 			//checks if a new disease should be generated
-			if (rand.nextInt(100) < 20 && simHasDisease == false){
+			if (rand.nextInt(100) < 0 && simHasDisease == false){
 				generateDisease();
 				simHasDisease = true;
 			}
