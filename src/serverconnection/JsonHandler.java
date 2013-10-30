@@ -110,7 +110,7 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					sheepMap.put(entry.getKey(), entry.getValue());
 				}
-				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(),
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
 						new Farmer(1, "besthashever", "bestfarmerever", "bestemailever@email.com"), sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
 				listOfSheeps.add(s);
 			}
