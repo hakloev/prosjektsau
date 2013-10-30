@@ -50,8 +50,6 @@ public class UserPanel extends JPanel {
 	private JTextField farmerId;
 	
 	private NetHandler handler;
-	private final String wrongUser = "Brukernavnet eksisterer ikke.";
-	private final String wrongPw = "Feil passord.";
 	private Farmer farmer;
 	
 	
@@ -71,7 +69,7 @@ public class UserPanel extends JPanel {
 		loginButton = new JButton("Logg inn");
 		
 		usernameText = new JLabel("Brukernavn:");
-		passwordText = new JLabel("Password:");
+		passwordText = new JLabel("Passord:");
 		
 		usernameField = new JTextField(10);
 		usernameField.setMaximumSize(new Dimension(1000,20));
@@ -124,8 +122,6 @@ public class UserPanel extends JPanel {
 	}
 	
 	// All listeners is implemented as classes that implements the ActionListener-interface
-	
-	
 	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal

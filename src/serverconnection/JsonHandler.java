@@ -2,7 +2,6 @@ package serverconnection;
 
 import characters.Farmer;
 import characters.Sheep;
-import serverconnection.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ public class JsonHandler {
 		}
 		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
 				farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble());
-
 	}
 
 	/**
@@ -123,5 +121,4 @@ public class JsonHandler {
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
-
 }

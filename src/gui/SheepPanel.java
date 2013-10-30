@@ -511,7 +511,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				String posInput = sheepPos.getText();
 				boolean posRegEx = posInput.matches("[0-9]{2}\\.[0-9]{6},[0-9]{2}\\.[0-9]{6}");
 				boolean yearRegEx = sheepAge.getText().matches("[2][0]([0][0-9]|[1][0-3])");
-				boolean nameReqEx = sheepNick.getText().matches("[a-zA-Z]+");
+				boolean nameReqEx = sheepNick.getText().matches("[a-zA-Z\\s]+");
 				if ((posRegEx) && (yearRegEx) && (nameReqEx)) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
 					// generete id funksjon? Hash?
@@ -526,7 +526,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					infoMode.setSelected(true);
 					radioGroup1.setSelected(infoMode.getModel(), true);
 				} else {
-					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345,10.435\nDu kan ha opptil seks desimaler" +
+					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 							"\n\nAlder angis på formen 2000\n" +
 							"Du kan ha alder fra 2000-2013\n\n" +
 							"Kallenavn kan kun inneholde bokstaver",
