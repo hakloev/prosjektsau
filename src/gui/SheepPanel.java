@@ -379,7 +379,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepList.remove(index);
 		list.clearSelection();
 		setEditable(false);
-		// remove sheep s here with handler
+		// remove sheep s in db here with handler
 	}
 	
 	/**
@@ -427,6 +427,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 					if (!e.getValueIsAdjusting()) {
 						AlarmPanel alarm = programFrame.getAlarmPanel();
 						Sheep sheep = list.getSelectedValue();
+						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
+						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
