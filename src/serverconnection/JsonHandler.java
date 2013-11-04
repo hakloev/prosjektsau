@@ -47,7 +47,7 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
+		return new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("gender").asText(), sheepMap.get("weight_grams").asInt(),
 				farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble(), sheepMap.get("is_infected").asInt());
 	}
 
@@ -79,7 +79,7 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					sheepMap.put(entry.getKey(), entry.getValue());
 				}
-				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("gender").asText(), sheepMap.get("weight_grams").asInt(),
 						farmer, sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble(), sheepMap.get("is_infected").asInt());
 				listOfSheeps.add(s);
 			}
@@ -114,7 +114,7 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					sheepMap.put(entry.getKey(), entry.getValue());
 				}
-				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("weight_grams").asInt(),
+				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("gender").asText(), sheepMap.get("weight_grams").asInt(),
 						new Farmer(1, "besthashever", "bestfarmerever", "bestemailever@email.com"), sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble()
 						, sheepMap.get("is_infected").asInt());
 				listOfSheeps.add(s);
