@@ -304,6 +304,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Should take a parameter userId or something like that.
 	 */
 	public void initUserSheeps(Response listOfSheeps) {
+		System.out.println("Tid brukt for å legge til samtlige sauer: ");
+		listOfSheeps.consoletime();
 		ArrayList<Sheep> sheeps = JsonHandler.parseJsonAndReturnSheepList(listOfSheeps, programFrame.getUserPanel().getFarmer());
 		if (!sheeps.isEmpty()) {
 			for (Sheep s : sheeps) {
@@ -325,7 +327,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	private void addSheepToDb(Sheep s) {
 		Response r = programFrame.getNetHandler().createSheep(s);
-		System.out.println(r.msg);
+		System.out.println("Tid for å legge sau til i database: ");
+		r.consoletime();
 		changingSheep = true;
 		sheepList.clear();
 		initUserSheeps(programFrame.getNetHandler().getSheep(-1));
@@ -340,7 +343,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		Sheep sheep = sheepList.getElementAt(list.getSelectedIndex());
 
 		String posInput = sheepPos.getText();
-		boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,6},[0-9]{1,2}\\.[0-9]{5,6}$");
+		boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,15},[0-9]{1,2}\\.[0-9]{5,15}$");
 		boolean weightRegEx = sheepWeight.getText().matches("[0-9]+");
 		boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
 		if ((posRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and weight. Can't change age
@@ -350,7 +353,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 			sheep.setNick(sheepNick.getText());
 			// Update server below here
 			Response r = programFrame.getNetHandler().updateSheep(sheep);
-			//System.out.println(r.msg);
+			System.out.println("Tid brukt for å oppdatere sau i database: ");
+			r.consoletime();
 		} else {
 			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 					"\n\nKallenavn kan kun inneholde bokstaver\n\n" +
@@ -373,7 +377,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		setEditable(false);
 		// remove sheep s in db here with handler
 		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
-		System.out.println(r.msg);
+		System.out.println("Tid brukt for å fjerne en sau i databasen: ");
+		r.consoletime();
 	}
 	
 	/**
@@ -422,6 +427,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 						AlarmPanel alarm = programFrame.getAlarmPanel();
 						Sheep sheep = list.getSelectedValue();
 						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
+						System.out.println("Tid brukt for å hente en sau: ");
+						json.consoletime();
 						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
@@ -536,7 +543,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			if (updateMode.isSelected()) {
 				String posInput = sheepPos.getText();
-				boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,6},[0-9]{1,2}\\.[0-9]{5,6}$");
+				boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,15},[0-9]{1,2}\\.[0-9]{5,15}$");
 				boolean yearRegEx = sheepAge.getText().matches("[2][0]([0][0-9]|[1][0-3])");
 				boolean weightRegEx = sheepWeight.getText().matches("[0-9]+");
 				boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
