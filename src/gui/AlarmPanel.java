@@ -22,6 +22,11 @@ import characters.Sheep;
 import mail.GMail;
 import serverconnection.Alarm;
 
+/**
+ * Class to show and handle alarms
+ * @author Andreas Lyngby
+ * @author Håkon Ødegård Løvdal
+ */
 public class AlarmPanel extends JPanel{
 
 	private ProgramFrame programFrame;

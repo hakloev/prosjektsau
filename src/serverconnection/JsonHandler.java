@@ -18,14 +18,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Class to handle JsonObjects
- * @author H��kon ��deg��rd L��vdal
+ * @author Håkon Ødegård Løvdal
  */
 public class JsonHandler {
 
 	/**
 	 * Method to parse sheep-json and return a sheep object
-	 *
-	 * @param jsonObject
+	 * @param jsonObject Response containing a json
 	 * @return A SheepObject
 	 */
 	public static Sheep parseJsonAndReturnSheep(Response jsonObject, Farmer farmer) {
@@ -55,8 +54,8 @@ public class JsonHandler {
 	/**
 	 * Method to parse sheep-list and return sheepObjects
 	 *
-	 * @param jsonObject
-	 * @param farmer
+	 * @param jsonObject Response containing a json
+	 * @param farmer The farmer-object currently logged in
 	 * @return ArrayList of sheeps
 	 */
 	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject, Farmer farmer) {
@@ -91,7 +90,12 @@ public class JsonHandler {
 		}
 		return listOfSheeps;
 	}
-	
+
+	/**
+	 * Method returning a ArrayList of sheep-objects, used only by the simulation class
+	 * @param jsonObject Response containing a json
+	 * @return A ArrayList<Sheep> containing all the sheep
+	 */
 	public static ArrayList<Sheep> parseJsonAndReturnSheepList(Response jsonObject) {
 		ArrayList<Sheep> listOfSheeps = new ArrayList<Sheep>();
 
@@ -126,7 +130,7 @@ public class JsonHandler {
 	
 	/**
 	 * Method to parse login-json and return a farmer object
-	 * @param jsonObject
+	 * @param jsonObject Response containing a json
 	 * @return A Farmer-object
 	 */
 	public static Farmer parseJsonAndReturnUser(Response jsonObject) {
