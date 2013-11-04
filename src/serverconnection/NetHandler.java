@@ -287,10 +287,10 @@ public class NetHandler {
 	}
 	
 	// Create a sheep.
-	public Response createSheep(Sheep s, int farmID) {
+	public Response createSheep(Sheep s) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("SHEEP_CREATE", m_userCode));
-		parameters.add(new BasicNameValuePair("farm_id", ""+farmID));
+		parameters.add(new BasicNameValuePair("farm_id", "" + m_farmID));
 		parameters = _getSheepPostParameters(parameters, s);
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }

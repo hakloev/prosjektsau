@@ -4,6 +4,7 @@ import java.util.Random;
 
 import serverconnection.JsonHandler;
 import serverconnection.Response;
+import serverconnection.NetHandler;
 import characters.Position;
 import characters.Sheep;
 

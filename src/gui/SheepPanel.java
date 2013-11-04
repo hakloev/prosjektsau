@@ -325,7 +325,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	private void addSheepToDb(Sheep s) {
 		Response r = programFrame.getNetHandler().createSheep(s);
-		//System.out.println(r.msg);
+		System.out.println(r.msg);
+		changingSheep = true;
+		sheepList.clear();
+		initUserSheeps(programFrame.getNetHandler().getSheep(-1));
+		changingSheep = false;
 	}
 
 	/**
@@ -369,7 +373,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 		setEditable(false);
 		// remove sheep s in db here with handler
 		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
-		//System.out.println(r.msg);
+		System.out.println(r.msg);
+
+
 
 	}
 	
