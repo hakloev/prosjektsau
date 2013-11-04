@@ -48,7 +48,6 @@ public class UserPanel extends JPanel {
 	private JTextField lastName;
 	private JTextField farmerId;
 	
-	private NetHandler handler;
 	private Farmer farmer;
 	
 	
@@ -56,6 +55,7 @@ public class UserPanel extends JPanel {
 		this.programFrame = programFrame;
 		initElements();
 		initDesign();
+
 	}
 	
 	
@@ -114,7 +114,7 @@ public class UserPanel extends JPanel {
 	
 	/**
 	 * Method that returns the farmer-object currently logged in
-	 * @return farmer
+	 * @return farmer-object
 	 */
 	public Farmer getFarmer() {
 		return this.farmer;
@@ -133,7 +133,7 @@ public class UserPanel extends JPanel {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			handler = programFrame.getNetHandler();
+			NetHandler handler = programFrame.getNetHandler();
 			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
 			if (!handler.isError(loginResult.msg)) {

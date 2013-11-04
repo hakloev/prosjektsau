@@ -14,12 +14,12 @@ import javax.swing.*;
  */
 public class ProgramFrame extends JFrame {
 	
-	//Størrelsesvariabler for vinduet
+	//Dimension-variables for the window
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
 	
-	//Div panel og swing variabler
+	//All the panels and two swing-variables
 	private MapPanel mapPanel;
 	private UserPanel userPanel;
 	private SheepPanel sheepPanel;
@@ -46,7 +46,7 @@ public class ProgramFrame extends JFrame {
 		setPreferredSize(windowSize);
 		setMinimumSize(minWindowSize);
 		setMaximumSize(maxWindowSize);
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); // Window has own listener
 		setSize(windowSize);
 		setTitle(Constants.title);
 		addWindowListener(new WindowAdapter() {
@@ -65,48 +65,47 @@ public class ProgramFrame extends JFrame {
 
 	/**
 	 * Return NetHandler-object
-	 * @return NetHandler-object
+	 * @return NetHandler-object speaking to the database
 	 */
 	public NetHandler getNetHandler() {
 		return handler;
 	}
 	
 	/**
-	 * Henter brukerpanelet userPanel.
-	 * @return JPanel
+	 * Get userPanel.
+	 * @return The UserPanel-instance
 	 */
 	public UserPanel getUserPanel(){
 		return userPanel;
 	}
 	
 	/**
-	 * Henter sauepanelet sheepPanel.
-	 * 
-	 * @return JPanel
+	 * Get sheepPanel.
+	 * @return The SheepPanel-instance
 	 */
 	public SheepPanel getSheepPanel(){
 		return sheepPanel;
 	}
 	
 	/**
-	 * Henter kartpanelet mapPanel.
-	 * @return JPanel
+	 * Get mapPanel.
+	 * @return The MapPanel-instance
 	 */
 	public MapPanel getMapPanel(){
 		return mapPanel;
 	}
 	
 	/**
-	 * Henter alarmpanelet alarmPanel.
-	 * @return JPanel
+	 * Get alarmPanel.
+	 * @return The AlarmPanel-instance
 	 */
 	public AlarmPanel getAlarmPanel(){
 		return alarmPanel;
 	}
 	
 	/**
-	 * Henter loggpanelet logPanel.
-	 * @return JPanel
+	 * Get the logPanel.
+	 * @return The LogPanel-instance
 	 */
 	public LogPanel getLogPanel(){
 		return logPanel;
@@ -114,7 +113,7 @@ public class ProgramFrame extends JFrame {
 	
 	/**
 	 * Returns jTabPane
-	 * @return jTabPane
+	 * @return JTabbedPane, the control for all the panes
 	 */
 	public JTabbedPane getJTabbedPane() {
 		return jTabPane;

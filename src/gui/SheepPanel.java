@@ -81,13 +81,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private GroupLayout layout;
 
-	private boolean changing;
-	private boolean creatingNewSheep;
+	private boolean changingSheep; // Boolean telling if a sheep is changing or not
+	private boolean creatingNewSheep;  // Boolean telling if a new sheep is being created
 
 	
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
-		this.changing = false;
+		this.changingSheep = false;
 		this.creatingNewSheep = false;
 		initElements();
 		initDesign();
@@ -175,7 +175,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		designSeperator = new JSeparator();
 		designSeperator2 = new JSeparator();
 		
-		// Listeners for every button in the sheep panel
+		// Listeners for every button in the sheep panel, description given in each class
 		list.addListSelectionListener(new ListListener());
 		showMap.addActionListener(new ShowInMapListener());
 		deleteMap.addActionListener(new DeleteMapListener());
@@ -319,7 +319,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		// TODO Auto-generated method stub
-		// WHAT DOES IT DO
+		// WHAT DOES THE FOX SAY
 	}
 	
 	/**
@@ -344,7 +344,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	}
 	
 	/**
-	 * Method used to update the edited sheep to the database
+	 * Method used to update the edited sheep to the database and locally to the sheepList
 	 */
 	private void updateSheepInDb() {
 		// oppdater sau-objektet i lista og send til server
@@ -355,12 +355,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 		boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,6},[0-9]{1,2}\\.[0-9]{5,6}$");
 		boolean weightRegEx = sheepWeight.getText().matches("[0-9]+");
 		boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
-		if ((posRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and cant change age
+		if ((posRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and weight. Can't change age
 			String[] pos = posInput.split(",");
 			sheep.setLocation(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));
 			sheep.setWeight(Integer.parseInt(sheepWeight.getText()));
 			sheep.setNick(sheepNick.getText());
-			// update server here
+			// Update server below here
 			Response r = programFrame.getNetHandler().updateSheep(sheep);
 			System.out.println(r.msg);
 		} else {
@@ -374,7 +374,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 	}
 
-	public void removeSheepInDb(int index) {
+	/**
+	 * Method to remove a given sheep from the sheepList and database
+	 * @param index Index tells which sheep is selected
+	 */
+	private void removeSheepInDb(int index) {
 		Sheep s = sheepList.getElementAt(index);
 		sheepList.remove(index);
 		list.clearSelection();
@@ -422,7 +426,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			if (!changing) {
+			if (!changingSheep) {
 				if (!updateMode.isSelected()) {
 					if (!e.getValueIsAdjusting()) {
 						AlarmPanel alarm = programFrame.getAlarmPanel();
@@ -443,9 +447,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 				} else {
 					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus",
 						"Modusfeil", JOptionPane.WARNING_MESSAGE);
-					changing = true; // To avoid double clearing
+					changingSheep = true; // To avoid double clearing
 					list.clearSelection();
-					changing = false;
+					changingSheep = false;
 				}
 			}
 		}
@@ -519,7 +523,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			changing = true;
+			changingSheep = true;
 			list.clearSelection();
 			if (infoMode.isSelected()) {
 				updateMode.setSelected(true);
@@ -528,7 +532,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 			}
 			setEditable(true);
 			creatingNewSheep = true;
-			changing = false;
+			changingSheep = false;
 		}
 	}
 	
@@ -653,12 +657,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en sau for å slette",
 						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
 			} else {
-				changing = true;
+				changingSheep = true;
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
 					removeSheepInDb(index);
-					changing = false;
-				} // ELSE HERE? TO RETURN  IF DONE??
+					changingSheep = false;
+					// TO RETURN IF DONE??
+				} // The else-condition here should not happen
 			}
 		}
 	}
