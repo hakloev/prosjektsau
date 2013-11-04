@@ -374,9 +374,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		// remove sheep s in db here with handler
 		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
 		System.out.println(r.msg);
-
-
-
 	}
 	
 	/**
