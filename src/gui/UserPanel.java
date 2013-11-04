@@ -144,10 +144,6 @@ public class UserPanel extends JPanel {
 				)
 
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(js1)
-				)
-
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(farmerEmailText)
 						.addComponent(farmerEmail)
 						.addComponent(areaBoxText)
@@ -169,9 +165,6 @@ public class UserPanel extends JPanel {
 					.addComponent(loginButton)
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(js)
-					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-							.addComponent(js1)
 					)
 					.addComponent(farmerEmailText)
 					.addComponent(farmerEmail)
