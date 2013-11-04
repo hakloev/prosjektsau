@@ -177,7 +177,6 @@ public class AlarmPanel extends JPanel{
 		alarmList.addElement(alarm);
 		alarm.getSheep().setAlarmStatus(true);
 		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
-		//programFrame.getJTabbedPane().setSelectedIndex(4); // Must not be wile init
 	}
 	
 	/**
@@ -199,7 +198,6 @@ public class AlarmPanel extends JPanel{
 	}
 	
 	// Classes for listners to ListSelection and DeleteAlarmButton
-	
 	/**
 	 * Listener for the "Slett alarm"-button
 	 * @author Håkon Ødegård Løvdal
