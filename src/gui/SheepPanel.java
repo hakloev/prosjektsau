@@ -65,8 +65,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private JSeparator designSeperator;
 	private JSeparator designSeperator2;
-	private JSeparator designSeperator3;
-	
+
 	private JLabel sheepIdText;
 	private JLabel sheepAgeText;
 	private JLabel sheepNickText;
@@ -91,14 +90,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		this.creatingNewSheep = false;
 		initElements();
 		initDesign();
-		/* Bare for testing
-		test2 = new DefaultListModel();
-		JList list = new JList(test2);
-		list.setVisibleRowCount(c5);
-		usernameText = new JLabel("Brukernavn:");
-		passwordText = new JLabel("Password:");
-		JScrollPane listScrollPane = new JScrollPane(list);
-		*/
 	}
 	
 	public void initElements(){
@@ -126,28 +117,18 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepWeightText = new JLabel("Vekt:");
 		
 		sheepId = new JTextArea("ID");
-		//sheepId.setMinimumSize(new Dimension(150,17));
-		//sheepId.setMaximumSize(new Dimension(200,17));
 		sheepId.setEditable(false);
 		
 		sheepAge = new JTextArea("Alder");
-		//sheepAge.setMinimumSize(new Dimension(150,17));
-		//sheepAge.setMaximumSize(new Dimension(200,17));
 		sheepAge.setEditable(false);
 		
 		sheepNick = new JTextArea("Kallenavn");
-		//sheepNick.setMinimumSize(new Dimension(150,17));
-		//sheepNick.setMaximumSize(new Dimension(200,17));
 		sheepNick.setEditable(false);
 		
 		sheepPos = new JTextArea("Posisjon");
-		//sheepPos.setMinimumSize(new Dimension(150,17));
-		//sheepPos.setMaximumSize(new Dimension(200,17));
 		sheepPos.setEditable(false);
 		
 		sheepWeight = new JTextArea("Vekt");
-		//sheepWeight.setMinimumSize(new Dimension(150,17));
-		//sheepWeight.setMaximumSize(new Dimension(200,17));
 		sheepWeight.setEditable(false);
 		
 		infoMode = new JRadioButton("Infomodus");
@@ -185,9 +166,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
 		deleteSheep.addActionListener(new DeleteSheepListener());
-		// deleteSheep listner
-		
-		
 	}
 	
 	public void initDesign(){
@@ -244,7 +222,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 										.addComponent(deleteSheep)
 								)
 							)
-							
 						)
 					)
 					.addContainerGap()
@@ -342,12 +319,19 @@ public class SheepPanel extends JPanel implements ItemListener{
 	public void addSheep(Sheep sheep) {
 		sheepList.addElement(sheep);
 	}
-	
+
+	/**
+	 * Method to add sheep to db
+	 */
+	private void addSheepToDb(Sheep s) {
+		Response r = programFrame.getNetHandler().createSheep(s);
+		//System.out.println(r.msg);
+	}
+
 	/**
 	 * Method used to update the edited sheep to the database and locally to the sheepList
 	 */
 	private void updateSheepInDb() {
-		// oppdater sau-objektet i lista og send til server
 		// UPDATE AND SEND SHEEP TO SERVER, MUST BE DONE ASAP WHEN ONE CHARACTHER IS EDITED
 		Sheep sheep = sheepList.getElementAt(list.getSelectedIndex());
 
@@ -362,7 +346,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 			sheep.setNick(sheepNick.getText());
 			// Update server below here
 			Response r = programFrame.getNetHandler().updateSheep(sheep);
-			System.out.println(r.msg);
+			//System.out.println(r.msg);
 		} else {
 			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 					"\n\nKallenavn kan kun inneholde bokstaver\n\n" +
@@ -379,11 +363,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * @param index Index tells which sheep is selected
 	 */
 	private void removeSheepInDb(int index) {
-		Sheep s = sheepList.getElementAt(index);
+		int sheepId = sheepList.getElementAt(index).getIdNr();
 		sheepList.remove(index);
 		list.clearSelection();
 		setEditable(false);
 		// remove sheep s in db here with handler
+		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
+		//System.out.println(r.msg);
+
 	}
 	
 	/**
@@ -552,12 +539,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
 				if ((posRegEx) && (yearRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
-					// generete id funksjon? Hash?
-
-					// genere sauer i en lignede metode som updateSheep()??
-					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
+					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
 					sheepList.addElement(sheep);
+					addSheepToDb(sheep);
 					creatingNewSheep = false;
 					setEditable(false);
 					updateMode.setSelected(false);
