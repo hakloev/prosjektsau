@@ -25,9 +25,11 @@ public class NetMain {
 		// Now you're logged in, do main things in here.
 		else if(net.isLoggedIn())
 		{
+			Farmer f = JsonHandler.parseJsonAndReturnUser(response);
+			System.out.println("farmer: "  + f.getUserName());
+			
 			// Response on login from server:
 			System.out.println(response.msg);
-			JsonHandler json = new JsonHandler();
 			
 			// Get all sheep
 			response = net.getSheep(-1);
@@ -36,12 +38,11 @@ public class NetMain {
 			} else { System.out.println("Svar fra server: " + response.msg); }	
 			
 			// Update a sheep.
-			Farmer f = json.parseJsonAndReturnUser(net.getUser());
-			System.out.println("farmer: "  + f.getUserName());
-			ArrayList<Sheep> sheepList = json.parseJsonAndReturnSheepList(response, f);
+			ArrayList<Sheep> sheepList = JsonHandler.parseJsonAndReturnSheepList(response, f);
 			Sheep sheep = sheepList.get(0);
 			System.out.println("has sheep: " + sheep.getIdNr());
-			sheep.setPulse(666);
+			sheep.setPulse(123);
+			sheep.setNick("testtest");
 			response = net.updateSheep(sheep);
 			if(net.isError(response.msg)) { 
 				System.out.println("Kunne ikke oppdatere sau: " + net.getLastError());

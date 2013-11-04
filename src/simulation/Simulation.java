@@ -1,5 +1,4 @@
 package simulation;
-import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.Random;
 

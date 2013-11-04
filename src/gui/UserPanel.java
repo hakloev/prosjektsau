@@ -9,9 +9,9 @@ import javax.swing.*;
 
 import characters.Farmer;
 import characters.Node;
-import serverconnection.NetHandler;
 import serverconnection.Response;
 import serverconnection.JsonHandler;
+import serverconnection.NetHandler;
 
 /**
  * Class holding the user information and login
