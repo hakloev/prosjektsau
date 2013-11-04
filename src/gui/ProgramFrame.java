@@ -1,24 +1,25 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import serverconnection.NetHandler;
 import utils.Constants;
+import serverconnection.NetHandler;
 
 import javax.swing.*;
 
 /**
  * @author Andreas Lynbgy
  */
-
-public class ProgramFrame extends JFrame{
+public class ProgramFrame extends JFrame {
 	
-	//Størrelsesvariabler for vinduet
+	//Dimension-variables for the window
 	public static Dimension windowSize;
 	public static Dimension minWindowSize;
 	public static Dimension maxWindowSize;
 	
-	//Div panel og swing variabler
+	//All the panels and two swing-variables
 	private MapPanel mapPanel;
 	private UserPanel userPanel;
 	private SheepPanel sheepPanel;
@@ -35,6 +36,7 @@ public class ProgramFrame extends JFrame{
 		handler = new NetHandler();
 		//jTabPane.setEnabled(false);
 	}
+	
 	/**
 	 * Initializes the program frame.
 	 */
@@ -44,55 +46,66 @@ public class ProgramFrame extends JFrame{
 		setPreferredSize(windowSize);
 		setMinimumSize(minWindowSize);
 		setMaximumSize(maxWindowSize);
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); // Window has own listener
 		setSize(windowSize);
 		setTitle(Constants.title);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == 0) {
+					handler.logout();
+					System.exit(0);
+				}
+			}
+		});
 	}
-	
+
+
+
 	/**
 	 * Return NetHandler-object
-	 * @return NetHandler-object
+	 * @return NetHandler-object speaking to the database
 	 */
 	public NetHandler getNetHandler() {
 		return handler;
 	}
 	
 	/**
-	 * Henter brukerpanelet userPanel.
-	 * @return JPanel
+	 * Get userPanel.
+	 * @return The UserPanel-instance
 	 */
 	public UserPanel getUserPanel(){
 		return userPanel;
 	}
 	
 	/**
-	 * Henter sauepanelet sheepPanel.
-	 * 
-	 * @return JPanel
+	 * Get sheepPanel.
+	 * @return The SheepPanel-instance
 	 */
 	public SheepPanel getSheepPanel(){
 		return sheepPanel;
 	}
 	
 	/**
-	 * Henter kartpanelet mapPanel.
-	 * @return JPanel
+	 * Get mapPanel.
+	 * @return The MapPanel-instance
 	 */
 	public MapPanel getMapPanel(){
 		return mapPanel;
 	}
 	
 	/**
-	 * Henter alarmpanelet alarmPanel.
-	 * @return JPanel
+	 * Get alarmPanel.
+	 * @return The AlarmPanel-instance
 	 */
 	public AlarmPanel getAlarmPanel(){
 		return alarmPanel;
 	}
 	
 	/**
-	 * Henter loggpanelet logPanel.
-	 * @return JPanel
+	 * Get the logPanel.
+	 * @return The LogPanel-instance
 	 */
 	public LogPanel getLogPanel(){
 		return logPanel;
@@ -100,7 +113,7 @@ public class ProgramFrame extends JFrame{
 	
 	/**
 	 * Returns jTabPane
-	 * @return jTabPane
+	 * @return JTabbedPane, the control for all the panes
 	 */
 	public JTabbedPane getJTabbedPane() {
 		return jTabPane;
@@ -144,10 +157,9 @@ public class ProgramFrame extends JFrame{
 				ProgramFrame program = new ProgramFrame();
 			}
 		});
-		
+
 		windowSize = new Dimension(800,600);
 		minWindowSize = new Dimension(600, 500);
 		maxWindowSize = new Dimension(1200,900);
 	}
-
 }

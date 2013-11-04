@@ -17,6 +17,7 @@ import javafx.scene.web.WebViewBuilder;
 /**
  * Class to generate map-panel
  * @author Håkon Ødegård Løvdal
+ * @author Thomas Mathiesen
  */
 public class MapPanel extends JPanel {
 
@@ -33,7 +34,6 @@ public class MapPanel extends JPanel {
 	/**
 	 * Initiates and show map. Will invoke a JavaFX-panel that works inside the 
 	 * swing application
-	 * 
 	 */
 	private void initAndShowMap() {
 		fxPanel = new JFXPanel();
@@ -54,7 +54,6 @@ public class MapPanel extends JPanel {
 
 	/**
 	 * Initiates the JavaFX-panel
-	 * 
 	 */
 	private void initFX() {
 		Group root = new Group();
@@ -68,7 +67,6 @@ public class MapPanel extends JPanel {
 	/**
 	 * Builds the WebEngine
 	 * Takes the url to to map.html as a parameter
-	 * 
 	 * @param url URL path to the map.html-file
 	 */
 	private void buildWebEngine(String url) {
@@ -80,7 +78,6 @@ public class MapPanel extends JPanel {
 
 	/**
 	 * Adds a marker to the map, by calling a JavaScript in map.html
-	 * 
 	 * @param title Sheeps nickname
 	 * @param lat latiude position
 	 * @param lng longtiude position
@@ -95,28 +92,31 @@ public class MapPanel extends JPanel {
 		});
 	}
 
+	
 	/**
-	 * Adds a polygon to the map, by calling a JavaScript in map.html
-	 * 
-	 * @author Thomas
+	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
 	 */
-	public void addPoly() {
+	public void addArea() {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
-				webEngine.executeScript("addPoly()");
+				
+				String yolo ="62.219955,9.555143,62.075598,9.139037,61.828282,9.518065,62.134708,10.005584,62.219956,9.555144";
+
+				webEngine.executeScript("addPoly('" + yolo + "')");
+				webEngine.executeScript("showAreas()");
 			}
 		});
 	}
+	
+	
 
 
 	/**
 	 * Removes polygon from map by calling a JavaScript in map.html
-	 * 
-	 * @author Thomas
 	 */
-	public void removePoly() {
+	public void removePoly() {/////////////////////FUNGERER IKKE FORELØPIG, VENTER PÅ USER-P/////////////
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -129,7 +129,6 @@ public class MapPanel extends JPanel {
 
 	/**
 	 * Deletes all markers from the map by calling a JavaScript in map.html
-	 * 
 	 */
 	protected void deleteMarkers() {
 		Platform.runLater(new Runnable() {
@@ -144,7 +143,6 @@ public class MapPanel extends JPanel {
 	
 	/**
 	 * Deletes all markers from the map by calling a JavaScript in map.html
-	 * 
 	 */
 	public void addTestSheep() {///////////////////////////////////////////////////KUN TIL TEST////////////////////////
 		Platform.runLater(new Runnable() {

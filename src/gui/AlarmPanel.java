@@ -22,6 +22,11 @@ import characters.Sheep;
 import mail.GMail;
 import serverconnection.Alarm;
 
+/**
+ * Class to show and handle alarms
+ * @author Andreas Lyngby
+ * @author Håkon Ødegård Løvdal
+ */
 public class AlarmPanel extends JPanel{
 
 	private ProgramFrame programFrame;
@@ -39,6 +44,7 @@ public class AlarmPanel extends JPanel{
 	private JTextArea alarmTime;
 	private JTextArea alarmDesc;
 	private JTextArea alarmPos;
+	private JTextArea alarmEmail;
 	
 	private JButton deleteAlarm;
 	private JButton showAlarm;
@@ -91,6 +97,10 @@ public class AlarmPanel extends JPanel{
 		deleteAlarm = new JButton("Slett alarm");
 		showAlarm = new JButton("Vis alarm på kart");
 		sendAlarm = new JButton("Send alarm som epost");
+		alarmEmail = new JTextArea("Vil du sende noen alarmen?");
+		alarmEmail.setMaximumSize(new Dimension(200, 25));
+
+		setEditable(false);
 		
 		// Listener for buttons and list
 		deleteAlarm.addActionListener(new DeleteAlarmListener());
@@ -99,14 +109,20 @@ public class AlarmPanel extends JPanel{
 		list.addListSelectionListener(new ShowAlarmListener());
 		
 		// Alarms and sheeps for testing
-		Sheep sheep1 = new Sheep(16, "Knut", 1994, this.programFrame.getUserPanel().getFarmer(), 62.10745, 9.76686);
-		Sheep sheep2 = new Sheep(15, "Link", 1992, this.programFrame.getUserPanel().getFarmer(), 61.99745, 9.46686);
-		programFrame.getSheepPanel().addSheep(sheep1);
-		programFrame.getSheepPanel().addSheep(sheep2);
+		Sheep sheep1 = new Sheep(16, "Knut", 1994, 10000, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686);
+		Sheep sheep2 = new Sheep(15, "Link", 1992, 1023421, this.programFrame.getUserPanel().getFarmer(), 100, 61.99745, 9.46686);
 		addAlarm(new Alarm(sheep1, "Killed in Action"));
 		addAlarm(new Alarm(sheep2, "Killed by a tourist bus from Germany"));
 		sheep1.setAlarmStatus(true);
 		sheep2.setAlarmStatus(true);
+	}
+
+	private void setEditable(boolean bool) {
+		sheepId.setEditable(bool);
+		alarmTime.setEditable(bool);
+		alarmDesc.setEditable(bool);
+		alarmPos.setEditable(bool);
+		alarmEmail.setEditable(true);
 	}
 	
 	private void initDesign() {
@@ -123,24 +139,30 @@ public class AlarmPanel extends JPanel{
 					.addComponent(alarmPos)
 					.addComponent(deleteAlarm)
 					.addComponent(showAlarm)
-					.addComponent(sendAlarm)
+					.addGroup(layout.createSequentialGroup()
+							.addComponent(sendAlarm)
+							.addComponent(alarmEmail)
+					)
 			)
 		);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(listScrollPane)
 				.addGroup(layout.createSequentialGroup()
-					.addComponent(sheepIdText)
-					.addComponent(sheepId)
-					.addComponent(alarmTimeText)
-					.addComponent(alarmTime)
-					.addComponent(alarmDescText)
-					.addComponent(alarmDesc)
-					.addComponent(alarmPosText)
-					.addComponent(alarmPos)
-					.addComponent(deleteAlarm)
-					.addComponent(showAlarm)
-					.addComponent(sendAlarm)
+						.addComponent(sheepIdText)
+						.addComponent(sheepId)
+						.addComponent(alarmTimeText)
+						.addComponent(alarmTime)
+						.addComponent(alarmDescText)
+						.addComponent(alarmDesc)
+						.addComponent(alarmPosText)
+						.addComponent(alarmPos)
+						.addComponent(deleteAlarm)
+						.addComponent(showAlarm)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(sendAlarm)
+								.addComponent(alarmEmail)
+						)
 				)
 			)
 		);
@@ -153,6 +175,7 @@ public class AlarmPanel extends JPanel{
 	 */
 	public void addAlarm(Alarm alarm) {
 		alarmList.addElement(alarm);
+		alarm.getSheep().setAlarmStatus(true);
 		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
 		//programFrame.getJTabbedPane().setSelectedIndex(4); // Must not be wile init
 	}
@@ -255,17 +278,23 @@ public class AlarmPanel extends JPanel{
 		    if (!list.isSelectionEmpty()) {
 			    Alarm alarm = list.getSelectedValue();
 			    GMail sender = new GMail();
-			    String recipient = programFrame.getUserPanel().getFarmer().getEmail();
-			    String subject = "ALARM: " + alarm.getSheep().toString();
-			    String text = "Du har bedt om å få tilsendt en epost med informasjon om alarmen til " + alarm.getSheep().toString()
-					    + "\n\nTid: " + alarm.getAlarmDate() + "\nBeskrivelse: " + alarm.getAlarmDescription()
-			            + "\nPosisjon: " + alarm.getAlarmPostition();
-			    boolean sendStatus = sender.sendMail(recipient, subject, text);
-			    if (sendStatus) {
-				    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Epost ble sendt! Mottaker: " + programFrame.getUserPanel().getFarmer().getEmail(),
-						    "Epost", JOptionPane.INFORMATION_MESSAGE);
+			    String recipient = alarmEmail.getText();
+			    if (recipient.contains("@")) {
+				    String subject = "ALARM: " + alarm.getSheep().toString();
+				    String text = "Du har blitt tilsendt en epost med informasjon om alarmen til " + alarm.getSheep().toString()
+						    + "\n\nTid: " + alarm.getAlarmDate() + "\nBeskrivelse: " + alarm.getAlarmDescription()
+						    + "\nPosisjon: " + alarm.getAlarmPostition()
+						    + "\n\nHilsen " + programFrame.getUserPanel().getFarmer().getUserName();
+				    boolean sendStatus = sender.sendMail(recipient, subject, text);
+				    if (sendStatus) {
+					    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Epost ble sendt! Mottaker: " + recipient,
+							    "Epost", JOptionPane.INFORMATION_MESSAGE);
+				    } else {
+					    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Vi klarte dessverre ikke å sende eposten!\nMottaker: " + recipient,
+							    "Epostfeil", JOptionPane.WARNING_MESSAGE);
+				    }
 			    } else {
-				    JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Vi klarte dessverre ikke å sende eposten!\nMottaker: " + programFrame.getUserPanel().getFarmer().getEmail(),
+					JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Dette er en ugyldig epost-addresse\nMottaker: " + recipient + "\nVennligst legg inn en ny addresse på formen:\n\nsau@sau.no",
 						    "Epostfeil", JOptionPane.WARNING_MESSAGE);
 			    }
 		    }
