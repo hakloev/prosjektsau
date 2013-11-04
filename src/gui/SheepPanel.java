@@ -65,8 +65,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	
 	private JSeparator designSeperator;
 	private JSeparator designSeperator2;
-	private JSeparator designSeperator3;
-	
+
 	private JLabel sheepIdText;
 	private JLabel sheepAgeText;
 	private JLabel sheepNickText;
@@ -91,14 +90,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		this.creatingNewSheep = false;
 		initElements();
 		initDesign();
-		/* Bare for testing
-		test2 = new DefaultListModel();
-		JList list = new JList(test2);
-		list.setVisibleRowCount(c5);
-		usernameText = new JLabel("Brukernavn:");
-		passwordText = new JLabel("Password:");
-		JScrollPane listScrollPane = new JScrollPane(list);
-		*/
 	}
 	
 	public void initElements(){
@@ -126,28 +117,18 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepWeightText = new JLabel("Vekt:");
 		
 		sheepId = new JTextArea("ID");
-		//sheepId.setMinimumSize(new Dimension(150,17));
-		//sheepId.setMaximumSize(new Dimension(200,17));
 		sheepId.setEditable(false);
 		
 		sheepAge = new JTextArea("Alder");
-		//sheepAge.setMinimumSize(new Dimension(150,17));
-		//sheepAge.setMaximumSize(new Dimension(200,17));
 		sheepAge.setEditable(false);
 		
 		sheepNick = new JTextArea("Kallenavn");
-		//sheepNick.setMinimumSize(new Dimension(150,17));
-		//sheepNick.setMaximumSize(new Dimension(200,17));
 		sheepNick.setEditable(false);
 		
 		sheepPos = new JTextArea("Posisjon");
-		//sheepPos.setMinimumSize(new Dimension(150,17));
-		//sheepPos.setMaximumSize(new Dimension(200,17));
 		sheepPos.setEditable(false);
 		
 		sheepWeight = new JTextArea("Vekt");
-		//sheepWeight.setMinimumSize(new Dimension(150,17));
-		//sheepWeight.setMaximumSize(new Dimension(200,17));
 		sheepWeight.setEditable(false);
 		
 		infoMode = new JRadioButton("Infomodus");
@@ -185,9 +166,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
 		deleteSheep.addActionListener(new DeleteSheepListener());
-		// deleteSheep listner
-		
-		
 	}
 	
 	public void initDesign(){
@@ -244,7 +222,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 										.addComponent(deleteSheep)
 								)
 							)
-							
 						)
 					)
 					.addContainerGap()
