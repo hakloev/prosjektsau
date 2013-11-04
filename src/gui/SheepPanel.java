@@ -543,7 +543,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if ((posRegEx) && (yearRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
 					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
-							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
+							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), new Integer(1));   // satt puls til 100
 					sheepList.addElement(sheep);
 					addSheepToDb(sheep);
 					creatingNewSheep = false;
