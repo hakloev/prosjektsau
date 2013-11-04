@@ -11,10 +11,10 @@ public class Area {
 	public Area(ArrayList<Position> areaPoints){
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
-		createPoly(areaPoints);				
+		createPoly();				
 	}
 	
-	private void createPoly(ArrayList<Position> areaPoints){
+	private void createPoly(){
 		boolean isFirst = true;
 		for (Position position : areaPoints){
 			if (isFirst){

@@ -5,6 +5,8 @@ import java.util.Random;
 
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
+import serverconnection.NetHandler.MailTo;
+import serverconnection.NetHandler.MailType;
 import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Farmer;
@@ -91,13 +93,20 @@ public class Simulation {
 						}
 					}
 				}
+				
 				//Causes health decrease based of current disease
-				if (currentSheep.isInfected() && (daysOfDisease > currentDisease.getIncubationPeriod())){
+				if (currentSheep.isInfected() && simHasDisease && (daysOfDisease > currentDisease.getIncubationPeriod())){
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
+				
+				/*if (!isInArea(currentSheep)){
+					netHandler.sendMail(MailType.SHEEP_ESCAPE, MailTo.USER_ID, ""+currentSheep.getFarmer().getFarmerId(), new String[]{""+currentSheep.getIdNr()}, null);
+				}*/
+				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
-									+ " Name: " + currentSheep.getNick());
+									+ " Name: " + currentSheep.getNick() + " Infected: " + currentSheep.isInfected());
+				
 				netHandler.updateSheep(currentSheep);
 				previousUpdateTime = timeNow;
 			}
