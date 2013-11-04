@@ -47,7 +47,6 @@ public class UserPanel extends JPanel {
 	private DefaultListModel<ArrayList<Node>> areaGuiList;
 	private JScrollPane listScrollPane;
 	
-	private JComboBox areaBox;
 	private JLabel areaBoxText;
 	
 	private JButton loginButton;
@@ -63,14 +62,8 @@ public class UserPanel extends JPanel {
 	private JSeparator js;
 	private JSeparator js1;
 	
-	private JLabel firstNameText;
-	private JLabel lastNameText;
-	private JLabel farmerIdText;
 	private JLabel farmerEmailText;
 	
-	private JTextField firstName;
-	private JTextField lastName;
-	private JTextField farmerId;
 	private JTextField farmerEmail;
 	
 	private NetHandler handler;
@@ -112,10 +105,6 @@ public class UserPanel extends JPanel {
 		areaBoxText = new JLabel("Områder:");
 		areaList = new ArrayList<ArrayList<Node>>();
 		
-		areaBox = new JComboBox(areaList.toArray());
-		areaBox.setMinimumSize(new Dimension(120,20));
-		areaBox.setMaximumSize(new Dimension(120,20));
-		
 		areaGuiList = new DefaultListModel<ArrayList<Node>>();
 		list = new JList(areaGuiList);
 		listScrollPane = new JScrollPane(list);
@@ -126,6 +115,11 @@ public class UserPanel extends JPanel {
 		farmerEmail.setPreferredSize(new Dimension(100,20));
 		farmerEmail.setMaximumSize(new Dimension(200,20));
 		
+		listScrollPane.setEnabled(false);
+		addArea.setEnabled(false);
+		editArea.setEnabled(false);
+		farmerEmail.setEnabled(false);
+
 		// Listeners
 		loginButton.addActionListener(new LoginListener());
 		addArea.addActionListener(new AddAreaListener(this));
@@ -291,7 +285,7 @@ public class UserPanel extends JPanel {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(panel.areaGuiList.size()!=0){
+			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
 				ArrayList<Node> temp = (ArrayList<Node>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 				panel.areaGuiList.remove(panel.list.getSelectedIndex());
 				new AreaEditFrame(panel.programFrame,temp);
@@ -319,6 +313,11 @@ public class UserPanel extends JPanel {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);
 				passwordField.setEditable(false);
+				
+				listScrollPane.setEnabled(true);
+				addArea.setEnabled(true);
+				editArea.setEnabled(true);
+				farmerEmail.setEnabled(true);
 				
 				// parse result json to create farmer
 				// set user hash

@@ -184,11 +184,11 @@ public class AreaEditFrame extends JFrame{
 				
 			}else if(button.equals("create")){
 				if(frame.vertList.size() != 0){
-					ArrayList<Node> node = new ArrayList<Node>();
+					ArrayList<Node> nodes = new ArrayList<Node>();
 					for(int i = 0;i<frame.vertList.getSize();i++){
-						node.add(vertList.getElementAt(i));
+						nodes.add(vertList.getElementAt(i));
 					}
-					frame.frame.getUserPanel().addArea(node);
+					frame.frame.getUserPanel().addArea(nodes);
 					frame.frame.getUserPanel().setAreaOpenable(true);
 					frame.dispose();
 				}
@@ -213,15 +213,10 @@ public class AreaEditFrame extends JFrame{
 		@Override
 		public void windowClosing(WindowEvent arg0) {
 			pframe.getUserPanel().setAreaOpenable(true);
-			if(frame.vertList.size() != 0){
-				ArrayList<Node> node = new ArrayList<Node>();
-				for(int i = 0;i<frame.vertList.getSize();i++){
-					node.add(vertList.getElementAt(i));
-				}
-				frame.frame.getUserPanel().addArea(node);
-				frame.frame.getUserPanel().setAreaOpenable(true);
-				frame.dispose();
+			if(frame.areaList.size()!=0){
+				pframe.getUserPanel().addArea(frame.areaList);
 			}
+			frame.dispose();
 		}
 		
 	}
