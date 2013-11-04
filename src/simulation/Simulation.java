@@ -1,4 +1,5 @@
 package simulation;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -6,6 +7,7 @@ import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 import serverconnection.NetMain;
 import serverconnection.Response;
+import characters.Farmer;
 import characters.Position;
 import characters.Sheep;
 
@@ -200,5 +202,10 @@ public class Simulation {
 		else{
 			return latdist;
 		}
+	}
+	
+	private boolean isInArea(Sheep sheep){
+		return sheep.getFarmer().getArea().containsPosition(sheep.getLocation());
+		
 	}
 }
