@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import characters.Farmer;
-import characters.Node;
+import characters.Position;
 import serverconnection.NetHandler;
 import serverconnection.Response;
 import serverconnection.JsonHandler;
@@ -24,8 +24,8 @@ public class UserPanel extends JPanel {
 
 	private ArrayList<ArrayList<Node>> areaList;
 
-	private JList<ArrayList<Node>> list;
-	private DefaultListModel<ArrayList<Node>> areaGuiList;
+	private JList<ArrayList<Position>> list;
+	private DefaultListModel<ArrayList<Position>> areaGuiList;
 	private JScrollPane listScrollPane;
 
 	private JLabel areaBoxText;
@@ -82,7 +82,7 @@ public class UserPanel extends JPanel {
 		areaBoxText = new JLabel("Omr�der:");
 		areaList = new ArrayList<ArrayList<Node>>();
 
-		areaGuiList = new DefaultListModel<ArrayList<Node>>();
+		areaGuiList = new DefaultListModel<ArrayList<Position>>();
 		list = new JList(areaGuiList);
 		listScrollPane = new JScrollPane(list);
 
@@ -177,11 +177,11 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Adds an area to the area list
-	 * @param list - ArrayList<Node>
+	 * @param nodes - ArrayList<Node>
 	 */
 
-	public void addArea(ArrayList<Node> list){
-		areaGuiList.addElement(list);
+	public void addArea(ArrayList<Position> nodes){
+		areaGuiList.addElement(nodes);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class UserPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
-				ArrayList<Node> temp = (ArrayList<Node>)panel.areaGuiList.get(panel.list.getSelectedIndex());
+				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 				panel.areaGuiList.remove(panel.list.getSelectedIndex());
 				new AreaEditFrame(panel.programFrame,temp);
 				panel.setAreaOpenable(false);

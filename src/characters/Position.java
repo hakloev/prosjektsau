@@ -44,5 +44,14 @@ public class Position {
 	public double getLongitude() {
 		return longitude;
 	}
+	
+	/**
+	 * Returns string with latitude and longitude
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString(){
+		return latitude + "," + longitude;
+	}
 
 }
