@@ -342,12 +342,19 @@ public class SheepPanel extends JPanel implements ItemListener{
 	public void addSheep(Sheep sheep) {
 		sheepList.addElement(sheep);
 	}
-	
+
+	/**
+	 * Method to add sheep to db
+	 */
+	private void addSheepToDb(Sheep s) {
+		Response r = programFrame.getNetHandler().createSheep(s);
+		//System.out.println(r.msg);
+	}
+
 	/**
 	 * Method used to update the edited sheep to the database and locally to the sheepList
 	 */
 	private void updateSheepInDb() {
-		// oppdater sau-objektet i lista og send til server
 		// UPDATE AND SEND SHEEP TO SERVER, MUST BE DONE ASAP WHEN ONE CHARACTHER IS EDITED
 		Sheep sheep = sheepList.getElementAt(list.getSelectedIndex());
 
@@ -362,7 +369,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 			sheep.setNick(sheepNick.getText());
 			// Update server below here
 			Response r = programFrame.getNetHandler().updateSheep(sheep);
-			System.out.println(r.msg);
+			//System.out.println(r.msg);
 		} else {
 			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 					"\n\nKallenavn kan kun inneholde bokstaver\n\n" +
@@ -379,11 +386,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * @param index Index tells which sheep is selected
 	 */
 	private void removeSheepInDb(int index) {
-		Sheep s = sheepList.getElementAt(index);
+		int sheepId = sheepList.getElementAt(index).getIdNr();
 		sheepList.remove(index);
 		list.clearSelection();
 		setEditable(false);
 		// remove sheep s in db here with handler
+		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
+		//System.out.println(r.msg);
+
 	}
 	
 	/**
@@ -552,12 +562,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
 				if ((posRegEx) && (yearRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
-					// generete id funksjon? Hash?
-
-					// genere sauer i en lignede metode som updateSheep()??
-					Sheep sheep = new Sheep(334, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
+					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
 					sheepList.addElement(sheep);
+					addSheepToDb(sheep);
 					creatingNewSheep = false;
 					setEditable(false);
 					updateMode.setSelected(false);
