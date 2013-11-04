@@ -5,7 +5,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import utils.Constants;
-import serverconnection.NetHandler;
 
 import javax.swing.*;
 

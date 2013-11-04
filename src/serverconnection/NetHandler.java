@@ -22,8 +22,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import characters.Sheep;
 
 // Oppgavekrav til tid:
-//  Responstid p��� foresp���rsler fra b���nder skal maksimalt ta 2 sekunder.
-//  Responstid p��� innleggelse av lokaliseringsinformasjon om en sau skal maksimalt ta 0,5 sekund.
+//  Responstid på forespørsler fra bønder skal maksimalt ta 2 sekunder.
+//  Responstid på innleggelse av lokaliseringsinformasjon om en sau skal maksimalt ta 0,5 sekund.
 
 /* *** M A N U A L ***
  * GET requests are used with the combination of ID
@@ -39,6 +39,7 @@ import characters.Sheep;
  * 5 = get map
  * 6 = get sheep position only
  * 7 = get simple sheep list [position, wool color, nickname]
+ * 8 = get sheep's farm and area
  */
 
 public class NetHandler {
@@ -54,6 +55,7 @@ public class NetHandler {
 	private			HttpPost 	m_post;
 	private 		String 		m_userCode	  	= null;
 	private 		String 		m_farmCode	  	= null;
+	private			int			m_farmID		= -1;
 	public final	String		SMS_CARRIER_NETCOM  = "@sms.netcom.no";
 	public final	String		SMS_CARRIER_TELENOR = "@mobilpost.no";
 	private	static	int			m_retryCounter	= 0;
@@ -122,6 +124,8 @@ public class NetHandler {
 			if(!isError(serverResponse.msg)) {
 				if(_setUserCode(searchJSON("usercode", serverResponse.msg))) {
 				m_farmCode = searchJSON("farm_share_code", serverResponse.msg);
+				m_farmID = Integer.parseInt( searchJSON("farm_id", serverResponse.msg) );
+				
 				m_isLoggedIn = true;
 				_setURLs();
 				if(m_isDebugging) { System.out.println( searchJSON("request_response_message", serverResponse.msg) ); }
@@ -203,7 +207,7 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("SEND_MAIL_TO_FARM", farmID));
 	    parameters.add(new BasicNameValuePair("mailtype", type.toString()));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -223,8 +227,23 @@ public class NetHandler {
 	    	parameters.add(new BasicNameValuePair("regardingIDs", regardingIDs[i]));
 	    
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;
+	}
+	
+	// Send escape mail to farm
+	public Response sendEscapeMailToFarm(String[] escapedSheepIDs, String altEmail) {		
+	return sendMail(MailType.SHEEP_ESCAPE, MailTo.FARM_ID, m_farmCode, escapedSheepIDs, altEmail);
+	}
+	
+	// Send dead mail to farm
+	public Response sendDeadMailToFarm(String[] deadSheepIDs, String altEmail) {		
+	return sendMail(MailType.SHEEP_DEAD, MailTo.FARM_ID, m_farmCode, deadSheepIDs, altEmail);
+	}
+	
+	// Send high pulse mail to farm
+	public Response sendPulseMailToFarm(String[] deadSheepIDs, String altEmail) {		
+	return sendMail(MailType.SHEEP_HIGH_PULSE, MailTo.FARM_ID, m_farmCode, deadSheepIDs, altEmail);
 	}
 	
 	// Sends POST data to update a user from usercode.
@@ -237,17 +256,17 @@ public class NetHandler {
 	    return null;
 	}
 	
-	private List<NameValuePair> getSheepPostParameters(List<NameValuePair> parameters, Sheep s) {
-	    // get id, name, position.. etc
+	private List<NameValuePair> _getSheepPostParameters(List<NameValuePair> parameters, Sheep s) {
 	    parameters.add(new BasicNameValuePair("id", ""+s.getIdNr() ) );
-	    parameters.add(new BasicNameValuePair("farm_id", ""+s.getFarmID() ) );
+	    //parameters.add(new BasicNameValuePair("farm_id", ""+s.getFarmID() ) );
+	    parameters.add(new BasicNameValuePair("farm_id", ""+m_farmID ) );
 	    parameters.add(new BasicNameValuePair("current_pulse", ""+s.getPulse() ) );
 	    parameters.add(new BasicNameValuePair("nickname", ""+s.getNick() ) ); 
 	    parameters.add(new BasicNameValuePair("latitude", ""+s.getLocation().getLatitude() ) ); 
 	    parameters.add(new BasicNameValuePair("longitude", ""+s.getLocation().getLongitude() ) );
-	    //parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    
-	    //parameters.add(new BasicNameValuePair("description", ""+s.getDescription() ) );    
-	    //parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );  
+	    parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    
+	    parameters.add(new BasicNameValuePair("description", ""+s.getDescription() ) );    
+	    parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );  
 	    return parameters;
 	}
 	
@@ -259,7 +278,7 @@ public class NetHandler {
 		
 		for(int i = 0; i < als.size(); i++) {
 			parameters.add(new BasicNameValuePair("number", ""+i));
-			parameters = getSheepPostParameters(parameters, als.get(i));
+			parameters = _getSheepPostParameters(parameters, als.get(i));
 		}
 		
 	    try { return _post(parameters);
@@ -267,11 +286,22 @@ public class NetHandler {
 	    return null;	
 	}
 	
-	// Update a single sheep.
-	public Response createSheep(Sheep s) {
+	// Create a sheep.
+	public Response createSheep(Sheep s, int farmID) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("SHEEP_CREATE", m_userCode));
-		parameters = getSheepPostParameters(parameters, s);
+		parameters.add(new BasicNameValuePair("farm_id", ""+farmID));
+		parameters = _getSheepPostParameters(parameters, s);
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}
+	
+	// Delete a single sheep.
+	public Response deleteSheep(int id) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("SHEEP_DELETE", m_userCode));
+		parameters.add(new BasicNameValuePair("id", ""+id));
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;	
@@ -281,7 +311,7 @@ public class NetHandler {
 	public Response updateSheep(Sheep s) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("SHEEP_UPDATE", m_userCode));
-		parameters = getSheepPostParameters(parameters, s);
+		parameters = _getSheepPostParameters(parameters, s);
 		
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
@@ -394,6 +424,23 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
+
+	// Get sheep from ID.
+	// -1 means all sheep.
+	public Response getFarmFromSheepID(int id) {
+		if(m_isDebugging) { System.out.println("[GET] sheep " + id); }
+		try { return _get("&rid=8&f="+id, null);
+		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
+		return null;
+	}
+	
+	// -1 means all sheep.
+	public Response getSheepB(int id) {
+		if(m_isDebugging) { System.out.println("[GET] sheep " + id); }
+		try { return _get("&rid=22&f="+id, null);
+		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
+		return null;
+	}
 	
 	// -1 means all sheep.
 	public Response getSimulatorSheep(int id) {
@@ -415,9 +462,9 @@ public class NetHandler {
 	// Get alarm log. No need to specify ID.
 	// User can only access his own alarms. use [amount] to decide how many.
 	// -1 means all alarms.
-	public Response getAlarm(int amount) {
-		if(m_isDebugging) { System.out.println("[GET] "+amount+" alarms"); }
-		try { return _get("&rid=4&f="+amount, null);
+	public Response getAlarm(int sheepID) {
+		if(m_isDebugging) { System.out.println("[GET] alarms for sheep id "+sheepID); }
+		try { return _get("&rid=4&f="+sheepID, null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}

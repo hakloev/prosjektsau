@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import serverconnection.JsonHandler;
-import serverconnection.NetHandler;
-import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Position;
 import characters.Sheep;
