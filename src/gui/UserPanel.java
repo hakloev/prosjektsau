@@ -42,6 +42,11 @@ public class UserPanel extends JPanel {
 	private ProgramFrame programFrame;
 	
 	private ArrayList<ArrayList<Node>> areaList;
+	
+	private JList<ArrayList<Node>> list;
+	private DefaultListModel<ArrayList<Node>> areaGuiList;
+	private JScrollPane listScrollPane;
+	
 	private JComboBox areaBox;
 	private JLabel areaBoxText;
 	
@@ -111,6 +116,10 @@ public class UserPanel extends JPanel {
 		areaBox.setMinimumSize(new Dimension(120,20));
 		areaBox.setMaximumSize(new Dimension(120,20));
 		
+		areaGuiList = new DefaultListModel<ArrayList<Node>>();
+		list = new JList(areaGuiList);
+		listScrollPane = new JScrollPane(list);
+		
 		farmerEmailText = new JLabel("E-mail:");
 		farmerEmail = new JTextField();
 		farmerEmail.setMinimumSize(new Dimension(100,20));
@@ -139,23 +148,18 @@ public class UserPanel extends JPanel {
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(js)
 				)
-				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(farmerEmailText)
-						.addComponent(farmerEmail)
-						
-					)
-				)
+
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(js1)
 				)
+
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addGroup(layout.createSequentialGroup()
+						.addComponent(farmerEmailText)
+						.addComponent(farmerEmail)
 						.addComponent(areaBoxText)
-						.addComponent(areaBox)
+						.addComponent(listScrollPane)
 						.addComponent(editArea)
 						.addComponent(addArea)
-					)
 				)
 			)
 		);
@@ -169,26 +173,18 @@ public class UserPanel extends JPanel {
 						.addComponent(passwordField)
 					)
 					.addComponent(loginButton)
-					.addGroup(layout.createParallelGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 							.addComponent(js)
 					)
-					.addGroup(layout.createParallelGroup()
-						.addGroup(layout.createSequentialGroup()
-							.addComponent(farmerEmailText)
-							.addComponent(farmerEmail)
-						)
-					)
-					.addGroup(layout.createParallelGroup()
+					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 							.addComponent(js1)
 					)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addGroup(layout.createSequentialGroup()
-							.addComponent(areaBoxText)
-							.addComponent(areaBox)
-						)
-						.addComponent(editArea)
-						.addComponent(addArea)
-					)
+					.addComponent(farmerEmailText)
+					.addComponent(farmerEmail)
+					.addComponent(areaBoxText)
+					.addComponent(listScrollPane)
+					.addComponent(editArea)
+					.addComponent(addArea)
 					.addContainerGap()
 				)
 			)
@@ -226,23 +222,44 @@ public class UserPanel extends JPanel {
 	}
 	*/
 	
+	/**
+	 * Disables or enables the addArea and editArea button if AreaEditFrame is opened or closed.
+	 * @param bool
+	 */
 	public void setAreaOpenable(boolean bool){
 		addArea.setEnabled(bool);
 		editArea.setEnabled(bool);
 	}
 	
+	/**
+	 * Adds an area to the area list
+	 * @param list - ArrayList<Node>
+	 */
+	
 	public void addArea(ArrayList<Node> list){
-		areaBox.addItem(list);
+		areaGuiList.addElement(list);
 	}
+	
+	/**
+	 * Class you implementing ActionLister to make the button to edit the farm area. 
+	 * @author Andreas
+	 *
+	 */
 	
 	class AddAreaListener implements ActionListener{
 		
 		private UserPanel panel;
-		
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
 		public AddAreaListener(UserPanel panel){
 			this.panel = panel;
 		}
 		
+		/**
+		 * Called when clicking the button to create a new area. Opens AreaEditFrame.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new AreaEditFrame(panel.programFrame, null);
@@ -250,21 +267,36 @@ public class UserPanel extends JPanel {
 		}
 	}
 	
+	
+	/**
+	 * Class you implementing ActionLister to make the button to edit the farm area.
+	 * @author Andreas
+	 *
+	 */
+	
 	class EditAreaListener implements ActionListener{
 		private UserPanel panel;
 		
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
 		public EditAreaListener(UserPanel panel){
 			this.panel = panel;
 		}
-
+		
+		/**
+		 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+		 * 
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			ArrayList<Node> temp = (ArrayList<Node>)panel.areaBox.getItemAt(panel.areaBox.getSelectedIndex());
-			if(panel.areaBox.getItemCount()!=0){
-				panel.areaBox.remove(panel.areaBox.getSelectedIndex());
+			if(panel.areaGuiList.size()!=0){
+				ArrayList<Node> temp = (ArrayList<Node>)panel.areaGuiList.get(panel.list.getSelectedIndex());
+				panel.areaGuiList.remove(panel.list.getSelectedIndex());
+				new AreaEditFrame(panel.programFrame,temp);
+				panel.setAreaOpenable(false);
 			}
-			new AreaEditFrame(panel.programFrame,temp);
-			panel.setAreaOpenable(false);
 		}
 	}
 	
