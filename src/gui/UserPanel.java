@@ -79,14 +79,14 @@ public class UserPanel extends JPanel {
 		
 		js = new JSeparator();
 
-		areaBoxText = new JLabel("Omr�der:");
+		areaBoxText = new JLabel("Områder:");
 		areaList = new ArrayList<ArrayList<Node>>();
 
 		areaGuiList = new DefaultListModel<ArrayList<Position>>();
 		list = new JList(areaGuiList);
 		listScrollPane = new JScrollPane(list);
 
-		farmerEmailText = new JLabel("E-mail:");
+		farmerEmailText = new JLabel("Epost:");
 		farmerEmail = new JTextField();
 		farmerEmail.setMinimumSize(new Dimension(100,20));
 		farmerEmail.setPreferredSize(new Dimension(100,20));
@@ -180,8 +180,8 @@ public class UserPanel extends JPanel {
 	 * @param nodes - ArrayList<Node>
 	 */
 
-	public void addArea(ArrayList<Position> nodes){
-		areaGuiList.addElement(nodes);
+	public void addArea(ArrayList<Node> list){
+		areaGuiList.addElement(list);
 	}
 
 	/**
@@ -259,6 +259,8 @@ public class UserPanel extends JPanel {
 			NetHandler handler = programFrame.getNetHandler();
 			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
+			System.out.print("Logge inn: ");
+			loginResult.consoletime();
 			if (!handler.isError(loginResult.msg)) {
 				loginButton.setEnabled(false);
 				usernameField.setEditable(false);

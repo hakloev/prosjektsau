@@ -4,14 +4,16 @@ import java.util.Random;
 
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
+import serverconnection.NetHandler.MailTo;
+import serverconnection.NetHandler.MailType;
 import serverconnection.NetMain;
 import serverconnection.Response;
+import characters.Farmer;
 import characters.Position;
 import characters.Sheep;
 
 public class Simulation {
 	private 				ArrayList<Sheep> 	sheepList;
-	private 				ArrayList<Sheep> 	infectedSheep;
 	private 				long 				previousUpdateTime 		= 0;
 	private 				long 				timeNow;
 	private 				Random 				rand;
@@ -21,6 +23,7 @@ public class Simulation {
 	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 7000;
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
+	public static final		int					MOVEMENTSCALE			= 10000;
 	private 				boolean 			simHasDisease;
 	private 				Disease 			currentDisease;
 	private 				int 				daysOfDisease 			= 0;
@@ -35,7 +38,6 @@ public class Simulation {
 		netHandler.login("Simulering", "Simulering");
 		sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		rand = new Random();
-		this.infectedSheep = new ArrayList<Sheep>();
 		simHasDisease = false;
 	}
 	
@@ -64,13 +66,13 @@ public class Simulation {
 				
 				sign = rand.nextInt(2);
 				if (sign == NEGATIVE){
-					double latrads = (rand.nextDouble() * 1000) / EARTHRADIUS;
-					double longrads = (rand.nextDouble() * 1000) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+					double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
 				}
 				else{
-					double latrads = (rand.nextDouble() * 1000) / EARTHRADIUS;
-					double longrads = ((rand.nextDouble() * 1000)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+					double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+					double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
 					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
 				}
 				
@@ -84,27 +86,28 @@ public class Simulation {
 				
 				//Check if current sheep should get infected
 				if (!currentSheep.isInfected() && simHasDisease){
-					ArrayList<Sheep> newlyInfected = new ArrayList<Sheep>();
-					for (Sheep infSheep : infectedSheep){
-						if ((distanceBetween(currentSheep, infSheep) < currentDisease.getSpreadDistance()) && (rand.nextInt(100) < currentDisease.getSpreadChance())){
-							newlyInfected.add(currentSheep);
-							infectSheep(sheepList.indexOf(currentSheep), currentDisease);
+					for (Sheep infSheep : sheepList){
+						if (infSheep.isInfected() && (distanceBetween(currentSheep, infSheep) < currentDisease.getSpreadDistance()) && (rand.nextInt(100) < currentDisease.getSpreadChance())){
+							infectSheep(sheepList.indexOf(currentSheep));
 						}
 					}
-					for (Sheep newinf : newlyInfected){
-						infectedSheep.add(newinf);
-					}
 				}
+				
 				//Causes health decrease based of current disease
-				if (currentSheep.isInfected() && (daysOfDisease > currentDisease.getIncubationPeriod())){
+				if (currentSheep.isInfected() && simHasDisease && (daysOfDisease > currentDisease.getIncubationPeriod())){
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
-				previousUpdateTime = timeNow;
+				
+				/*if (!isInArea(currentSheep)){
+					netHandler.sendMail(MailType.SHEEP_ESCAPE, MailTo.USER_ID, ""+currentSheep.getFarmer().getFarmerId(), new String[]{""+currentSheep.getIdNr()}, null);
+				}*/
+				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
-									+ " Name: " + currentSheep.getNick());
+									+ " Name: " + currentSheep.getNick() + " Infected: " + currentSheep.isInfected());
+				
 				netHandler.updateSheep(currentSheep);
-				//System.out.println(response.msg);
+				previousUpdateTime = timeNow;
 			}
 			System.out.println("");
 			
@@ -113,10 +116,9 @@ public class Simulation {
 				daysOfDisease++;
 				if (daysOfDisease > currentDisease.getDiseaseLength()){
 					System.out.println("Disease ended");
-					for (Sheep infSheep : infectedSheep){
+					for (Sheep infSheep : sheepList){
 						infSheep.cure();
 					}
-					infectedSheep.clear();
 					simHasDisease = false;
 				}
 			}
@@ -132,9 +134,9 @@ public class Simulation {
 				generateDisease();
 				simHasDisease = true;
 			}
+			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 			previousUpdateTime = timeNow;
 			
-			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
 		}
 	}
 	
@@ -186,12 +188,11 @@ public class Simulation {
 				return;
 			}
 		}
-		infectedSheep.add(sheepList.get(breakoutSheepIndex));
-		infectSheep(breakoutSheepIndex, currentDisease);
+		infectSheep(breakoutSheepIndex);
 	}
 	
 	//Infects a given sheep if it is not already infected
-	public void infectSheep(int index, Disease dis){
+	public void infectSheep(int index){
 		if (!sheepList.get(index).isInfected()){
 			System.out.println("Sheep: " + index + " got infected");
 			sheepList.get(index).innfect();
@@ -211,7 +212,8 @@ public class Simulation {
 		}
 	}
 	
-	public void addNewSheep(Sheep sheep){
-		sheepList.add(sheep);
+	private boolean isInArea(Sheep sheep){
+		return sheep.getFarmer().getArea().containsPosition(sheep.getLocation());
+		
 	}
 }

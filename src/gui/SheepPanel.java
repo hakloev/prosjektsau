@@ -62,6 +62,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JRadioButton mapAll;
 	private JRadioButton mapSelected;
 	private ButtonGroup radioGroup2;
+	private JRadioButton sheepMale;
+	private JRadioButton sheepFemale;
+	private ButtonGroup radioGroup3;
 	
 	private JSeparator designSeperator;
 	private JSeparator designSeperator2;
@@ -71,7 +74,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JLabel sheepNickText;
 	private JLabel sheepPosText;
 	private JLabel sheepWeightText;
-	
+	private JLabel sheepSex;
+
 	private JTextArea sheepId;
 	private JTextArea sheepAge;
 	private JTextArea sheepNick;
@@ -82,12 +86,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 	private boolean changingSheep; // Boolean telling if a sheep is changing or not
 	private boolean creatingNewSheep;  // Boolean telling if a new sheep is being created
+	private boolean updatingSheep;   // Boolean telling if a user is changing a sheep
 
 	
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		this.changingSheep = false;
 		this.creatingNewSheep = false;
+		this.updatingSheep = false;
 		initElements();
 		initDesign();
 	}
@@ -115,7 +121,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepNickText = new JLabel("Kallenavn:");
 		sheepPosText = new JLabel("Posisjon:");
 		sheepWeightText = new JLabel("Vekt:");
-		
+		sheepSex = new JLabel("Kjønn:");
+
 		sheepId = new JTextArea("ID");
 		sheepId.setEditable(false);
 		
@@ -133,15 +140,21 @@ public class SheepPanel extends JPanel implements ItemListener{
 		
 		infoMode = new JRadioButton("Infomodus");
 		updateMode = new JRadioButton("Oppdateringsmodus");
-		updateMode.setSelected(true);
 		radioGroup1 = new ButtonGroup();
 		radioGroup1.add(infoMode);
 		radioGroup1.add(updateMode);
-		infoMode.setSelected(true);
 		radioGroup1.setSelected(infoMode.getModel(), true);
-		
+		sheepMale = new JRadioButton("Hannkjønn");
+		sheepFemale = new JRadioButton("Hunnkjønn");
+		radioGroup3 = new ButtonGroup();
+		radioGroup3.add(sheepMale);
+		radioGroup3.add(sheepFemale);
+		sheepMale.getModel().setEnabled(false);
+		sheepFemale.getModel().setEnabled(false);
+
 		mapAll = new JRadioButton("Alle");
 		mapSelected = new JRadioButton("Valgt");
+		mapSelected.setSelected(true);
 		radioGroup2 = new ButtonGroup();
 		radioGroup2.add(mapAll);
 		radioGroup2.add(mapSelected);
@@ -173,121 +186,132 @@ public class SheepPanel extends JPanel implements ItemListener{
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup()
-							.addComponent(sheepListText)
-						)
-						.addGroup(layout.createSequentialGroup()
-							.addComponent(listScrollPane)
-							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addComponent(designSeperator)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addGroup(layout.createSequentialGroup()
-									.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addGroup(layout.createSequentialGroup()
-											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(sheepIdText)
-												.addComponent(sheepNickText)
-												.addComponent(sheepAgeText)
-												.addComponent(sheepWeightText)
-												.addComponent(sheepPosText)
-											)
-											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addComponent(sheepId)
-												.addComponent(sheepNick)
-												.addComponent(sheepAge)
-												.addComponent(sheepWeight)
-												.addComponent(sheepPos)
-											)
-											.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-													.addComponent(updateSheep)
+										.addComponent(sheepListText)
+								)
+								.addGroup(layout.createSequentialGroup()
+										.addComponent(listScrollPane)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addComponent(designSeperator)
+												.addGroup(layout.createSequentialGroup()
+														.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+																.addGroup(layout.createSequentialGroup()
+																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+																				.addComponent(sheepIdText)
+																				.addComponent(sheepNickText)
+																				.addComponent(sheepAgeText)
+																				.addComponent(sheepWeightText)
+																				.addComponent(sheepPosText)
+																				.addComponent(sheepSex)
+																		)
+																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+																				.addComponent(sheepId)
+																				.addComponent(sheepNick)
+																				.addComponent(sheepAge)
+																				.addComponent(sheepWeight)
+																				.addComponent(sheepPos)
+																				.addGroup(layout.createSequentialGroup()
+																						.addComponent(sheepMale)
+																						.addComponent(sheepFemale)
+																				)
+																		)
+																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+																				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+																						.addComponent(updateSheep)
+																				)
+																				.addComponent(infoMode)
+																				.addComponent(updateMode)
+																		)
+																)
+																.addComponent(hasAlarm)
+																.addGroup(layout.createSequentialGroup()
+																		.addComponent(showMap)
+																		.addComponent(mapSelected)
+																		.addComponent(mapAll)
+																		.addComponent(deleteMap)
+																)
+														)
 												)
-												.addComponent(infoMode)
-												.addComponent(updateMode)
-											)
+												.addComponent(designSeperator2)
+												.addGroup(layout.createSequentialGroup()
+														.addComponent(newSheep)
+														.addComponent(addSheep)
+														.addComponent(deleteSheep)
+												)
 										)
-										.addComponent(hasAlarm)
-										.addGroup(layout.createSequentialGroup()
-											.addComponent(showMap)
-											.addComponent(mapSelected)
-											.addComponent(mapAll)
-											.addComponent(deleteMap)
-										) 
-									)
 								)
-								.addComponent(designSeperator2)
-								.addGroup(layout.createSequentialGroup()
-										.addComponent(newSheep)
-										.addComponent(addSheep)
-										.addComponent(deleteSheep)
-								)
-							)
 						)
-					)
-					.addContainerGap()
+						.addContainerGap()
 				)
 			)
 		);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(sheepListText)
-					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup()
-							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-									.addComponent(sheepIdText)
-									.addComponent(sheepId)
+						.addContainerGap()
+						.addComponent(sheepListText)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+														.addComponent(sheepIdText)
+														.addComponent(sheepId)
+												)
+												.addComponent(infoMode, GroupLayout.Alignment.TRAILING)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+												.addComponent(sheepNickText)
+												.addComponent(sheepNick)
+												.addComponent(updateMode)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+												.addComponent(sheepAgeText)
+												.addComponent(sheepAge)
+												.addComponent(updateSheep)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+												.addComponent(sheepWeightText)
+												.addComponent(sheepWeight)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+												.addComponent(sheepPosText)
+												.addComponent(sheepPos)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+											.addComponent(sheepSex)
+											.addComponent(sheepMale)
+											.addComponent(sheepFemale)
+										)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(designSeperator)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(hasAlarm)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addComponent(showMap)
+												.addComponent(mapAll)
+												.addComponent(mapSelected)
+												.addComponent(deleteMap)
+										)
+										.addGap(20)
+										.addComponent(designSeperator2)
+										.addGap(20)
+										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+												.addComponent(newSheep)
+												.addComponent(addSheep)
+												.addComponent(deleteSheep)
+										)
+										.addGap(0, 300, Short.MAX_VALUE)
 								)
-								.addComponent(infoMode,GroupLayout.Alignment.TRAILING)
-							)
-							.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-							.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-								.addComponent(sheepNickText)
-								.addComponent(sheepNick)
-								.addComponent(updateMode)
-							)
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        		.addComponent(sheepAgeText)
-                        		.addComponent(sheepAge)
-                        		.addComponent(updateSheep)
-	                        )
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        		.addComponent(sheepWeightText)
-                        		.addComponent(sheepWeight)
-	                        )
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        		.addComponent(sheepPosText)
-                        		.addComponent(sheepPos)
-	                        )
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(designSeperator)
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(hasAlarm)
-	                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        		.addComponent(showMap)
-                        		.addComponent(mapAll)
-                        		.addComponent(mapSelected)
-                        		.addComponent(deleteMap)
-	                        )
-	                        .addGap(20)
-	                        .addComponent(designSeperator2)
-	                        .addGap(20)
-	                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-	                        		.addComponent(newSheep)
-	                        		.addComponent(addSheep)
-	                        		.addComponent(deleteSheep)
-	                        )
-	                        .addGap(0, 300, Short.MAX_VALUE)
+								.addComponent(listScrollPane)
 						)
-						.addComponent(listScrollPane)
-					)
-					.addContainerGap()
+						.addContainerGap()
 				)
 			)
 		);
@@ -304,6 +328,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Should take a parameter userId or something like that.
 	 */
 	public void initUserSheeps(Response listOfSheeps) {
+		System.out.print("Legge til samtlige sauer: ");
+		listOfSheeps.consoletime();
 		ArrayList<Sheep> sheeps = JsonHandler.parseJsonAndReturnSheepList(listOfSheeps, programFrame.getUserPanel().getFarmer());
 		if (!sheeps.isEmpty()) {
 			for (Sheep s : sheeps) {
@@ -325,18 +351,23 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 */
 	private void addSheepToDb(Sheep s) {
 		Response r = programFrame.getNetHandler().createSheep(s);
-		//System.out.println(r.msg);
+		System.out.print("Legge sau til i database: ");
+		r.consoletime();
+		changingSheep = true;
+		sheepList.clear();
+		initUserSheeps(programFrame.getNetHandler().getSheep(-1));
+		changingSheep = false;
 	}
 
 	/**
 	 * Method used to update the edited sheep to the database and locally to the sheepList
 	 */
-	private void updateSheepInDb() {
+	private boolean updateSheepInDb() {
 		// UPDATE AND SEND SHEEP TO SERVER, MUST BE DONE ASAP WHEN ONE CHARACTHER IS EDITED
 		Sheep sheep = sheepList.getElementAt(list.getSelectedIndex());
 
 		String posInput = sheepPos.getText();
-		boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,6},[0-9]{1,2}\\.[0-9]{5,6}$");
+		boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,15},[0-9]{1,2}\\.[0-9]{5,15}$");
 		boolean weightRegEx = sheepWeight.getText().matches("[0-9]+");
 		boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
 		if ((posRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and weight. Can't change age
@@ -346,12 +377,15 @@ public class SheepPanel extends JPanel implements ItemListener{
 			sheep.setNick(sheepNick.getText());
 			// Update server below here
 			Response r = programFrame.getNetHandler().updateSheep(sheep);
-			//System.out.println(r.msg);
+			System.out.print("Oppdatere sau i database: ");
+			r.consoletime();
+			return true;
 		} else {
 			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 					"\n\nKallenavn kan kun inneholde bokstaver\n\n" +
 					"Vekt angis i gram på formen: 654354",
 					"Inputfeil", JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 
 
@@ -369,8 +403,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		setEditable(false);
 		// remove sheep s in db here with handler
 		Response r = programFrame.getNetHandler().deleteSheep(sheepId);
-		//System.out.println(r.msg);
-
+		System.out.print("Fjerne en sau i databasen: ");
+		r.consoletime();
 	}
 	
 	/**
@@ -383,12 +417,15 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepAge.setEditable(bool);
 		sheepWeight.setEditable(bool);
 		sheepPos.setEditable(bool);
+		sheepMale.setEnabled(bool);
+		sheepFemale.setEnabled(bool);
 		
 		sheepId.setText("ID genereres av serveren");
 		sheepNick.setText("Kallenavn");
 		sheepAge.setText("Tast inn fødselsår");
 		sheepWeight.setText("Vekt");
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
+		radioGroup3.clearSelection();
 		hasAlarm.setText("Har Alarm: NEI");
 	}
 	/**
@@ -401,6 +438,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepAge.setEditable(false);
 		sheepWeight.setEditable(bool);
 		sheepPos.setEditable(bool);
+		if (sheepMale.isSelected()) {
+			sheepMale.setEnabled(true);
+			sheepFemale.setEnabled(false);
+		} else {
+			sheepFemale.setEnabled(true);
+			sheepMale.setEnabled(false);
+		}
+
 	}
 	
 	// All the button listeners, implemented as classes with listener-interfaces
@@ -416,15 +461,26 @@ public class SheepPanel extends JPanel implements ItemListener{
 			if (!changingSheep) {
 				if (!updateMode.isSelected()) {
 					if (!e.getValueIsAdjusting()) {
-						AlarmPanel alarm = programFrame.getAlarmPanel();
 						Sheep sheep = list.getSelectedValue();
 						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
+						// LAGRER IKKE BIRTHDATE I DB
+						System.out.print("Hente en sau i database: ");
+						json.consoletime();
 						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
 						sheepWeight.setText(Integer.toString(sheep.getWeight()));
 						sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
+						if (sheep.getGender().equals("hanne")) {
+							radioGroup3.setSelected(sheepMale.getModel(), true);
+							sheepFemale.setEnabled(false);
+							sheepMale.setEnabled(true);
+						} else {
+							radioGroup3.setSelected(sheepFemale.getModel(), true);
+							sheepFemale.setEnabled(true);
+							sheepMale.setEnabled(false);
+						}
 						if (sheep.getAlarmStatus()) {
 							hasAlarm.setText("Har alarm: JA");
 						}  else {
@@ -510,16 +566,22 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			changingSheep = true;
-			list.clearSelection();
+			if (updatingSheep) {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan ikke legge til ny sau når du oppdaterer en sau",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+			}
 			if (infoMode.isSelected()) {
+				changingSheep = true;
+				list.clearSelection();
 				updateMode.setSelected(true);
 				infoMode.setSelected(false);
 				radioGroup1.setSelected(updateMode.getModel(), true);
+				setEditable(true);
+				radioGroup3.clearSelection();
+				creatingNewSheep = true;
+				changingSheep = false;
 			}
-			setEditable(true);
-			creatingNewSheep = true;
-			changingSheep = false;
+
 		}
 	}
 	
@@ -531,16 +593,25 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (updateMode.isSelected()) {
+			if (updatingSheep) {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du ønsker vel å oppdatere sauen først?",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+			}  else if (updateMode.isSelected()) {
 				String posInput = sheepPos.getText();
-				boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,6},[0-9]{1,2}\\.[0-9]{5,6}$");
+				boolean posRegEx = posInput.matches("^[0-9]{1,2}\\.[0-9]{5,15},[0-9]{1,2}\\.[0-9]{5,15}$");
 				boolean yearRegEx = sheepAge.getText().matches("[2][0]([0][0-9]|[1][0-3])");
 				boolean weightRegEx = sheepWeight.getText().matches("[0-9]+");
 				boolean nameReqEx = sheepNick.getText().matches("[a-zA-ZæøåÆØÅ\\s]+");
-				if ((posRegEx) && (yearRegEx) && (nameReqEx) && (weightRegEx)) {  // RegEx that checks if it is correct position, name and age format
+				if ((posRegEx) && (yearRegEx) && (nameReqEx) && (weightRegEx) && ((sheepMale.isSelected() || sheepFemale.isSelected()))) {  // RegEx that checks if it is correct position, name and age format
 					String[] pos = posInput.split(",");
-					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), Integer.parseInt(sheepWeight.getText()),
-							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]));   // satt puls til 100
+					String gender;
+					if (sheepMale.isSelected()) {
+						gender = "hanne";
+					} else {
+						gender = "hunne";
+					}
+					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), gender, Integer.parseInt(sheepWeight.getText()),
+							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), new Integer(1));   // satt puls til 100
 					sheepList.addElement(sheep);
 					addSheepToDb(sheep);
 					creatingNewSheep = false;
@@ -553,12 +624,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 							"\n\nAlder angis på formen 2000\n" +
 							"Du kan ha alder fra 2000-2013\n\n" +
 							"Vekt angis i gram på formen: 643454\n\n" +
-							"Kallenavn kan kun inneholde bokstaver",
+							"Kallenavn kan kun inneholde bokstaver\n\n" +
+							"Husk å angi kjønn",
 							"Inputfeil", JOptionPane.WARNING_MESSAGE);
-					System.out.println("" + posRegEx + yearRegEx + nameReqEx);
 				}
 			}  else {
-				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan legge til ny sau uten å trykke \"Ny sau\"",
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan ikke legge til ny sau uten å trykke \"Ny sau\"",
 						"Modusfeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -573,11 +644,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (updateMode.isSelected() && !creatingNewSheep) {
-				setEditableWithSheepInfo(false);
-				updateSheepInDb();
-				updateMode.setSelected(false);
-				infoMode.setSelected(true);
-				radioGroup1.setSelected(infoMode.getModel(), true);
+				boolean updateStatus = updateSheepInDb();
+				if (updateStatus) {
+					updateMode.setSelected(false);
+					infoMode.setSelected(true);
+					radioGroup1.setSelected(infoMode.getModel(), true);
+					setEditableWithSheepInfo(false);
+					updatingSheep = false;
+				}
 			} else {
 				if (creatingNewSheep) {
 					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan ikke oppdatere en sau når\ndu lager en ny sau.",
@@ -609,6 +683,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				infoMode.setSelected(true);
 				radioGroup1.setSelected(infoMode.getModel(), true);
 			} else {
+				updatingSheep = true;
 				setEditableWithSheepInfo(true);
 			}
 		}
@@ -624,9 +699,17 @@ public class SheepPanel extends JPanel implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			// kan nå gå fra oppdatering til info uten å lagre endringer.. 
 			// må gjøres noe med
-			setEditableWithSheepInfo(false);
-			infoMode.setSelected(true);
-			radioGroup1.setSelected(infoMode.getModel(), true);
+			if (updatingSheep) {
+				updateMode.setSelected(true);
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må lagre endringene først\nTrykk \"Oppdater sau\"",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+			} else {
+				setEditableWithSheepInfo(false);
+				updatingSheep = false;
+				creatingNewSheep = false;
+				infoMode.setSelected(true);
+				radioGroup1.setSelected(infoMode.getModel(), true);
+			}
 		}
 	}
 
@@ -640,6 +723,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			if (list.isSelectionEmpty()) {
 				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en sau for å slette",
+						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
+			} else if (updateMode.isSelected()) {
+				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du kan ikke slette sau i oppdateringsmodus",
 						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
 			} else {
 				changingSheep = true;

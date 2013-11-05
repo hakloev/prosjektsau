@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import serverconnection.Response;
 import utils.Constants;
 import serverconnection.NetHandler;
 
@@ -54,7 +55,9 @@ public class ProgramFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == 0) {
-					handler.logout();
+					Response r = handler.logout();
+					System.out.print("Logge ut: ");
+					r.consoletime();
 					System.exit(0);
 				}
 			}

@@ -3,6 +3,10 @@
 *.class
 # /out
 
+/jar_lib
+/gui
+
+
 #IntelliJ project files
 .idea
 prosjektsau.iml
