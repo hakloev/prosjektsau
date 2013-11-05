@@ -1,5 +1,7 @@
 package characters;
 
+import java.util.ArrayList;
+
 /**
  * Class holding information about the farmer currently logged in
  * @author Andreas Lønes
@@ -10,7 +12,9 @@ public class Farmer {
 	private final String farmerHash;
 	private String userName;
 	private String email;
-	private Farm farm;
+	private Area area;
+	//private ArrayList<ArrayList<Position>> areaList;
+	private ArrayList<ArrayList<Position>> areaList = new ArrayList<ArrayList<Position>>();
 	
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
@@ -24,6 +28,24 @@ public class Farmer {
 		setEmail(email);
 		this.userName = userName;
 	}
+	
+	/**
+	 * Adds an area to the farmers list of areas "areaList".
+	 * @param ArrayList<Position> area
+	 */
+	public void addArea(ArrayList<Position> area) {
+		System.out.println("YOLOO" + area);
+		areaList.add(area);
+	}
+	
+	/**
+	 * removes an area from the farmers list of areas "areaList".
+	 * @param ArrayList<Position> area
+	 */
+	public void removeArea(ArrayList<Position> area) {
+		areaList.remove(area);
+	}
+	
 	
 	/**
 	 * Get the farmer's email address
@@ -79,12 +101,22 @@ public class Farmer {
 				+ ", userName=" + userName + "]";
 	}
 	
-	public void setFarm(Farm farm){
-		this.farm = farm;
+	/**
+	 * sets the farmer's area
+	 * 
+	 * @param area
+	 */
+	//Trenger exception-handler!!!!!!!!
+	public void setArea(Area area) {
+		this.area = area;
 	}
-	
-	public Farm getFarm(){
-		return this.farm;
+
+	/**
+	 * 
+	 * @return returns the farmer's are
+	 */
+	public Area getArea() {
+		return area;
 	}
 }
 
