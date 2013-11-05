@@ -18,7 +18,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
+import characters.Area;
 import characters.Sheep;
 
 // Oppgavekrav til tid:
@@ -69,7 +69,7 @@ public class NetHandler {
 		m_hasConnection = ping() ? true : false;
 	}
 
-	public enum MailType { SHEEP_ESCAPE, SHEEP_HIGH_PULSE,  SHEEP_DEAD }
+	public enum MailType { SHEEP_ESCAPE, SHEEP_HIGH_PULSE, 	SHEEP_LOW_PULSE, SHEEP_DEAD }
 	public enum MailTo   { USER_ID, 	 FARM_ID, 			SHEEP_ID   }
 	
 	public void isDebugging(boolean b) { m_isDebugging = b; }
@@ -242,8 +242,13 @@ public class NetHandler {
 	}
 	
 	// Send high pulse mail to farm
-	public Response sendPulseMailToFarm(String[] deadSheepIDs, String altEmail) {		
+	public Response sendHighPulseMailToFarm(String[] deadSheepIDs, String altEmail) {		
 	return sendMail(MailType.SHEEP_HIGH_PULSE, MailTo.FARM_ID, m_farmCode, deadSheepIDs, altEmail);
+	}
+	
+	// Send low pulse mail to farm
+	public Response sendLowPulseMailToFarm(String[] deadSheepIDs, String altEmail) {		
+	return sendMail(MailType.SHEEP_LOW_PULSE, MailTo.FARM_ID, m_farmCode, deadSheepIDs, altEmail);
 	}
 	
 	// Sends POST data to update a user from usercode.
@@ -268,14 +273,54 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("longitude", ""+s.getLocation().getLongitude() ) );
 	    parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    
 	    parameters.add(new BasicNameValuePair("description", ""+s.getDescription() ) );    
+	    parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );  
+	    parameters.add(new BasicNameValuePair("birthdate", ""+s.getBirthYear() ) );  
 	    parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );
 		if (s.isInfected()) {
 			parameters.add(new BasicNameValuePair("is_infected", "1") );
 		} else {
 			parameters.add(new BasicNameValuePair("is_infected", "0") );
 		}
-
 	    return parameters;
+	}
+	
+	// AREAS
+	// Delete an area.
+	public Response deleteArea(int id) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("AREA_DELETE", m_userCode));
+		parameters.add(new BasicNameValuePair("farm_id", ""+m_farmID));
+		parameters.add(new BasicNameValuePair("id", ""+id));
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}
+
+	// Update arraylist of sheep.
+	public Response updateArea(Area a) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("AREA_UPDATE", m_userCode));
+		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
+		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
+		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
+		
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}	
+	
+	// Create an area.
+	public Response createArea(Area a) {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("AREA_CREATE", m_userCode));
+		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
+		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
+		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
 	}
 	
 	// Update arraylist of sheep.
