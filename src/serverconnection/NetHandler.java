@@ -268,7 +268,13 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("longitude", ""+s.getLocation().getLongitude() ) );
 	    parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    
 	    parameters.add(new BasicNameValuePair("description", ""+s.getDescription() ) );    
-	    parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );  
+	    parameters.add(new BasicNameValuePair("wool_color", ""+s.getWoolColor() ) );
+		if (s.isInfected()) {
+			parameters.add(new BasicNameValuePair("is_infected", "1") );
+		} else {
+			parameters.add(new BasicNameValuePair("is_infected", "0") );
+		}
+
 	    return parameters;
 	}
 	
