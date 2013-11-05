@@ -10,7 +10,7 @@ public class Farmer {
 	private final String farmerHash;
 	private String userName;
 	private String email;
-	private Area area;
+	private Farm farm;
 	
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
@@ -79,22 +79,12 @@ public class Farmer {
 				+ ", userName=" + userName + "]";
 	}
 	
-	/**
-	 * sets the farmer's area
-	 * 
-	 * @param area
-	 */
-	//Trenger exception-handler!!!!!!!!
-	public void setArea(Area area) {
-		this.area = area;
+	public void setFarm(Farm farm){
+		this.farm = farm;
 	}
-
-	/**
-	 * 
-	 * @return returns the farmer's are
-	 */
-	public Area getArea() {
-		return area;
+	
+	public Farm getFarm(){
+		return this.farm;
 	}
 }
 

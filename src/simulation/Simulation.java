@@ -8,6 +8,7 @@ import serverconnection.NetHandler.MailTo;
 import serverconnection.NetHandler.MailType;
 import serverconnection.NetMain;
 import serverconnection.Response;
+import characters.Area;
 import characters.Farmer;
 import characters.Position;
 import characters.Sheep;
@@ -45,6 +46,10 @@ public class Simulation {
 	 * Starts the simulation 
 	 */
 	public void runSimulation(){
+		for (Sheep sheep : sheepList){
+			sheep.cure();
+		}
+		
 		boolean running = true;
 		long updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
 		int sign;
@@ -71,7 +76,7 @@ public class Simulation {
 			}
 			
 			//checks if a new disease should be generated
-			if (rand.nextInt(100) < 90 && simHasDisease == false){
+			if (rand.nextInt(100) < 20 && simHasDisease == false){
 				generateDisease();
 				simHasDisease = true;
 			}
@@ -173,6 +178,9 @@ public class Simulation {
 	 */
 	public void killSheep(Sheep sheep){
 		sheep.setPulse(0);
+		netHandler.updateSheep(sheep);
+
+		
 	}
 	
 	//Infects one sheep with a randomly generated disease
@@ -215,7 +223,13 @@ public class Simulation {
 	}
 	
 	private boolean isInArea(Sheep sheep){
-		return sheep.getFarmer().getArea().containsPosition(sheep.getLocation());
+		boolean inArea = false;
+		for (Area area : sheep.getFarmer().getFarm().getAreaList()){
+			if (area.containsPosition(sheep.getLocation())){
+				inArea = true;
+			}
+		}
+		return inArea;
 		
 	}
 }
