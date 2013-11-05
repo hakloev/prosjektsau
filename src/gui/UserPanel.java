@@ -22,7 +22,7 @@ public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
 
-	private ArrayList<ArrayList<Node>> areaList;
+	private ArrayList<ArrayList<Position>> areaList;
 
 	private JList<ArrayList<Position>> list;
 	private DefaultListModel<ArrayList<Position>> areaGuiList;
@@ -80,7 +80,7 @@ public class UserPanel extends JPanel {
 		js = new JSeparator();
 
 		areaBoxText = new JLabel("Områder:");
-		areaList = new ArrayList<ArrayList<Node>>();
+		areaList = new ArrayList<ArrayList<Position>>();
 
 		areaGuiList = new DefaultListModel<ArrayList<Position>>();
 		list = new JList(areaGuiList);
@@ -177,10 +177,9 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Adds an area to the area list
-	 * @param nodes - ArrayList<Node>
+	 * @param list - ArrayList<Position>
 	 */
-
-	public void addArea(ArrayList<Node> list){
+	public void addArea(ArrayList<Position> list){
 		areaGuiList.addElement(list);
 	}
 
