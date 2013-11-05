@@ -262,8 +262,8 @@ public class NetHandler {
 	    parameters.add(new BasicNameValuePair("farm_id", ""+m_farmID ) );
 	    parameters.add(new BasicNameValuePair("current_pulse", ""+s.getPulse() ) );
 	    parameters.add(new BasicNameValuePair("nickname", ""+s.getNick() ) );
-		parameters.add(new BasicNameValuePair("birthdate", ""+s.getAge()));
-		parameters.add(new BasicNameValuePair("gender", ""+s.getGender()));
+		parameters.add(new BasicNameValuePair("birthdate", ""+s.getBirthYear() ) );
+		parameters.add(new BasicNameValuePair("gender", ""+s.getGender() ) );
 	    parameters.add(new BasicNameValuePair("latitude", ""+s.getLocation().getLatitude() ) ); 
 	    parameters.add(new BasicNameValuePair("longitude", ""+s.getLocation().getLongitude() ) );
 	    parameters.add(new BasicNameValuePair("weight_grams", ""+s.getWeight() ) );    

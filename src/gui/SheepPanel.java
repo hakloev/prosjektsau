@@ -1,7 +1,5 @@
 package gui;
 
-// 571
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -440,8 +438,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepAge.setEditable(false);
 		sheepWeight.setEditable(bool);
 		sheepPos.setEditable(bool);
-		sheepFemale.setEnabled(false);
-		sheepMale.setEnabled(false);
+		if (sheepMale.isSelected()) {
+			sheepMale.setEnabled(true);
+			sheepFemale.setEnabled(false);
+		} else {
+			sheepFemale.setEnabled(true);
+			sheepMale.setEnabled(false);
+		}
 
 	}
 	
@@ -460,6 +463,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 					if (!e.getValueIsAdjusting()) {
 						Sheep sheep = list.getSelectedValue();
 						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
+						// LAGRER IKKE BIRTHDATE I DB
 						System.out.print("Hente en sau i database: ");
 						json.consoletime();
 						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
@@ -470,8 +474,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 						sheepPos.setText(sheep.getLocation().getLatitude() + "," + sheep.getLocation().getLongitude());
 						if (sheep.getGender().equals("hanne")) {
 							radioGroup3.setSelected(sheepMale.getModel(), true);
+							sheepFemale.setEnabled(false);
+							sheepMale.setEnabled(true);
 						} else {
 							radioGroup3.setSelected(sheepFemale.getModel(), true);
+							sheepFemale.setEnabled(true);
+							sheepMale.setEnabled(false);
 						}
 						if (sheep.getAlarmStatus()) {
 							hasAlarm.setText("Har alarm: JA");

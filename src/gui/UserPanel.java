@@ -259,7 +259,7 @@ public class UserPanel extends JPanel {
 			NetHandler handler = programFrame.getNetHandler();
 			Response loginResult = handler.login(usernameField.getText(),
 					new String(passwordField.getPassword()));
-			System.out.println("Tid brukt for å logge inn: ");
+			System.out.print("Logge inn: ");
 			loginResult.consoletime();
 			if (!handler.isError(loginResult.msg)) {
 				loginButton.setEnabled(false);
