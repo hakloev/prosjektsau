@@ -17,13 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import characters.Node;
+import characters.Position;
 
 public class AreaEditFrame extends JFrame{
 
 
-	private JList<Node> list;
-	private DefaultListModel<Node> vertList;
+	private JList<Position> list;
+	private DefaultListModel<Position> vertList;
 	private JScrollPane listScrollPane;
 	
 	private JButton addToList;
@@ -39,7 +39,7 @@ public class AreaEditFrame extends JFrame{
 	private JPanel contentPanel;
 	
 	private ProgramFrame frame;
-	private ArrayList<Node> areaList;
+	private ArrayList<Position> areaList;
 	
 	/*public static void main(String[] args){
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -50,7 +50,7 @@ public class AreaEditFrame extends JFrame{
 	}*/
 	
 	
-	public AreaEditFrame(ProgramFrame frame, ArrayList<Node> list) {
+	public AreaEditFrame(ProgramFrame frame, ArrayList<Position> list) {
 		this.frame = frame;  
 		this.areaList = list;
 		this.setVisible(true);
@@ -69,13 +69,13 @@ public class AreaEditFrame extends JFrame{
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-		vertList = new DefaultListModel<Node>();
+		vertList = new DefaultListModel<Position>();
 		if(areaList != null){
-			for(Node a : areaList){
+			for(Position a : areaList){
 				vertList.addElement(a);
 			}
 		}else{
-			areaList = new ArrayList<Node>();
+			areaList = new ArrayList<Position>();
 		}
 		list = new JList(vertList);
 		listScrollPane = new JScrollPane(list);
@@ -175,7 +175,7 @@ public class AreaEditFrame extends JFrame{
 				if(!latitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$") || !longitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$")){
 					
 				}else{
-					frame.vertList.addElement(new Node(frame.latitude.getText(), frame.longitude.getText()));
+					frame.vertList.addElement(new Position(Double.parseDouble(frame.latitude.getText()), Double.parseDouble(frame.longitude.getText())));
 				}
 			}else if(button.equals("delete")){
 				if(!frame.list.isSelectionEmpty()){
@@ -184,7 +184,7 @@ public class AreaEditFrame extends JFrame{
 				
 			}else if(button.equals("create")){
 				if(frame.vertList.size() != 0){
-					ArrayList<Node> nodes = new ArrayList<Node>();
+					ArrayList<Position> nodes = new ArrayList<Position>();
 					for(int i = 0;i<frame.vertList.getSize();i++){
 						nodes.add(vertList.getElementAt(i));
 					}
