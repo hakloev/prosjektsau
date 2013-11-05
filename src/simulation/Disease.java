@@ -21,7 +21,7 @@ public class Disease {
 	 * @param length How long the disease lasts
 	 */
 	public Disease(double distance, int chance, int damage, int period, int length){
-		this.spreadDistance = distance / 10;
+		this.spreadDistance = distance / 100;
 		this.spreadChance = chance;
 		if (damage == 0){
 			this.damage = 5;
