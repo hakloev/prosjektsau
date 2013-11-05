@@ -42,12 +42,12 @@ public class Alarm {
 	}
 	
 	public String getSheepId() {
-		return "Sau-ID: " + this.sheep.getIdNr() + "  //  Nick: " + this.sheep.getNick();
+		return this.sheep.getIdNr() + "  //  " + this.sheep.getNick();
 	}
 	
 	@Override
 	public String toString() {
-		return "Sau-ID: " + sheep.getIdNr() + " (" + sheep.getNick() + ")";
+		return "(" + sheep.getIdNr() + ") " +  sheep.getNick();
 	}
 	
 	

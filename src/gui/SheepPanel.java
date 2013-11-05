@@ -350,14 +350,23 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Method to add sheep to db
 	 */
-	private void addSheepToDb(Sheep s) {
+	private boolean addSheepToDb(Sheep s) {
 		Response r = programFrame.getNetHandler().createSheep(s);
 		System.out.print("Legge sau til i database: ");
 		r.consoletime();
-		changingSheep = true;
-		sheepList.clear();
-		initUserSheeps(programFrame.getNetHandler().getSheep(-1));
-		changingSheep = false;
+		System.out.println(r.msg);
+		if (programFrame.getNetHandler().isError(r.msg)) {
+			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Kan dessverre ikke legge til flere sauer i databasen",
+					"Databasefeil", JOptionPane.WARNING_MESSAGE);
+			return false;
+		} else {
+
+			changingSheep = true;
+			sheepList.clear();
+			initUserSheeps(programFrame.getNetHandler().getSheep(-1));
+			changingSheep = false;
+		    return true;
+		}
 	}
 
 	/**
@@ -625,13 +634,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 					}
 					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), gender, Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), new Integer(1));   // satt puls til 100
-					sheepList.addElement(sheep);
-					addSheepToDb(sheep);
-					creatingNewSheep = false;
-					setEditable(false);
-					updateMode.setSelected(false);
-					infoMode.setSelected(true);
-					radioGroup1.setSelected(infoMode.getModel(), true);
+					boolean addStatus = addSheepToDb(sheep);
+					if (addStatus) {
+						creatingNewSheep = false;
+						setEditable(false);
+						updateMode.setSelected(false);
+						infoMode.setSelected(true);
+						radioGroup1.setSelected(infoMode.getModel(), true);
+					}
 				} else {
 					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 							"\n\nAlder angis på formen 2000\n" +

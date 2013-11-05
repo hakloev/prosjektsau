@@ -55,10 +55,15 @@ public class ProgramFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == 0) {
-					Response r = handler.logout();
-					System.out.print("Logge ut: ");
-					r.consoletime();
-					System.exit(0);
+					try {
+						Response r = handler.logout();
+						System.out.print("Logge ut: ");
+						r.consoletime();
+					} catch (NullPointerException e1) {
+						System.out.println("Ikke logget inn når programmet ble avsluttet!");
+					} finally {
+						System.exit(0);
+					}
 				}
 			}
 		});
