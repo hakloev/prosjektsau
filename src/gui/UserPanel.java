@@ -79,14 +79,14 @@ public class UserPanel extends JPanel {
 		
 		js = new JSeparator();
 
-		areaBoxText = new JLabel("Omr�der:");
+		areaBoxText = new JLabel("Områder:");
 		areaList = new ArrayList<ArrayList<Node>>();
 
 		areaGuiList = new DefaultListModel<ArrayList<Node>>();
 		list = new JList(areaGuiList);
 		listScrollPane = new JScrollPane(list);
 
-		farmerEmailText = new JLabel("E-mail:");
+		farmerEmailText = new JLabel("Epost:");
 		farmerEmail = new JTextField();
 		farmerEmail.setMinimumSize(new Dimension(100,20));
 		farmerEmail.setPreferredSize(new Dimension(100,20));
