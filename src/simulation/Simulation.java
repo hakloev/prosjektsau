@@ -23,7 +23,7 @@ public class Simulation {
 	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 7000;
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
-	public static final		int					MOVEMENTSCALE			= 10000;
+	public static final		int					MOVEMENTSCALE			= 1000;
 	private 				boolean 			simHasDisease;
 	private 				Disease 			currentDisease;
 	private 				int 				daysOfDisease 			= 0;
@@ -36,7 +36,7 @@ public class Simulation {
 	public Simulation() {
 		netHandler = new NetHandler();
 		netHandler.login("Simulering", "Simulering");
-		sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
+		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 		rand = new Random();
 		simHasDisease = false;
 	}
@@ -51,6 +51,30 @@ public class Simulation {
 		
 		while (running){
 		previousUpdateTime = timeNow;
+		
+			//checks if the disease should end based on how long it has lasted
+			if (simHasDisease){
+				daysOfDisease++;
+				if (daysOfDisease > currentDisease.getDiseaseLength()){
+					System.out.println("Disease ended");
+					for (Sheep infSheep : sheepList){
+						infSheep.cure();
+					}
+					simHasDisease = false;
+				}
+			}
+			
+			//checks if a wolf attack should occur
+			if (rand.nextInt(100) < 10){
+				System.out.println("Wolf attack");
+				sheepAttack();
+			}
+			
+			//checks if a new disease should be generated
+			if (rand.nextInt(100) < 90 && simHasDisease == false){
+				generateDisease();
+				simHasDisease = true;
+			}
 
 			for (Sheep currentSheep : sheepList){
 				//waits until enough time has passed
@@ -111,30 +135,7 @@ public class Simulation {
 			}
 			System.out.println("");
 			
-			//checks if the disease should end based on how long it has lasted
-			if (simHasDisease){
-				daysOfDisease++;
-				if (daysOfDisease > currentDisease.getDiseaseLength()){
-					System.out.println("Disease ended");
-					for (Sheep infSheep : sheepList){
-						infSheep.cure();
-					}
-					simHasDisease = false;
-				}
-			}
-			
-			//checks if a wolf attack should occur
-			if (rand.nextInt(100) < 10){
-				System.out.println("Wolf attack");
-				sheepAttack();
-			}
-			
-			//checks if a new disease should be generated
-			if (rand.nextInt(100) < 20 && simHasDisease == false){
-				generateDisease();
-				simHasDisease = true;
-			}
-			sheepList = JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1));
+			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
 			
 		}
@@ -196,6 +197,7 @@ public class Simulation {
 		if (!sheepList.get(index).isInfected()){
 			System.out.println("Sheep: " + index + " got infected");
 			sheepList.get(index).innfect();
+			
 		}
 	}
 	
