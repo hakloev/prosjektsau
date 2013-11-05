@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -131,7 +131,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		
 		sheepNick = new JTextArea("Kallenavn");
 		sheepNick.setEditable(false);
-		
+		sheepNick.setFont(new Font("Verdana", Font.BOLD, 12));
+
 		sheepPos = new JTextArea("Posisjon");
 		sheepPos.setEditable(false);
 		
@@ -420,7 +421,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepMale.setEnabled(bool);
 		sheepFemale.setEnabled(bool);
 		
-		sheepId.setText("ID genereres av serveren");
+		sheepId.setText("ID genereres automatisk");
 		sheepNick.setText("Kallenavn");
 		sheepAge.setText("Tast inn fødselsår");
 		sheepWeight.setText("Vekt");
@@ -486,6 +487,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 						}  else {
 							hasAlarm.setText("Har alarm: NEI");
 						}
+						if (sheep.isDead())  {
+							sheepNick.setForeground(Color.RED);
+							sheepNick.setText("DØD: " + sheep.getNick());
+						} else {
+							sheepNick.setForeground(Color.BLACK);
+
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du er i oppdateringsmodus, endre til infomodus",
@@ -517,6 +525,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 						Sheep sheep = list.getSelectedValue();
 						if (sheep.getAlarmStatus()) {
 							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.isDead()) {
+							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
@@ -530,6 +540,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 						Sheep sheep = list.getModel().getElementAt(i);
 						if (sheep.getAlarmStatus()) {
 							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.isDead()) {
+							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
@@ -572,6 +584,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 			}
 			if (infoMode.isSelected()) {
 				changingSheep = true;
+				sheepNick.setForeground(Color.BLACK);
 				list.clearSelection();
 				updateMode.setSelected(true);
 				infoMode.setSelected(false);
@@ -678,10 +691,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 		public void actionPerformed(ActionEvent e) {
 			if (list.isSelectionEmpty()) {
 				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må ha valgt en sau for å gå i editeringsmodus",
-						"Posisjonsfeil", JOptionPane.WARNING_MESSAGE);
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
 				updateMode.setSelected(false);
 				infoMode.setSelected(true);
 				radioGroup1.setSelected(infoMode.getModel(), true);
+			} else if (list.getSelectedValue().isDead()) {
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du kan dessverre ikke oppdatere en dø sau",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+				infoMode.setSelected(true);
 			} else {
 				updatingSheep = true;
 				setEditableWithSheepInfo(true);
@@ -703,6 +720,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				updateMode.setSelected(true);
 				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må lagre endringene først\nTrykk \"Oppdater sau\"",
 						"Modusfeil", JOptionPane.WARNING_MESSAGE);
+			} else if (creatingNewSheep) {
+				updateMode.setSelected(true);
+				JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Du må lage ferdig sauen først",
+						"Modusfeil", JOptionPane.WARNING_MESSAGE);
 			} else {
 				setEditableWithSheepInfo(false);
 				updatingSheep = false;
@@ -721,7 +742,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (list.isSelectionEmpty()) {
+			if (creatingNewSheep) {
+				creatingNewSheep = false;
+				infoMode.setSelected(true);
+				setEditable(false);
+			} else if (list.isSelectionEmpty()) {
 				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du må velge en sau for å slette",
 						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
 			} else if (updateMode.isSelected()) {
@@ -729,6 +754,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
 			} else {
 				changingSheep = true;
+				sheepNick.setForeground(Color.BLACK);
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
 					removeSheepInDb(index);

@@ -198,7 +198,7 @@ public class Sheep {
 	 */
 	@Override
 	public String toString() {
-		return "Sau-ID: " + sheepId + " (" + nick + ")";
+		return "(" + sheepId + ") " + nick;
 	}
 	
 	public boolean isInfected(){
