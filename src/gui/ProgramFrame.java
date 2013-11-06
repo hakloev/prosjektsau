@@ -7,6 +7,8 @@ import java.awt.event.WindowEvent;
 import serverconnection.Response;
 import utils.Constants;
 import serverconnection.NetHandler;
+import utils.AlarmThread;
+import utils.SwingThread;
 
 import javax.swing.*;
 
@@ -30,7 +32,10 @@ public class ProgramFrame extends JFrame {
 	
 	//Init a NetHandler
 	private NetHandler handler;
-	
+
+	/**
+	 * ProgramFrame Constructor
+	 */
 	public ProgramFrame() {
 		initFrame();
 		initGuiTabs();
@@ -153,18 +158,18 @@ public class ProgramFrame extends JFrame {
 		this.add(jTabPane);
 	}
 
+
 	/**
 	 * Main method for the client-application
 	 * @param args commandline input args
 	 */
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				ProgramFrame program = new ProgramFrame();
-			}
-		});
+		// Initialize program with two threads to show alarms when they happen
+		Thread swingThread, alarmThread;
+		swingThread = new SwingThread();
+		alarmThread = new AlarmThread((SwingThread) swingThread);
+		swingThread.start();
+		alarmThread.start();
 
 		windowSize = new Dimension(800,600);
 		minWindowSize = new Dimension(600, 500);

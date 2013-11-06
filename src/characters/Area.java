@@ -13,6 +13,7 @@ public class Area {
 	private ArrayList<Position> areaPoints;
 	private String name;
 	private int farmID, id, list_pos;
+	private String coordinates;
 	
 	/**
 	 * 
@@ -60,10 +61,15 @@ public class Area {
 	public void setFarmID(int farmID) 		{ this.farmID 	= farmID; 	}
 	public void setName(String name) 		{ this.name 	= name; 	}
 	public void setId(int id) 				{ this.id 		= id; 		}
+	public void setCoordinates(String c) 	{ this.coordinates = c; 	} // return all points as "1.2,5.1,4.6," etc. (merged to string)
+	
 	// get
 	public int getList_pos() 				{ return list_pos; 	}
 	public int getFarmID() 					{ return farmID; 	}
 	public String getName() 				{ return name; 		}
 	public int getId() 						{ return id; 		}
+	public String getCoordinates() 			{ return coordinates; }
+	
+	
 		
 }
