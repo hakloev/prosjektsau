@@ -1,4 +1,5 @@
 package simulation;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -163,9 +164,14 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				
-				/*if (!isInArea(currentSheep)){
-					netHandler.sendMail(MailType.SHEEP_ESCAPE, MailTo.USER_ID, ""+currentSheep.getFarmer().getFarmerId(), new String[]{""+currentSheep.getIdNr()}, null);
-				}*/
+				//Sends a mail if currentSheep is outside it's farm's areas
+				if (!isInArea(currentSheep)){
+					try {
+						netHandler.sendMailToFarm(MailType.SHEEP_ESCAPE, ""+currentSheep.getFarmID());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
