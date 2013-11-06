@@ -271,7 +271,7 @@ public class Simulation {
 	 * @param sheep  The sheep to check
 	 * @return Returns true or false depending on whether the sheep is in it's are or not
 	 */
-	private boolean isInArea(Sheep sheep){
+	/*private boolean isInArea(Sheep sheep){
 		boolean inArea = false;
 		for (Area area : netHandler.getAreas(sheep.getFarmID())){
 			if (area.containsPosition(sheep.getLocation())){
@@ -280,5 +280,5 @@ public class Simulation {
 		}
 		return inArea;
 		
-	}
+	}*/
 }
