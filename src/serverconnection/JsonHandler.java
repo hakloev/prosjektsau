@@ -22,6 +22,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Class to handle JsonObjects
  * @author Håkon Ødegård Løvdal
+ * @author maxmelander
  */
 public class JsonHandler {
 
@@ -160,6 +161,11 @@ public class JsonHandler {
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
 	
+	/**
+	 * Method for parsing getFarmFromSheepID json and returning a farm object which contains a list of area objects
+	 * @param jsonObject Respons containing a json
+	 * @return Returns a Farm object containing a list of Area objects
+	 */
 	public static Farm parseJsonAndReturnFarm(Response jsonObject) {
 		//System.out.println(jsonObject.msg);
 		ArrayList<Area> areaList = new ArrayList<Area>();
