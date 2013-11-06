@@ -18,6 +18,7 @@ public class Simulation {
 	private 				ArrayList<Sheep> 	sheepList;
 	private 				long 				previousUpdateTime 		= 0;
 	private 				long 				timeNow;
+	private					long				updateInterval;
 	private 				Random 				rand;
 	private 				Position 			sheepLocation;
 	public static final 	int 				EARTHRADIUS 			= 6378137;
@@ -52,10 +53,10 @@ public class Simulation {
 		}
 		
 		boolean running = true;
-		long updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
 		int sign;
 		
 		while (running){
+		updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
 		previousUpdateTime = timeNow;
 		
 			//checks if the disease should end based on how long it has lasted
@@ -96,14 +97,30 @@ public class Simulation {
 				
 				sign = rand.nextInt(2);
 				if (sign == NEGATIVE){
-					double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
-					double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
-					currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+					if (rand.nextInt(2) == 0){
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+					}
+					else{
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+
+					}
 				}
 				else{
-					double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
-					double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
-					currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+					if (rand.nextInt(2) == 0){
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+					}
+					else{
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+
+					}
 				}
 				
 				//Sheep gain health every day they are not sick or at full health
@@ -188,7 +205,7 @@ public class Simulation {
 	public void generateDisease(){
 		System.out.println("Disease generated");
 		daysOfDisease = 0;
-		currentDisease = new Disease(rand.nextDouble(), rand.nextInt(20), rand.nextInt(10), rand.nextInt(5), rand.nextInt(20));
+		currentDisease = new Disease(rand.nextDouble(), rand.nextInt(15), rand.nextInt(10), rand.nextInt(5), rand.nextInt(20));
 		int breakoutSheepIndex = rand.nextInt(sheepList.size());
 		int numberoftries = 0;
 		while (sheepList.get(breakoutSheepIndex).isDead() && numberoftries < 10){
