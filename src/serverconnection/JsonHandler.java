@@ -116,7 +116,7 @@ public class JsonHandler {
 				}
 				Sheep s = new Sheep(sheepMap.get("id").asInt(), sheepMap.get("nickname").asText(), sheepMap.get("birthdate").asInt(), sheepMap.get("gender").asText(), sheepMap.get("weight_grams").asInt(),
 						new Farmer(1, "besthashever", "bestfarmerever", "bestemailever@email.com"), sheepMap.get("current_pulse").asInt(), sheepMap.get("latitude").asDouble(), sheepMap.get("longitude").asDouble()
-						, sheepMap.get("is_infected").asInt());
+						, sheepMap.get("is_infected").asInt(), sheepMap.get("farm_id").asInt());
 				listOfSheeps.add(s);
 			}
 		} catch (IOException e) {

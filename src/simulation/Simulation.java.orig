@@ -46,6 +46,8 @@ public class Simulation {
 		netHandler = new NetHandler();
 		netHandler.login("Simulering", "Simulering");
 		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
+		//this.response = (netHandler.getSimulatorSheep(-1));
+		//System.out.println(this.response.msg);
 		rand = new Random();
 		simHasDisease = false;
 	}
@@ -53,7 +55,8 @@ public class Simulation {
 	/**
 	 * Runs the simulation
 	 */
-	public void runSimulation(){
+	public void runSimulation(){ 
+		
 		for (Sheep sheep : sheepList){
 			sheep.cure();
 		}
@@ -266,6 +269,7 @@ public class Simulation {
 			return latdist;
 		}
 	}
+<<<<<<< HEAD
 	/**
 	 * Checks if a sheep is in it's area
 	 * @param sheep  The sheep to check
@@ -279,6 +283,17 @@ public class Simulation {
 			}
 		}
 		return inArea;
+=======
+	
+	//private boolean isInArea(Sheep sheep){
+	//	boolean inArea = false;
+	//	for (Area area : sheep.getFarmer().getArea().getAreaList()){
+	//		if (area.containsPosition(sheep.getLocation())){
+	//			inArea = true;
+	//		}
+	//	}
+	//	return inArea;
+>>>>>>> master
 		
-	}
+	//}
 }

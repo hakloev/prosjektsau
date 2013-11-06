@@ -557,7 +557,6 @@ public class NetHandler {
 		if(altURL != null) 	{ url = new URL(altURL + query);  } 
 		else 				{ url = new URL(GET_URL + query); }
 		//if(m_isDebugging) 	{ System.out.println("[GET] " + url); }
-		
         // Start download stream.
         BufferedReader in = new BufferedReader(
         new InputStreamReader(url.openStream()));
