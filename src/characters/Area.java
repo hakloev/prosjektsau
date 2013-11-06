@@ -3,18 +3,30 @@ package characters;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
+/**
+ * Class with area polygon. Used to check if a position is contained within the area.
+ * @author maxmelander, madsmidtlyng
+ *
+ */
 public class Area {
 	private Path2D areaPoly;
 	private ArrayList<Position> areaPoints;
 	private String name;
 	private int farmID, id, list_pos;
 	
+	/**
+	 * 
+	 * @param areaPoints The coordinate points used to create the area polygon
+	 */
 	public Area(ArrayList<Position> areaPoints){
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
 		createPoly();				
 	}
 	
+	/**
+	 * Creates a polygon, using the list of positions, areaPoints
+	 */
 	private void createPoly(){
 		boolean isFirst = true;
 		for (Position position : areaPoints){
@@ -27,11 +39,18 @@ public class Area {
 		}
 		areaPoly.closePath();
 	}
-	
+	/**
+	 * 
+	 * @return returns the area polygon
+	 */
 	public Path2D returnAreaPoly(){
 		return areaPoly;
 	}
-	
+	/**
+	 * 
+	 * @param position 	the position to check
+	 * @return 			returns true or false depending on if the given position if contained within the area polygon or not
+	 */
 	public boolean containsPosition(Position position){
 		return areaPoly.contains(position.getLatitude(), position.getLongitude());
 	}
