@@ -1,21 +1,25 @@
 package characters;
 
+import gui.MapPanel;
+import gui.ProgramFrame;
+
 import java.util.ArrayList;
 
 /**
  * Class holding information about the farmer currently logged in
  * @author Andreas Lønes
+ * @author Thomas Mathisen
  */
 public class Farmer {
 
+	private ProgramFrame programFrame;
 	private final int farmerId;
 	private final String farmerHash;
 	private String userName;
 	private String email;
-	private Area area;
-	//private ArrayList<ArrayList<Position>> areaList;
-	private ArrayList<ArrayList<Position>> areaList = new ArrayList<ArrayList<Position>>();
-	
+	private ArrayList<ArrayList<Position>> areaPositionList = new ArrayList<ArrayList<Position>>();
+	private ArrayList<Area> areaList = new ArrayList<Area>();
+
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
 	 * @param farmerId the farmers identification number
@@ -28,25 +32,31 @@ public class Farmer {
 		setEmail(email);
 		this.userName = userName;
 	}
-	
+
+
+
+
+
 	/**
 	 * Adds an area to the farmers list of areas "areaList".
+	 * Adds an array of the postition objects of the area to the list "areaPositionList".
 	 * @param ArrayList<Position> area
 	 */
 	public void addArea(ArrayList<Position> area) {
-		System.out.println("YOLOO" + area);
-		areaList.add(area);
+		areaPositionList.add(area);
+		Area tempArea = new Area (area);
+		areaList.add(tempArea);
 	}
-	
+
 	/**
 	 * removes an area from the farmers list of areas "areaList".
 	 * @param ArrayList<Position> area
 	 */
 	public void removeArea(ArrayList<Position> area) {
-		areaList.remove(area);
+		areaPositionList.remove(area);
 	}
-	
-	
+
+
 	/**
 	 * Get the farmer's email address
 	 * @return returns the farmer's Email
@@ -65,7 +75,7 @@ public class Farmer {
 			this.email = email;
 		}
 	}
-	
+
 	/**
 	 * Get the farmer's username
 	 * @return returns the farmer's username
@@ -100,23 +110,18 @@ public class Farmer {
 		return "Farmer [farmerId=" + farmerId + ", farmerHash=" + farmerHash
 				+ ", userName=" + userName + "]";
 	}
+
+
 	
 	/**
-	 * sets the farmer's area
 	 * 
-	 * @param area
+	 * @return returns an array of arrays containing the position of the areas belonging to the farmer.
 	 */
-	//Trenger exception-handler!!!!!!!!
-	public void setArea(Area area) {
-		this.area = area;
+	public ArrayList<ArrayList<Position>> getAreaList() {
+		return areaPositionList;
 	}
 
-	/**
-	 * 
-	 * @return returns the farmer's are
-	 */
-	public Area getArea() {
-		return area;
-	}
+
+
 }
 

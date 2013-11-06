@@ -18,6 +18,7 @@ import serverconnection.JsonHandler;
  * Class holding the user information and login
  * @author Andreas Lyngby
  * @author Håkon Ødegård Løvdal
+ * @author Thomas Mathisen
  */
 public class UserPanel extends JPanel {
 
@@ -25,7 +26,6 @@ public class UserPanel extends JPanel {
 
 	private ArrayList<ArrayList<Position>> areaList;
 	private ArrayList<Area> listOfAreas;
-	
 
 	private JList<ArrayList<Position>> list;
 	private DefaultListModel<ArrayList<Position>> areaGuiList;
@@ -50,7 +50,7 @@ public class UserPanel extends JPanel {
 	private JTextField farmerEmail;
 
 	private Farmer farmer;
-	
+
 
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -179,20 +179,22 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Adds an area to the area list and 
-	 * Sends the whole list to mapPanel.addArea() 
+	 * Sends the whole list as strings to mapPanel.addArea() 
 	 * Also adds the area to the farmer's list.
 	 * @param list - ArrayList<Position>
 	 */
 	public void addArea(ArrayList<Position> list){
 		MapPanel map = programFrame.getMapPanel();
 		farmer.addArea(list);
-		
+
 		areaGuiList.addElement(list);
+		map.deleteAreas ();
 		String coordinates = "";
-		for (int i = 0 ; i < areaGuiList.size() ; i++){
+		areaList = farmer.getAreaList();
+
+		for (ArrayList<Position> positionList : areaList){//for hvert area i storlista
 			coordinates = "";
-			ArrayList<Position> positionList = areaGuiList.get(i);
-			for (Position posObject : positionList){
+			for (Position posObject : positionList){//for hvert positionelement i area
 				coordinates+= posObject.getLatitude();
 				coordinates += ",";
 				coordinates+= posObject.getLongitude();
@@ -202,118 +204,121 @@ public class UserPanel extends JPanel {
 			coordinates += ",";
 			coordinates += positionList.get(0).getLongitude();
 			map.addArea (coordinates);
+		map.showArea();
 		}
+
 	}
 
 
-/**
- * Class you implementing ActionLister to make the button to edit the farm area.
- * @author Andreas
- *
- */
-
-class AddAreaListener implements ActionListener{
-
-	private UserPanel panel;
 	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
-	 */
-	public AddAreaListener(UserPanel panel){
-		this.panel = panel;
-	}
-
-	/**
-	 * Called when clicking the button to create a new area. Opens AreaEditFrame.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		new AreaEditFrame(panel.programFrame, null);
-		panel.setAreaOpenable(false);
-	}
-}
-
-
-/**
- * Class you implementing ActionLister to make the button to edit the farm area.
- * @author Andreas
- *
- */
-
-class EditAreaListener implements ActionListener{
-	private UserPanel panel;
-
-	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
-	 */
-	public EditAreaListener(UserPanel panel){
-		this.panel = panel;
-	}
-
-	/**
-	 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+	 * Class for implementing ActionLister to make the button to edit the farm area.
+	 * @author Andreas
 	 *
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
-			ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
-			panel.areaGuiList.remove(panel.list.getSelectedIndex());
-			new AreaEditFrame(panel.programFrame,temp);
+
+	class AddAreaListener implements ActionListener{
+
+		private UserPanel panel;
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
+		public AddAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+
+		/**
+		 * Called when clicking the button to create a new area. Opens AreaEditFrame.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new AreaEditFrame(panel.programFrame, null);
 			panel.setAreaOpenable(false);
 		}
 	}
-}
 
-/**
- * Listener for the loginButton
- * @author Håkon Ødegård Løvdal
- * 
- */
-class LoginListener implements ActionListener {		
+
 	/**
-	 * Method that checks if user is valid and logs in
-	 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
+	 * Class you implementing ActionLister to make the button to edit the farm area.
+	 * @author Andreas
+	 *
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		NetHandler handler = programFrame.getNetHandler();
-		Response loginResult = handler.login(usernameField.getText(),
-				new String(passwordField.getPassword()));
-		System.out.print("Logge inn: ");
-		loginResult.consoletime();
-		if (!handler.isError(loginResult.msg)) {
-			loginButton.setEnabled(false);
-			usernameField.setEditable(false);
-			passwordField.setEditable(false);
 
-			listScrollPane.setEnabled(true);
-			addArea.setEnabled(true);
-			editArea.setEnabled(true);
-			farmerEmail.setEnabled(true);
+	class EditAreaListener implements ActionListener{
+		private UserPanel panel;
 
-			// Parse Response to create farmer
-			farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
+		public EditAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
 
-			//Get farmer info
-			farmerEmail.setText(farmer.getEmail());
-
-			// Initiate sheeps
-			programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
-
-			// Activate other tabs
-			programFrame.getJTabbedPane().setEnabledAt(1, true);
-			programFrame.getJTabbedPane().setEnabledAt(2, true);
-			programFrame.getJTabbedPane().setEnabledAt(3, true);
-			programFrame.getJTabbedPane().setEnabledAt(4, true);
-
-			// Set panel to SheepPanel
-			programFrame.getJTabbedPane().setSelectedIndex(1); 
-		} else {
-			JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
-					"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+		/**
+		 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
+				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
+				panel.areaGuiList.remove(panel.list.getSelectedIndex());
+				panel.farmer.removeArea(temp);
+				new AreaEditFrame(panel.programFrame,temp);
+				panel.setAreaOpenable(false);
+			}
 		}
 	}
-}
+
+	/**
+	 * Listener for the loginButton
+	 * @author Håkon Ødegård Løvdal
+	 * 
+	 */
+	class LoginListener implements ActionListener {		
+		/**
+		 * Method that checks if user is valid and logs in
+		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NetHandler handler = programFrame.getNetHandler();
+			Response loginResult = handler.login(usernameField.getText(),
+					new String(passwordField.getPassword()));
+			System.out.print("Logge inn: ");
+			loginResult.consoletime();
+			if (!handler.isError(loginResult.msg)) {
+				loginButton.setEnabled(false);
+				usernameField.setEditable(false);
+				passwordField.setEditable(false);
+
+				listScrollPane.setEnabled(true);
+				addArea.setEnabled(true);
+				editArea.setEnabled(true);
+				farmerEmail.setEnabled(true);
+
+				// Parse Response to create farmer
+				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+
+				//Get farmer info
+				farmerEmail.setText(farmer.getEmail());
+
+				// Initiate sheeps
+				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
+
+				// Activate other tabs
+				programFrame.getJTabbedPane().setEnabledAt(1, true);
+				programFrame.getJTabbedPane().setEnabledAt(2, true);
+				programFrame.getJTabbedPane().setEnabledAt(3, true);
+				programFrame.getJTabbedPane().setEnabledAt(4, true);
+
+				// Set panel to SheepPanel
+				programFrame.getJTabbedPane().setSelectedIndex(1); 
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
 }

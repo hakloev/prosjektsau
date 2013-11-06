@@ -15,6 +15,7 @@ public class Area {
 		createPoly();				
 	}
 	
+
 	private void createPoly(){
 		boolean isFirst = true;
 		for (Position position : areaPoints){
@@ -35,6 +36,9 @@ public class Area {
 	public boolean containsPosition(Position position){
 		return areaPoly.contains(position.getLatitude(), position.getLongitude());
 	}
+	
+	
+
 
 	// set
 	public void setList_pos(int list_pos) 	{ this.list_pos = list_pos; }

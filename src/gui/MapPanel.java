@@ -17,7 +17,7 @@ import javafx.scene.web.WebViewBuilder;
 /**
  * Class to generate map-panel
  * @author Håkon Ødegård Løvdal
- * @author Thomas Mathiesen
+ * @author Thomas Mathisen
  */
 public class MapPanel extends JPanel {
 
@@ -96,25 +96,33 @@ public class MapPanel extends JPanel {
 	
 	
 	/**
-	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
+	 * Adds a polygon-area to the map's list of areas, by calling a JavaScript in map.html
 	 * @param coordinates 
 	 */
-	
 	public void addArea(final String coordinates) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				webEngine.executeScript("addPoly('" + coordinates + "')");
+			}
+		});
+	}
+	
+	/**
+	 * Tells the javascript to show the areas contained in the javascript's list of areas.
+	 */
+	public void showArea() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
 				webEngine.executeScript("showAreas()");
 			}
 		});
 	}
 	
 	
-
-
 	/**
-	 * Hides all areas on map.
+	 * deletes all areas in the list used by the javascript to draw areas.
 	 */
 	public void deleteAreas() {
 		Platform.runLater(new Runnable() {
