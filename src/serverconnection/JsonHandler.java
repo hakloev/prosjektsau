@@ -1,5 +1,7 @@
 package serverconnection;
 
+import characters.Area;
+import characters.Farm;
 import characters.Farmer;
 import characters.Sheep;
 
@@ -155,5 +157,28 @@ public class JsonHandler {
 		}
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
+	}
+	
+	public static Farm parseJsonAndReturnFarm(Response jsonObject) {
+		Map<String, JsonNode> farmerMap = new HashMap<String, JsonNode>();
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+			
+			Iterator<Entry<String, JsonNode>> nodeIterator = input.getFields();
+			while (nodeIterator.hasNext()) {
+				Entry<String, JsonNode> entry = nodeIterator.next();
+				farmerMap.put(entry.getKey(), entry.getValue());
+			}			
+		} catch (IOException e) {
+			e.printStackTrace();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new Farm(new ArrayList<Area>(), farmerMap.get("id").asInt(), farmerMap.get("owner_id").asInt(),
+				farmerMap.get("farm_name").getTextValue(), farmerMap.get("farm_address").getTextValue());
 	}
 }
