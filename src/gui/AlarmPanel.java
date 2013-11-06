@@ -113,10 +113,6 @@ public class AlarmPanel extends JPanel{
 		showAlarm.addActionListener(new ShowAlarmInMapListener());
 		sendAlarm.addActionListener(new SendMailListener());
 		list.addListSelectionListener(new ShowAlarmListener());
-		
-		// Alarms and sheeps for testing
-		Sheep sheep1 = new Sheep(16, "Knut", 1994, "hanne", 10000, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686, new Integer(0));
-		//addAlarm(new Alarm(sheep1, 201311111239, "Killed in Action"));
 	}
 
 	/**
