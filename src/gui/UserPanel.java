@@ -50,21 +50,16 @@ public class UserPanel extends JPanel {
 	private JTextField farmerEmail;
 
 	private Farmer farmer;
-	private MapPanel map;
 	
 
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
 		initDesign();
-		
-
 	}
 
 
 	public void initElements(){
-		map = programFrame.getMapPanel();
-		System.out.println();
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -183,18 +178,17 @@ public class UserPanel extends JPanel {
 	}
 
 	/**
-	 * Adds an area to the area list
+	 * Adds an area to the area list and 
+	 * Sends the whole list to mapPanel.addArea() 
+	 * Also adds the area to the farmer's list.
 	 * @param list - ArrayList<Position>
 	 */
 	public void addArea(ArrayList<Position> list){
-		MapPanel map = programFrame.getMapPanel();/////////HER SKJER DET NOE KUK SIDEN DEN LAGER EN NY MAP INSTANS HVER GANG. DERFOR KOMMER DET MANGE AREAS OVER HVERANDRE.
-		//kanskje lage en "lagre-knapp" i user panel, som først da sletter gamle map-instansen, og lager den nye med omraadene.
-		System.out.println("lista" + list);
+		MapPanel map = programFrame.getMapPanel();
 		farmer.addArea(list);
 		
 		areaGuiList.addElement(list);
 		String coordinates = "";
-		map.deleteAreas ();
 		for (int i = 0 ; i < areaGuiList.size() ; i++){
 			coordinates = "";
 			ArrayList<Position> positionList = areaGuiList.get(i);
@@ -208,13 +202,7 @@ public class UserPanel extends JPanel {
 			coordinates += ",";
 			coordinates += positionList.get(0).getLongitude();
 			map.addArea (coordinates);
-		
 		}
-			
-		
-
-		//////////////////////////////////////////////////////////WTF/////////////
-
 	}
 
 
