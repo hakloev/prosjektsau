@@ -166,6 +166,7 @@ public class Simulation {
 				
 				//Sends a mail if currentSheep is outside it's farm's areas
 				if (!isInArea(currentSheep)){
+					System.out.println("Sheep " + currentSheep.getIdNr() + " HAS ESCAPED!");
 					try {
 						netHandler.sendMailToFarm(MailType.SHEEP_ESCAPE, ""+currentSheep.getFarmID());
 					} catch (IOException e) {
@@ -184,7 +185,6 @@ public class Simulation {
 			
 			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
-			
 		}
 	}
 	
