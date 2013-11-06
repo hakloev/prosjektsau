@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import gui.ProgramFrame;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
@@ -127,8 +128,6 @@ public class JsonHandler {
 		return listOfSheeps;
 	}
 
-
-	
 	/**
 	 * Method to parse login-json and return a farmer object
 	 * @param jsonObject Response containing a json
@@ -155,5 +154,41 @@ public class JsonHandler {
 		}
 		return new Farmer(farmerMap.get("id").asInt(), farmerMap.get("usercode").getTextValue(),
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
+	}
+
+	/**
+	 * Method to parse alarm-json and return ArrayList of alarm-objects
+	 * @param jsonObject Response containing a json
+	 * @return
+	 */
+	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
+		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
+		System.out.println(jsonObject.msg);
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+
+			int count = input.get("count").asInt();
+			for (int i = 1; i <= count; i++) {
+				Map<String, JsonNode> alarmMap = new HashMap<String, JsonNode>();
+				JsonNode alarm = input.get(Integer.toString(i));
+				Iterator<Entry<String, JsonNode>> nodeIterator = alarm.getFields();
+				while (nodeIterator.hasNext()) {
+					Entry<String, JsonNode> entry = nodeIterator.next();
+					alarmMap.put(entry.getKey(), entry.getValue());
+				}
+
+				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
+						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
+				listOfAlarms.add(a);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listOfAlarms;
 	}
 }

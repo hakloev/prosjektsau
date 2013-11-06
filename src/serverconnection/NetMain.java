@@ -10,7 +10,7 @@ public class NetMain {
 	public static void main(String[] args) {
 
 		NetHandler net 	= new NetHandler();
-		
+		net.isDebugging(true);
 		// Example 1) Login to service:
 		Response response;
 		response = net.login("mads", "mads");
@@ -29,25 +29,49 @@ public class NetMain {
 			System.out.println("farmer: "  + f.getUserName());
 			
 			// Response on login from server:
-			System.out.println(response.msg);
+			System.out.println(response.msg);	
+
+			response = net.makeDebugSheep(net.getFarmCode(), 100);
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke opprette sauer: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); response.consoletime(); }	
+			
 			
 			// Get all sheep
 			response = net.getSheep(-1);
 			if(net.isError(response.msg)) { 
 				System.out.println("Kunne ikke hente sau: " + net.getLastError());
 			} else { System.out.println("Svar fra server: " + response.msg); }	
-			
-			// Update a sheep.
+
 			ArrayList<Sheep> sheepList = JsonHandler.parseJsonAndReturnSheepList(response, f);
 			Sheep sheep = sheepList.get(0);
 			System.out.println("has sheep: " + sheep.getIdNr());
-			sheep.setPulse(123);
-			sheep.setNick("testtest");
+			
+			response = net.getFarmFromSheepID(sheep.getIdNr());
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke hente gård: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); }	
+			
+			
+			response = net.getAlarm(-1);
+			if(net.isError(response.msg)) { 
+				System.out.println("Kunne ikke hente sau: " + net.getLastError());
+			} else { System.out.println("Svar fra server: " + response.msg); }	
+
+			
+			
+			// Update a sheep.
+			/*
+			ArrayList<Sheep> sheepList = JsonHandler.parseJsonAndReturnSheepList(response, f);
+			Sheep sheep = sheepList.get(0);
+			System.out.println("has sheep: " + sheep.getIdNr());
+			sheep.setPulse(102);
+			sheep.setNick("Horeull II");
 			response = net.updateSheep(sheep);
 			if(net.isError(response.msg)) { 
 				System.out.println("Kunne ikke oppdatere sau: " + net.getLastError());
 			} else { System.out.println("Svar fra server: " + response.msg); }	
-			
+			*/
 			
 			/*
 			response = net.makeDebugSheep(net.getFarmCode(), 100);
