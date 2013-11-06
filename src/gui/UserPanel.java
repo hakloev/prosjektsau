@@ -33,14 +33,27 @@ public class UserPanel extends JPanel {
 	private JButton loginButton;
 	private JButton addArea;
 	private JButton editArea;
+	private JButton deleteArea;
+	private JButton createFarm;
+	private JButton deleteFarm;
+	private JButton addFarmCode;
+	private JButton removeFarmCode;
 	
 	private JTextField usernameField;
 	private JPasswordField passwordField;
+	private JTextField farmField;
+	private JTextField farmCodeField;
+	
 	private JLabel usernameText;
 	private JLabel passwordText;
+	private JLabel farmText;
+	private JLabel farmCodeText;
+	
 	private GroupLayout layout;
 	
 	private JSeparator js;
+	private JSeparator js1;
+	private JSeparator js2;
 
 	private JLabel farmerEmailText;
 
@@ -66,9 +79,16 @@ public class UserPanel extends JPanel {
 		loginButton = new JButton("Logg inn");
 		addArea = new JButton("Legg til område");
 		editArea = new JButton("Endre område");
+		deleteArea = new JButton("Slett omr�de");
+		createFarm = new JButton("Lag g�rd");
+		deleteFarm = new JButton("Slett g�rd");
+		addFarmCode = new JButton("Legg til kode");
+		removeFarmCode = new JButton("Fjern kode");
 
 		usernameText = new JLabel("Brukernavn:");
 		passwordText = new JLabel("Passord:");
+		farmText = new JLabel("G�rd:");
+		farmCodeText = new JLabel("G�rdkode");
 		
 		usernameField = new JTextField(10);
 		usernameField.setMaximumSize(new Dimension(1000,20));
@@ -76,8 +96,13 @@ public class UserPanel extends JPanel {
 		passwordField = new JPasswordField(10);
 		passwordField.setEchoChar('*');
 		passwordField.setMaximumSize(new Dimension(1000,20));
+	
+		farmField = new JTextField();
+		farmCodeField = new JTextField();
 		
 		js = new JSeparator();
+		js1 = new JSeparator();
+		js2 = new JSeparator();
 
 		areaBoxText = new JLabel("Områder:");
 		areaList = new ArrayList<ArrayList<Position>>();
@@ -101,6 +126,7 @@ public class UserPanel extends JPanel {
 		loginButton.addActionListener(new LoginListener());
 		addArea.addActionListener(new AddAreaListener(this));
 		editArea.addActionListener(new EditAreaListener(this));
+		deleteArea.addActionListener(new DeleteAreaListener());
 	}
 
 
@@ -119,14 +145,34 @@ public class UserPanel extends JPanel {
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addComponent(js)
 						)
-
+						.addGroup(layout.createSequentialGroup() 
+								.addComponent(farmCodeText)
+								.addComponent(farmCodeField)
+								.addComponent(addFarmCode)
+								.addComponent(removeFarmCode)
+						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(js1)
+						)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(farmText)
+								.addComponent(farmField)
+								.addComponent(createFarm)
+								.addComponent(deleteFarm)
+						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(js2)
+						)
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addComponent(farmerEmailText)
 								.addComponent(farmerEmail)
 								.addComponent(areaBoxText)
 								.addComponent(listScrollPane)
-								.addComponent(editArea)
-								.addComponent(addArea)
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(editArea)
+									.addComponent(addArea)
+									.addComponent(deleteArea)
+								)
 						)
 				)
 		);
@@ -143,12 +189,33 @@ public class UserPanel extends JPanel {
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 										.addComponent(js)
 								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE) 
+										.addComponent(farmCodeText)
+										.addComponent(farmCodeField)
+										.addComponent(addFarmCode)
+										.addComponent(removeFarmCode)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(js1)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(farmText)
+										.addComponent(farmField)
+										.addComponent(createFarm)
+										.addComponent(deleteFarm)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(js2)
+								)
 								.addComponent(farmerEmailText)
 								.addComponent(farmerEmail)
 								.addComponent(areaBoxText)
 								.addComponent(listScrollPane)
-								.addComponent(editArea)
-								.addComponent(addArea)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+									.addComponent(editArea)
+									.addComponent(addArea)
+									.addComponent(deleteArea)
+								)
 								.addContainerGap()
 						)
 				)
@@ -183,8 +250,18 @@ public class UserPanel extends JPanel {
 		areaGuiList.addElement(list);
 	}
 
+	class DeleteAreaListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(programFrame.getUserPanel().areaGuiList.size()!=0 && programFrame.getUserPanel().list.getSelectedIndex() != -1){
+				ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
+				programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
+			}
+		}
+	}
+	
 	/**
-	 * Class you implementing ActionLister to make the button to edit the farm area.
+	 * Class implementing ActionLister to make the button to edit the farm area.
 	 * @author Andreas
 	 *
 	 */
@@ -242,7 +319,67 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
+	
+	/**
+	 * CreateFarmListener - creates a farm for the user.
+	 * 
+	 * @author Andreas
+	 *
+	 */
+	
+	class CreateFarmListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(programFrame.getUserPanel().farmer.getFarm()==null){
+				NetHandler nh = programFrame.getNetHandler();
+				nh.newFarm();
+				nh.getUser();
+				String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
+				programFrame.getUserPanel().farmField.setText(farmName);
+			}
+		}
+	}
+	
+	/*
+	class DeleteFarmListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(programFrame.getUserPanel().farmer.getFarm()!=null){
+				NetHandler nh = programFrame.getNetHandler();
+				//deletefarm
+			}
+		}
+	}*/
 
+	/**
+	 * Creates a farm share code the farmer can use to share his farm
+	 * @author Andreas
+	 *
+	 */
+	
+	class CreateFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			NetHandler nh = programFrame.getNetHandler();
+			nh.newFarmShareCode();
+			nh.getUser();
+		}
+	}
+	
+	/**
+	 * Removes the farmcode from the user who requests to remove it.
+	 * @author Andreas
+	 *
+	 */
+	
+	/*
+	class RemoveFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			NetHandler nh = programFrame.getNetHandler();
+		}
+	}*/
+	
 	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
