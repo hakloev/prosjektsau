@@ -10,6 +10,7 @@ import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Area;
 import characters.Farmer;
+import characters.Farm;
 import characters.Position;
 import characters.Sheep;
 
@@ -222,14 +223,14 @@ public class Simulation {
 		}
 	}
 	
-	private boolean isInArea(Sheep sheep){
-		boolean inArea = false;
-		for (Area area : sheep.getFarmer().getFarm().getAreaList()){
-			if (area.containsPosition(sheep.getLocation())){
-				inArea = true;
-			}
-		}
-		return inArea;
+	//private boolean isInArea(Sheep sheep){
+	//	boolean inArea = false;
+	//	for (Area area : sheep.getFarmer().getArea().getAreaList()){
+	//		if (area.containsPosition(sheep.getLocation())){
+	//			inArea = true;
+	//		}
+	//	}
+	//	return inArea;
 		
-	}
+	//}
 }
