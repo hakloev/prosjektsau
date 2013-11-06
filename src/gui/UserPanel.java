@@ -50,17 +50,21 @@ public class UserPanel extends JPanel {
 	private JTextField farmerEmail;
 
 	private Farmer farmer;
+	private MapPanel map;
 	
 
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
 		initDesign();
+		
 
 	}
 
 
 	public void initElements(){
+		map = programFrame.getMapPanel();
+		System.out.println();
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);

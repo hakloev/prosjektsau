@@ -10,7 +10,6 @@ import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Area;
 import characters.Farmer;
-import characters.Farm;
 import characters.Position;
 import characters.Sheep;
 
@@ -46,6 +45,8 @@ public class Simulation {
 		netHandler = new NetHandler();
 		netHandler.login("Simulering", "Simulering");
 		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
+		//this.response = (netHandler.getSimulatorSheep(-1));
+		//System.out.println(this.response.msg);
 		rand = new Random();
 		simHasDisease = false;
 	}
@@ -53,7 +54,8 @@ public class Simulation {
 	/**
 	 * Runs the simulation
 	 */
-	public void runSimulation(){
+	public void runSimulation(){ 
+		
 		for (Sheep sheep : sheepList){
 			sheep.cure();
 		}

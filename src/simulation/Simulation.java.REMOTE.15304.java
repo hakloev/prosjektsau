@@ -14,11 +14,6 @@ import characters.Farm;
 import characters.Position;
 import characters.Sheep;
 
-/**
- * Simulates sheep movement and diseases
- * @author maxmelander
- *
- */
 public class Simulation {
 	private 				ArrayList<Sheep> 	sheepList;
 	private 				long 				previousUpdateTime 		= 0;
@@ -32,12 +27,11 @@ public class Simulation {
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
 	public static final		int					MOVEMENTSCALE			= 1000;
-	public static final 	long				NORESPONSETIME			= 10000;
 	private 				boolean 			simHasDisease;
 	private 				Disease 			currentDisease;
 	private 				int 				daysOfDisease 			= 0;
 	private 				NetHandler 			netHandler;
-	private					Response			response				= new Response();
+	private					Response			response;
 	/**
 	 * The simulation constructor
 	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
@@ -51,7 +45,7 @@ public class Simulation {
 	}
 	
 	/**
-	 * Runs the simulation
+	 * Starts the simulation 
 	 */
 	public void runSimulation(){
 		for (Sheep sheep : sheepList){
@@ -62,20 +56,9 @@ public class Simulation {
 		int sign;
 		
 		while (running){
-			
-			while(sheepList.size() == 0){
-				System.out.println("No response from server or no sheep in database");
-				sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
-				try {
-					Thread.sleep(NORESPONSETIME);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			previousUpdateTime = timeNow;
-			updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
-			
+		updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
+		previousUpdateTime = timeNow;
+		
 			//checks if the disease should end based on how long it has lasted
 			if (simHasDisease){
 				daysOfDisease++;
@@ -112,7 +95,6 @@ public class Simulation {
 				}
 				sheepLocation = currentSheep.getLocation();
 				
-				//Random sheep movement
 				sign = rand.nextInt(2);
 				if (sign == NEGATIVE){
 					if (rand.nextInt(2) == 0){
@@ -210,7 +192,7 @@ public class Simulation {
 	
 	/**
 	 * Kills a sheep
-	 * @param sheep The sheep that should be killed
+	 * @param sheep Sheep that should be killed
 	 */
 	public void killSheep(Sheep sheep){
 		sheep.setPulse(0);
@@ -219,9 +201,7 @@ public class Simulation {
 		
 	}
 	
-	/**
-	 * Generates a disease with some random attributes 
-	 */
+	//Infects one sheep with a randomly generated disease
 	public void generateDisease(){
 		System.out.println("Disease generated");
 		daysOfDisease = 0;
@@ -238,10 +218,7 @@ public class Simulation {
 		infectSheep(breakoutSheepIndex);
 	}
 	
-	/**
-	 * Infects a sheep
-	 * @param index The index of sheep to infect
-	 */
+	//Infects a given sheep if it is not already infected
 	public void infectSheep(int index){
 		if (!sheepList.get(index).isInfected()){
 			System.out.println("Sheep: " + index + " got infected");
@@ -249,12 +226,8 @@ public class Simulation {
 			
 		}
 	}
-	/**
-	 * A function to check distance between sheep
-	 * @param sheep1 The first sheep
-	 * @param sheep2 The second sheep
-	 * @return Absolute value of the biggest distance in lat or long between the two sheep
-	 */
+	
+	//Returns the biggest difference in location between two sheep
 	public double distanceBetween(Sheep sheep1, Sheep sheep2){
 		double longdist = Math.abs(sheep1.getLocation().getLongitude() - sheep2.getLocation().getLongitude());
 		double latdist = Math.abs(sheep1.getLocation().getLatitude() - sheep2.getLocation().getLatitude());
@@ -266,19 +239,15 @@ public class Simulation {
 			return latdist;
 		}
 	}
-	/**
-	 * Checks if a sheep is in it's area
-	 * @param sheep  The sheep to check
-	 * @return Returns true or false depending on whether the sheep is in it's are or not
-	 */
-	private boolean isInArea(Sheep sheep){
-		boolean inArea = false;
-		for (Area area : netHandler.getAreas(sheep.getFarmID())){
-			if (area.containsPosition(sheep.getLocation())){
-				inArea = true;
-			}
-		}
-		return inArea;
+	
+	//private boolean isInArea(Sheep sheep){
+	//	boolean inArea = false;
+	//	for (Area area : sheep.getFarmer().getArea().getAreaList()){
+	//		if (area.containsPosition(sheep.getLocation())){
+	//			inArea = true;
+	//		}
+	//	}
+	//	return inArea;
 		
-	}
+	//}
 }
