@@ -18,7 +18,9 @@ public class Area {
 	 * 
 	 * @param areaPoints The coordinate points used to create the area polygon
 	 */
-	public Area(ArrayList<Position> areaPoints){
+	public Area(String name, int farmID, ArrayList<Position> areaPoints){
+		this.name = name;
+		this.farmID = farmID;
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
 		createPoly();				
@@ -45,6 +47,10 @@ public class Area {
 	 */
 	public Path2D returnAreaPoly(){
 		return areaPoly;
+	}
+	
+	public ArrayList<Position> getAreaPoints(){
+		return areaPoints;
 	}
 	/**
 	 * 
