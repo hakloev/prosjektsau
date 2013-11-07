@@ -77,18 +77,18 @@ public class UserPanel extends JPanel {
 		layout.setAutoCreateContainerGaps(true);
 
 		loginButton = new JButton("Logg inn");
-		addArea = new JButton("Legg til omr√•de");
-		editArea = new JButton("Endre omr√•de");
-		deleteArea = new JButton("Slett omrÂde");
-		createFarm = new JButton("Lag gÂrd");
-		deleteFarm = new JButton("Slett gÂrd");
+		addArea = new JButton("Legg til område");
+		editArea = new JButton("Endre område");
+		deleteArea = new JButton("Slett område");
+		createFarm = new JButton("Lag gård");
+		deleteFarm = new JButton("Slett gård");
 		addFarmCode = new JButton("Legg til kode");
 		removeFarmCode = new JButton("Fjern kode");
 
 		usernameText = new JLabel("Brukernavn:");
 		passwordText = new JLabel("Passord:");
-		farmText = new JLabel("GÂrd:");
-		farmCodeText = new JLabel("GÂrdkode");
+		farmText = new JLabel("Gård:");
+		farmCodeText = new JLabel("Gårdkode");
 		
 		usernameField = new JTextField(10);
 		usernameField.setMaximumSize(new Dimension(1000,20));
@@ -232,8 +232,6 @@ public class UserPanel extends JPanel {
 		return this.farmer;
 	}
 
-	// All listeners is implemented as classes that implements the ActionListener-interface
-
 	/**
 	 * Disables or enables the addArea and editArea button if AreaEditFrame is opened or closed.
 	 * @param bool
@@ -252,7 +250,7 @@ public class UserPanel extends JPanel {
 	public void addArea(ArrayList<Position> list){
 		MapPanel map = programFrame.getMapPanel();
 		farmer.addArea(list);
-		
+
 		areaGuiList.addElement(list);
 		String coordinates = "";
 		for (int i = 0 ; i < areaGuiList.size() ; i++){
@@ -271,6 +269,8 @@ public class UserPanel extends JPanel {
 		}
 	}
 
+	// All listeners is implemented as classes that implements the ActionListener-interface
+
 	class DeleteAreaListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -280,7 +280,7 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param panel - Userpanel for later use
@@ -307,38 +307,40 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-class EditAreaListener implements ActionListener{
-	private UserPanel panel;
+	class EditAreaListener implements ActionListener {
 
-	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
-	 */
-	public EditAreaListener(UserPanel panel){
-		this.panel = panel;
-	}
+		private UserPanel panel;
 
-	/**
-	 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
-	 *
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
-			ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
-			panel.areaGuiList.remove(panel.list.getSelectedIndex());
-			new AreaEditFrame(panel.programFrame,temp);
-			panel.setAreaOpenable(false);
+		/**
+	    * Constructor
+	    * @param panel - Userpanel for later use
+	    */
+		public EditAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+
+		/**
+	    * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+	    *
+	    */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
+				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
+				panel.areaGuiList.remove(panel.list.getSelectedIndex());
+				new AreaEditFrame(panel.programFrame,temp);
+				panel.setAreaOpenable(false);
+			}
 		}
 	}
-	
+
 	/**
 	 * CreateFarmListener - creates a farm for the user.
-	 * 
+	 *
 	 * @author Andreas
 	 *
 	 */
-	
+
 	class CreateFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -350,7 +352,7 @@ class EditAreaListener implements ActionListener{
 			}
 		}
 	}
-	
+
 	/*
 	class DeleteFarmListener implements ActionListener{
 		@Override
@@ -362,53 +364,102 @@ class EditAreaListener implements ActionListener{
 		}
 	}*/
 
-/**
- * Listener for the loginButton
- * @author Håkon Ødegård Løvdal
- * 
- */
-class LoginListener implements ActionListener {		
 	/**
-	 * Method that checks if user is valid and logs in
-	 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
+	 * Creates a farm share code the farmer can use to share his farm
+	 * @author Andreas
+	 *
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		NetHandler handler = programFrame.getNetHandler();
-		Response loginResult = handler.login(usernameField.getText(),
-				new String(passwordField.getPassword()));
-		System.out.print("Logge inn: ");
-		loginResult.consoletime();
-		if (!handler.isError(loginResult.msg)) {
-			loginButton.setEnabled(false);
-			usernameField.setEditable(false);
-			passwordField.setEditable(false);
 
-			listScrollPane.setEnabled(true);
-			addArea.setEnabled(true);
-			editArea.setEnabled(true);
-			farmerEmail.setEnabled(true);
+	class CreateFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
+			NetHandler nh = programFrame.getNetHandler();
+			nh.newFarmShareCode();
+			nh.getUser();
+			//String farmCode = programFrame.getUserPanel().farmer.getFarmCode();
 
-			// Parse Response to create farmer
-			farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+			//}
+		}
+	}
 
-			//Get farmer info
-			farmerEmail.setText(farmer.getEmail());
+	class AddFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
+			NetHandler nh = programFrame.getNetHandler();
+			if(nh.getFarmCode()==null){
+				//nh.addFarmCode(farmCode);
+			}
+			System.out.println(nh.getFarmCode());
+		}
+	}
 
-			// Initiate sheeps
-			programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
+	/**
+	 * Removes the farmcode from the user who requests to remove it.
+	 * @author Andreas
+	 *
+	 */
 
-			// Activate other tabs
-			programFrame.getJTabbedPane().setEnabledAt(1, true);
-			programFrame.getJTabbedPane().setEnabledAt(2, true);
-			programFrame.getJTabbedPane().setEnabledAt(3, true);
-			programFrame.getJTabbedPane().setEnabledAt(4, true);
+	class RemoveFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			NetHandler nh = programFrame.getNetHandler();
+			if(nh.getFarmCode()!=null){
+				//noe for å fjerne farmcode
+			}
+		}
+	}
 
-			// Set panel to SheepPanel
-			programFrame.getJTabbedPane().setSelectedIndex(1); 
-		} else {
-			JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
-					"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+
+	/**
+	 * Listener for the loginButton
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
+	class LoginListener implements ActionListener {
+		/**
+		 * Method that checks if user is valid and logs in
+		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NetHandler handler = programFrame.getNetHandler();
+			Response loginResult = handler.login(usernameField.getText(),
+					new String(passwordField.getPassword()));
+			System.out.print("Logge inn: ");
+			loginResult.consoletime();
+			if (!handler.isError(loginResult.msg)) {
+				loginButton.setEnabled(false);
+				usernameField.setEditable(false);
+				passwordField.setEditable(false);
+
+				listScrollPane.setEnabled(true);
+				addArea.setEnabled(true);
+				editArea.setEnabled(true);
+				farmerEmail.setEnabled(true);
+
+				// Parse Response to create farmer
+				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+
+				//Get farmer info
+				farmerEmail.setText(farmer.getEmail());
+
+				// Initiate sheeps
+				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
+
+				// Activate other tabs
+				programFrame.getJTabbedPane().setEnabledAt(1, true);
+				programFrame.getJTabbedPane().setEnabledAt(2, true);
+				programFrame.getJTabbedPane().setEnabledAt(3, true);
+				programFrame.getJTabbedPane().setEnabledAt(4, true);
+
+				// Set panel to SheepPanel
+				programFrame.getJTabbedPane().setSelectedIndex(1);
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 }
