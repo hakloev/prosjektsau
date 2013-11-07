@@ -76,6 +76,7 @@ public class ProgramFrame extends JFrame {
 	 * @return NetHandler-object speaking to the database
 	 */
 	public NetHandler getNetHandler() {
+		System.out.println("yooooolooooo!!!!!!!!!!!!!!!");
 		return handler;
 	}
 	

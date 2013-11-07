@@ -12,13 +12,13 @@ import java.util.ArrayList;
  */
 public class Farmer {
 
-	private ProgramFrame programFrame;
 	private final int farmerId;
 	private final String farmerHash;
 	private String userName;
 	private String email;
 	private ArrayList<ArrayList<Position>> areaPositionList = new ArrayList<ArrayList<Position>>();
 	private ArrayList<Area> areaList = new ArrayList<Area>();
+	private int farmId;
 
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
@@ -41,11 +41,13 @@ public class Farmer {
 	 * Adds an area to the farmers list of areas "areaList".
 	 * Adds an array of the postition objects of the area to the list "areaPositionList".
 	 * @param ArrayList<Position> area
+	 * @return 
 	 */
-	public void addArea(ArrayList<Position> area) {
+	public Area addArea(ArrayList<Position> area) {
 		areaPositionList.add(area);
-		Area tempArea = new Area (area);
+		Area tempArea = new Area ("NewArea", farmId, area);
 		areaList.add(tempArea);
+		return (tempArea);
 	}
 
 	/**
@@ -83,6 +85,25 @@ public class Farmer {
 	public String getUserName() {
 		return userName;
 	}
+
+	
+	
+	
+	public int getFarmId() {
+		return farmId;
+	}
+
+
+
+
+
+	public void setFarmId(int farmId) {
+		this.farmId = farmId;
+	}
+
+
+
+
 
 	/**
 	 * Get the farmers identification number

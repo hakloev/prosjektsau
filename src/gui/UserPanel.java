@@ -52,6 +52,7 @@ public class UserPanel extends JPanel {
 	private Farmer farmer;
 
 
+
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
@@ -180,12 +181,15 @@ public class UserPanel extends JPanel {
 	/**
 	 * Adds an area to the area list and 
 	 * Sends the whole list as strings to mapPanel.addArea() 
-	 * Also adds the area to the farmer's list.
+	 * Adds the area to the farmer's list.
+	 * Sendt the area to the server.
+	 * 
 	 * @param list - ArrayList<Position>
 	 */
 	public void addArea(ArrayList<Position> list){
 		MapPanel map = programFrame.getMapPanel();
-		farmer.addArea(list);
+		Area tempArea = farmer.addArea(list);
+		programFrame.getNetHandler().createArea(tempArea);
 
 		areaGuiList.addElement(list);
 		map.deleteAreas ();
@@ -277,6 +281,8 @@ public class UserPanel extends JPanel {
 	 * 
 	 */
 	class LoginListener implements ActionListener {		
+		private int farmId;
+
 		/**
 		 * Method that checks if user is valid and logs in
 		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps. 
@@ -300,6 +306,10 @@ public class UserPanel extends JPanel {
 
 				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+				
+				//sets farmID
+				this.farmId = programFrame.getNetHandler().getM_farmID();
+				farmer.setFarmId(farmId);
 
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
