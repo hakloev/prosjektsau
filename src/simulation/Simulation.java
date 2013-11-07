@@ -31,7 +31,7 @@ public class Simulation {
 	private 				Position 			sheepLocation;
 	public static final 	int 				EARTHRADIUS 			= 6378137;
 	public static final 	int 				MSINDAY 				= 86400000;
-	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 10;
+	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 7000;
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
 	public static final		int					MOVEMENTSCALE			= 1000;
@@ -167,22 +167,13 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				
-				//Sends a mail and creates an alarm if currentSheep is outside it's farm's areas
-				if (!isInArea(currentSheep)){
-					System.out.println("Sheep " + currentSheep.getIdNr() + " HAS ESCAPED!");
-					try {
-						netHandler.sendMailToFarm(MailType.SHEEP_ESCAPE, ""+currentSheep.getFarmID());
-						netHandler.notifyFarmAlarm(currentSheep.getIdNr(), MailType.SHEEP_ESCAPE, null);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
 									+ " Name: " + currentSheep.getNick() + " Infected: " + currentSheep.isInfected());
 				
 				netHandler.updateSheep(currentSheep);
+				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);
 				previousUpdateTime = timeNow;
 			}
 			System.out.println("");

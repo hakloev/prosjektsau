@@ -483,18 +483,24 @@ public class NetHandler {
 	    return null;
 	}
 	
-	// Delete an area.
-	public Response notifyFarmAlarm(int sheep_id, MailType mt, String altEmail) {
-		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
-		parameters.add(new BasicNameValuePair("ALARM_NOTIFY", m_userCode));
-		parameters.add(new BasicNameValuePair("farm_share_code", ""+m_farmCode));
-		parameters.add(new BasicNameValuePair("mailtype", ""+mt.toString()));
-		parameters.add(new BasicNameValuePair("sheep_id", ""+sheep_id));
-		parameters.add(new BasicNameValuePair("altEmail", ""+altEmail));
-	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
-	    return null;	
-	}
+	// Tell server to check alarms.
+		public Response requestAlarmCheck(int sheep_id, boolean isOutside, String altEmail) {
+			List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+			parameters.add(new BasicNameValuePair("ALARM_NOTIFY", m_userCode));
+			parameters.add(new BasicNameValuePair("farm_share_code", ""+m_farmCode));
+			parameters.add(new BasicNameValuePair("sheep_id", ""+sheep_id));
+			if(altEmail != null) {
+			parameters.add(new BasicNameValuePair("altEmail", ""+altEmail));
+			}
+			if(isOutside) {
+				parameters.add(new BasicNameValuePair("outside", "1"));
+			} else {
+				parameters.add(new BasicNameValuePair("outside", "0"));
+			}
+		    try { return _post(parameters);
+			} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+		    return null;	
+		}
 	
 	// Actual POSTing method over a connection. 
 	// Post a list over parameters to the server.
