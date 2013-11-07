@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class AlarmThread extends Thread implements Runnable {
 
 	private SwingThread swingRef;
-	private boolean debug = true;
+	private boolean debug = false;
 
 	public AlarmThread(SwingThread swingRef) {
 		this.swingRef = swingRef;
