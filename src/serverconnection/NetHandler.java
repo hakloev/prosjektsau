@@ -363,7 +363,7 @@ public class NetHandler {
 		String longitudes = "";
 		for(int i = 0; i < a.getPosition().size(); i++) {
 			latitudes += ","+a.getPosition().get(i).getLatitude();
-			longitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLongitude();
 		}
 		
 		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));
