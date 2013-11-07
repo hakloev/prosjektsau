@@ -58,6 +58,38 @@ public class Sheep {
 			this.infected = false;
 		}
 	}
+	/**
+	 * 
+	 * @param sheepId
+	 * @param nick
+	 * @param birthYear
+	 * @param gender
+	 * @param weight
+	 * @param farmer
+	 * @param pulse
+	 * @param latitude
+	 * @param longitude
+	 * @param infected
+	 * @param farmID
+	 */
+	public Sheep(int sheepId, String nick, int birthYear, String gender, int weight, Farmer farmer, int pulse, double latitude, double longitude, int infected, int farmID) {
+		this.sheepId = sheepId;
+		setNick(nick);
+		setBirthYear(birthYear);
+		this.gender = gender;
+		this.weight = weight;
+		this.farmer = farmer;
+		this.pulse = pulse;
+		setLocation(latitude, longitude);
+		this.alarm = false;
+		if (infected == 1){
+			this.infected = true;
+		}
+		else{
+			this.infected = false;
+		}
+		this.farmID = farmID;
+	}
 
 	/**
 	 * Sets the sheep's location

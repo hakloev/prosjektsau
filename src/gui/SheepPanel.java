@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 
 import serverconnection.JsonHandler;
 import characters.Sheep;
-import serverconnection.Alarm;
 import serverconnection.Response;
 
 /**
@@ -37,7 +36,6 @@ import serverconnection.Response;
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
  */
-
 public class SheepPanel extends JPanel implements ItemListener{
 	
 	private ProgramFrame programFrame;
@@ -88,7 +86,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private boolean creatingNewSheep;  // Boolean telling if a new sheep is being created
 	private boolean updatingSheep;   // Boolean telling if a user is changing a sheep
 
-	
+	/**
+	 * Constructor for the SheepPanel
+	 * @param programFrame the programFrame
+	 */
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		this.changingSheep = false;
@@ -97,8 +98,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		initElements();
 		initDesign();
 	}
-	
-	public void initElements(){
+
+	/**
+	 * Method to initiate gui elements
+	 */
+	private void initElements(){
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -181,8 +185,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		infoMode.addActionListener(new InfoModeListener());
 		deleteSheep.addActionListener(new DeleteSheepListener());
 	}
-	
-	public void initDesign(){
+
+	/**
+	 * Method to initiate the gui-design
+	 */
+	private void initDesign(){
 		setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -339,6 +346,15 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 
+	public Sheep getSheep(int id) {
+		for (int i = 0; i < sheepList.size(); i++) {
+			if (sheepList.getElementAt(i).getIdNr() == id)  {
+				return sheepList.getElementAt(i);
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Method to add sheep to sheepList
 	 * @param sheep
@@ -350,14 +366,23 @@ public class SheepPanel extends JPanel implements ItemListener{
 	/**
 	 * Method to add sheep to db
 	 */
-	private void addSheepToDb(Sheep s) {
+	private boolean addSheepToDb(Sheep s) {
 		Response r = programFrame.getNetHandler().createSheep(s);
 		System.out.print("Legge sau til i database: ");
 		r.consoletime();
-		changingSheep = true;
-		sheepList.clear();
-		initUserSheeps(programFrame.getNetHandler().getSheep(-1));
-		changingSheep = false;
+		System.out.println(r.msg);
+		if (programFrame.getNetHandler().isError(r.msg)) {
+			JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Kan dessverre ikke legge til flere sauer i databasen",
+					"Databasefeil", JOptionPane.WARNING_MESSAGE);
+			return false;
+		} else {
+
+			changingSheep = true;
+			sheepList.clear();
+			initUserSheeps(programFrame.getNetHandler().getSheep(-1));
+			changingSheep = false;
+		    return true;
+		}
 	}
 
 	/**
@@ -464,10 +489,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 					if (!e.getValueIsAdjusting()) {
 						Sheep sheep = list.getSelectedValue();
 						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
-						// LAGRER IKKE BIRTHDATE I DB
 						System.out.print("Hente en sau i database: ");
 						json.consoletime();
 						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
+						if (programFrame.getAlarmPanel().hasAlarm(sheep.getIdNr())) {
+							sheep.setAlarmStatus(true);
+						}
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
@@ -482,17 +509,16 @@ public class SheepPanel extends JPanel implements ItemListener{
 							sheepFemale.setEnabled(true);
 							sheepMale.setEnabled(false);
 						}
-						if (sheep.getAlarmStatus()) {
-							hasAlarm.setText("Har alarm: JA");
-						}  else {
-							hasAlarm.setText("Har alarm: NEI");
-						}
 						if (sheep.isDead())  {
 							sheepNick.setForeground(Color.RED);
 							sheepNick.setText("DØD: " + sheep.getNick());
 						} else {
 							sheepNick.setForeground(Color.BLACK);
-
+						}
+						if (sheep.getAlarmStatus()) {
+							hasAlarm.setText("Har alarm: JA");
+						}  else {
+							hasAlarm.setText("Har alarm: NEI");
 						}
 					}
 				} else {
@@ -523,10 +549,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						if (sheep.getAlarmStatus()) {
-							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
-						} else if (sheep.isDead()) {
+						if (sheep.isDead()) {
 							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
@@ -538,15 +564,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 				} else if (mapAll.isSelected() && (!sheepList.isEmpty())) {
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
-						if (sheep.getAlarmStatus()) {
-							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
-						} else if (sheep.isDead()) {
+						if (sheep.isDead()) {
 							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
-/////////////////////////////////////////////SKAL FJERNES SENERE (ADDPOLY)///////////////////////						
-						map.addArea();
 					}
 					programFrame.getJTabbedPane().setSelectedIndex(2);
 				} else {
@@ -625,13 +649,14 @@ public class SheepPanel extends JPanel implements ItemListener{
 					}
 					Sheep sheep = new Sheep(666, sheepNick.getText(), Integer.parseInt(sheepAge.getText()), gender, Integer.parseInt(sheepWeight.getText()),
 							programFrame.getUserPanel().getFarmer(), (new Random().nextInt(50) + 50), Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), new Integer(1));   // satt puls til 100
-					sheepList.addElement(sheep);
-					addSheepToDb(sheep);
-					creatingNewSheep = false;
-					setEditable(false);
-					updateMode.setSelected(false);
-					infoMode.setSelected(true);
-					radioGroup1.setSelected(infoMode.getModel(), true);
+					boolean addStatus = addSheepToDb(sheep);
+					if (addStatus) {
+						creatingNewSheep = false;
+						setEditable(false);
+						updateMode.setSelected(false);
+						infoMode.setSelected(true);
+						radioGroup1.setSelected(infoMode.getModel(), true);
+					}
 				} else {
 					JOptionPane.showMessageDialog(programFrame.getSheepPanel(), "Posisisjon angis på formen: 63.345343,10.435334\nDu kan ha opptil seks desimaler" +
 							"\n\nAlder angis på formen 2000\n" +

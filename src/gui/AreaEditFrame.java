@@ -83,7 +83,7 @@ public class AreaEditFrame extends JFrame{
 		deleteFromList.setPreferredSize(new Dimension(100,20));
 		deleteFromList.setMaximumSize(new Dimension(200,20));
 		deleteFromList.setName("delete");
-		createArea = new JButton("Lag område");
+		createArea = new JButton("Lag omrï¿½de");
 		createArea.setMinimumSize(new Dimension(100,20));
 		createArea.setPreferredSize(new Dimension(100,20));
 		createArea.setMaximumSize(new Dimension(200,20));
@@ -163,7 +163,7 @@ public class AreaEditFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(button.equals("add")){
-				if(!latitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$") || !longitude.getText().matches("^[0-9]{2}\\.[0-9]{6}$")){
+				if(!latitude.getText().matches("^[0-9]{1,2}\\.[0-9]{2,15}$") || !longitude.getText().matches("^[0-9]{2}\\.[0-9]{2,15}$")){
 					
 				}else{
 					frame.vertList.addElement(new Position(Double.parseDouble(frame.latitude.getText()), Double.parseDouble(frame.longitude.getText())));

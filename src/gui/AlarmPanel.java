@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -54,7 +53,11 @@ public class AlarmPanel extends JPanel{
 	
 	// Used to deactivate listSelectionListner when deleting a sheep
 	private boolean changing;
-	
+
+	/**
+	 * Constructor for AlarmPanel
+	 * @param programFrame the programFrame instance
+	 */
 	public AlarmPanel(ProgramFrame programFrame){
 		this.programFrame = programFrame;
 		initElements();
@@ -62,6 +65,9 @@ public class AlarmPanel extends JPanel{
 		changing = false;
 	}
 
+	/**
+	 * Method to init gui-elements
+	 */
 	private void initElements() {
 		layout = new GroupLayout(this);
 		setLayout(layout);
@@ -107,24 +113,11 @@ public class AlarmPanel extends JPanel{
 		showAlarm.addActionListener(new ShowAlarmInMapListener());
 		sendAlarm.addActionListener(new SendMailListener());
 		list.addListSelectionListener(new ShowAlarmListener());
-		
-		// Alarms and sheeps for testing
-		Sheep sheep1 = new Sheep(16, "Knut", 1994, "hanne", 10000, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686, new Integer(0));
-		Sheep sheep2 = new Sheep(15, "Link", 1992, "hanne", 1023421, this.programFrame.getUserPanel().getFarmer(), 100, 61.99745, 9.46686, new Integer(0));
-		addAlarm(new Alarm(sheep1, "Killed in Action"));
-		addAlarm(new Alarm(sheep2, "Killed by a tourist bus from Germany"));
-		sheep1.setAlarmStatus(true);
-		sheep2.setAlarmStatus(true);
 	}
 
-	private void setEditable(boolean bool) {
-		sheepId.setEditable(bool);
-		alarmTime.setEditable(bool);
-		alarmDesc.setEditable(bool);
-		alarmPos.setEditable(bool);
-		alarmEmail.setEditable(true);
-	}
-	
+	/**
+	 * Method to initate gui-design
+	 */
 	private void initDesign() {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addComponent(listScrollPane)
@@ -168,15 +161,50 @@ public class AlarmPanel extends JPanel{
 		);
 		
 	}
-	
+
+	/**
+	 * Method to set textfields editiable defined by boolean
+	 * @param bool boolean to set editable or not
+	 */
+	private void setEditable(boolean bool) {
+		sheepId.setEditable(bool);
+		alarmTime.setEditable(bool);
+		alarmDesc.setEditable(bool);
+		alarmPos.setEditable(bool);
+		alarmEmail.setEditable(true);
+	}
+
+	/**
+	 * Method to tell if given sheep has alarm
+	 * @param sheepId Id of sheep
+	 * @return boolean value
+	 */
+	public boolean hasAlarm(int sheepId) {
+		for (int i = 0; i < alarmList.size(); i++) {
+			if (alarmList.getElementAt(i).getSheep().getIdNr() == sheepId) {
+				  return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Method for adding an alarm
 	 * @param alarm Takes in an alarm-object
 	 */
 	public void addAlarm(Alarm alarm) {
-		alarmList.addElement(alarm);
-		alarm.getSheep().setAlarmStatus(true);
-		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
+		boolean exists = false;
+		for (int i = 0; i < alarmList.size(); i++) {
+			if (alarm.getSheep().getIdNr() == alarmList.getElementAt(i).getSheep().getIdNr()) {
+				exists = true;
+				break;
+			}
+		}
+		if (!exists) {
+			alarmList.addElement(alarm);
+			list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
+			programFrame.getJTabbedPane().setSelectedIndex(3);
+		}
 	}
 	
 	/**
@@ -187,14 +215,6 @@ public class AlarmPanel extends JPanel{
 		alarmTime.setText("Tid");
 		alarmDesc.setText("Beskrivelse");
 		alarmPos.setText("Posisjon");
-	}
-
-	/**
-	 * Method to get alarmList
-	 * @return DefaultListModel holding alarms
-	 */
-	public DefaultListModel<Alarm> getAlarmList() {
-		return alarmList;
 	}
 	
 	// Classes for listners to ListSelection and DeleteAlarmButton
@@ -213,12 +233,12 @@ public class AlarmPanel extends JPanel{
 				changing = true;
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
-					alarmList.getElementAt(index).getSheep().setAlarmStatus(false);
+					programFrame.getNetHandler().updateAlarm(alarmList.get(index).getId(), true, true);
 					alarmList.remove(index);
 					list.clearSelection();
 					clearAlarmSections();
 					changing = false;
-				} // ELSE HERE? TO RETURN  IF DONE??
+				}
 			}
 		}
 		
@@ -235,11 +255,12 @@ public class AlarmPanel extends JPanel{
 			if (!changing) { // Check if this event is called from DeleteAlarmListener
 				if (!e.getValueIsAdjusting()) {
 					Alarm alarm = list.getSelectedValue();
-					sheepId.setText(alarm.getSheepId());
+					sheepId.setText(String.valueOf(alarm.getSheep().getIdNr()));
 					alarmTime.setText(alarm.getAlarmDate());
 					alarmDesc.setText(alarm.getAlarmDescription());
 					alarmPos.setText(alarm.getAlarmPostition());
-				} // No need for ELSE?
+					programFrame.getNetHandler().updateAlarm(alarm.getId(), true, false);
+				}
 			}
 		}
 	}

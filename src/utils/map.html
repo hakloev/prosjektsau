@@ -80,7 +80,7 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		 function showAreas(){
 		 	//addPoly();
 		 	if (areas) {
-    			for (i in areas) {
+		 		for (var i = 0; i < areas.length; i+=1) {
       			areas[i].setMap(map);
     			}	
   			}
@@ -92,9 +92,12 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     			for (i in areas) {
     				areas[i].setMap(null);
     			}	
-    		//areas.length = 0;
   			}
-		 	//farmerArea.setMap(null);
+		 	farmerArea.setMap(null);
+		 }
+		 
+		 function deleteAreas(){
+    		areas.length = 0;
 		 }
 	
 	

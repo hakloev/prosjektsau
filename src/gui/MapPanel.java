@@ -93,18 +93,18 @@ public class MapPanel extends JPanel {
 	}
 
 	
+	
+	
 	/**
 	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
+	 * @param coordinates 
 	 */
-	public void addArea() {
+	
+	public void addArea(final String coordinates) {
 		Platform.runLater(new Runnable() {
-
 			@Override
 			public void run() {
-				
-				String yolo ="62.219955,9.555143,62.075598,9.139037,61.828282,9.518065,62.134708,10.005584,62.219956,9.555144";
-
-				webEngine.executeScript("addPoly('" + yolo + "')");
+				webEngine.executeScript("addPoly('" + coordinates + "')");
 				webEngine.executeScript("showAreas()");
 			}
 		});
@@ -114,14 +114,14 @@ public class MapPanel extends JPanel {
 
 
 	/**
-	 * Removes polygon from map by calling a JavaScript in map.html
+	 * Hides all areas on map.
 	 */
-	public void removePoly() {/////////////////////FUNGERER IKKE FORELØPIG, VENTER PÅ USER-P/////////////
+	public void deleteAreas() {
 		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
-				webEngine.executeScript("removePoly()");
+				webEngine.executeScript("deleteAreas()");
 			}
 		});
 	}
@@ -141,20 +141,6 @@ public class MapPanel extends JPanel {
 	}
 
 	
-	/**
-	 * Deletes all markers from the map by calling a JavaScript in map.html
-	 */
-	public void addTestSheep() {///////////////////////////////////////////////////KUN TIL TEST////////////////////////
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				webEngine.executeScript("addTestSheep()");
-			}
-		});
-	}
-
-
 
 	/**
 	 * Main method for testing 

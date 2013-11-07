@@ -7,6 +7,8 @@ import java.awt.event.WindowEvent;
 import serverconnection.Response;
 import utils.Constants;
 import serverconnection.NetHandler;
+import utils.AlarmThread;
+import utils.SwingThread;
 
 import javax.swing.*;
 
@@ -30,7 +32,10 @@ public class ProgramFrame extends JFrame {
 	
 	//Init a NetHandler
 	private NetHandler handler;
-	
+
+	/**
+	 * ProgramFrame Constructor
+	 */
 	public ProgramFrame() {
 		initFrame();
 		initGuiTabs();
@@ -55,10 +60,15 @@ public class ProgramFrame extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Sikker på at du vil avslutte?", "Avslutte?", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == 0) {
-					Response r = handler.logout();
-					System.out.print("Logge ut: ");
-					r.consoletime();
-					System.exit(0);
+					try {
+						Response r = handler.logout();
+						System.out.print("Logge ut: ");
+						r.consoletime();
+					} catch (NullPointerException e1) {
+						System.out.println("Ikke logget inn når programmet ble avsluttet!");
+					} finally {
+						System.exit(0);
+					}
 				}
 			}
 		});
@@ -148,18 +158,18 @@ public class ProgramFrame extends JFrame {
 		this.add(jTabPane);
 	}
 
+
 	/**
 	 * Main method for the client-application
 	 * @param args commandline input args
 	 */
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				ProgramFrame program = new ProgramFrame();
-			}
-		});
+		// Initialize program with two threads to show alarms when they happen
+		Thread swingThread, alarmThread;
+		swingThread = new SwingThread();
+		alarmThread = new AlarmThread((SwingThread) swingThread);
+		swingThread.start();
+		alarmThread.start();
 
 		windowSize = new Dimension(800,600);
 		minWindowSize = new Dimension(600, 500);
