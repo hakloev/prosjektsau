@@ -69,6 +69,8 @@ public class NetHandler {
 		m_hasConnection = ping() ? true : false;
 	}
 
+	public int getFarmID() { return m_farmID; }
+	
 	public enum MailType { SHEEP_ESCAPE, SHEEP_HIGH_PULSE, 	SHEEP_LOW_PULSE, SHEEP_DEAD }
 	public enum MailTo   { USER_ID, 	 FARM_ID, 			SHEEP_ID   }
 	
@@ -330,8 +332,17 @@ public class NetHandler {
 		parameters.add(new BasicNameValuePair("AREA_UPDATE", m_userCode));
 		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
 		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
-		parameters.add(new BasicNameValuePair("coordinates", ""+a.getCoordinates()));
-		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		// Create position
+		String latitudes = "";
+		String longitudes = "";
+		for(int i = 0; i < a.getPosition().size(); i++) {
+			latitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLatitude();
+		}
+		
+		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));
+		parameters.add(new BasicNameValuePair("area_longitude", ""+longitudes));
+		parameters.add(new BasicNameValuePair("area_name", ""+a.getName()));
 		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
 		
 	    try { return _post(parameters);
@@ -341,16 +352,28 @@ public class NetHandler {
 	
 	// Create an area.
 	public Response createArea(Area a) {
+		if(a != null)
+		{
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("AREA_CREATE", m_userCode));
-		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
 		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
-		parameters.add(new BasicNameValuePair("coordinates", ""+a.getCoordinates()));
-		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		
+		// Create position
+		String latitudes = "";
+		String longitudes = "";
+		for(int i = 0; i < a.getPosition().size(); i++) {
+			latitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLatitude();
+		}
+		
+		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));
+		parameters.add(new BasicNameValuePair("area_longitude", ""+longitudes));
+		parameters.add(new BasicNameValuePair("area_name", ""+a.getName()));
 		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;	
+		} else return null;
 	}
 	
 	// Update arraylist of sheep.
@@ -459,6 +482,25 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;
 	}
+	
+	// Tell server to check alarms.
+		public Response requestAlarmCheck(int sheep_id, boolean isOutside, String altEmail) {
+			List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+			parameters.add(new BasicNameValuePair("ALARM_NOTIFY", m_userCode));
+			parameters.add(new BasicNameValuePair("farm_share_code", ""+m_farmCode));
+			parameters.add(new BasicNameValuePair("sheep_id", ""+sheep_id));
+			if(altEmail != null) {
+			parameters.add(new BasicNameValuePair("altEmail", ""+altEmail));
+			}
+			if(isOutside) {
+				parameters.add(new BasicNameValuePair("outside", "1"));
+			} else {
+				parameters.add(new BasicNameValuePair("outside", "0"));
+			}
+		    try { return _post(parameters);
+			} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+		    return null;	
+		}
 	
 	// Actual POSTing method over a connection. 
 	// Post a list over parameters to the server.
@@ -620,6 +662,7 @@ public class NetHandler {
 		if(altURL != null) 	{ url = new URL(altURL + query);  } 
 		else 				{ url = new URL(GET_URL + query); }
 		//if(m_isDebugging) 	{ System.out.println("[GET] " + url); }
+		
         // Start download stream.
         BufferedReader in = new BufferedReader(
         new InputStreamReader(url.openStream()));

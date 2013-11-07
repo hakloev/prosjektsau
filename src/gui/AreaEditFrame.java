@@ -41,21 +41,12 @@ public class AreaEditFrame extends JFrame{
 	private ProgramFrame frame;
 	private ArrayList<Position> areaList;
 	
-	/*public static void main(String[] args){
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new AreaEditFrame(true, new ArrayList<Node>());
-			}
-		});
-	}*/
-	
-	
 	public AreaEditFrame(ProgramFrame frame, ArrayList<Position> list) {
 		this.frame = frame;  
 		this.areaList = list;
 		this.setVisible(true);
 		this.setResizable(false);
-		
+
 		this.addWindowListener(new WAdapter(this, frame));
 		
 		initElements();
