@@ -35,6 +35,7 @@ public class Area {
 		for (Position position : areaPoints){
 			if (isFirst){
 				areaPoly.moveTo(position.getLatitude(), position.getLongitude());
+				isFirst = false;
 			}
 			else{
 				areaPoly.lineTo(position.getLatitude(), position.getLongitude());
