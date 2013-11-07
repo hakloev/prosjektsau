@@ -127,6 +127,7 @@ public class UserPanel extends JPanel {
 		addArea.addActionListener(new AddAreaListener(this));
 		editArea.addActionListener(new EditAreaListener(this));
 		deleteArea.addActionListener(new DeleteAreaListener());
+		addFarmCode.addActionListener(new AddFarmCode());
 	}
 
 
@@ -331,11 +332,10 @@ public class UserPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e){
 			if(programFrame.getUserPanel().farmer.getFarm()==null){
-				NetHandler nh = programFrame.getNetHandler();
-				nh.newFarm();
-				nh.getUser();
 				String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
-				programFrame.getUserPanel().farmField.setText(farmName);
+				NetHandler nh = programFrame.getNetHandler();
+				//nh.newFarm(farmName);
+				nh.getUser();
 			}
 		}
 	}
@@ -360,9 +360,25 @@ public class UserPanel extends JPanel {
 	class CreateFarmCode implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
+			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){ 
+				NetHandler nh = programFrame.getNetHandler();
+				nh.newFarmShareCode();
+				nh.getUser();
+				//String farmCode = programFrame.getUserPanel().farmer.getFarmCode();
+				
+			//}
+		}
+	}
+	
+	class AddFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
 			NetHandler nh = programFrame.getNetHandler();
-			nh.newFarmShareCode();
-			nh.getUser();
+			if(nh.getFarmCode()==null){
+				//nh.addFarmCode(farmCode);	
+			}
+			System.out.println(nh.getFarmCode());
 		}
 	}
 	
@@ -372,13 +388,15 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 	
-	/*
 	class RemoveFarmCode implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
+			if(nh.getFarmCode()!=null){
+				//noe for å fjerne farmcode
+			}
 		}
-	}*/
+	}
 	
 	/**
 	 * Listener for the loginButton
