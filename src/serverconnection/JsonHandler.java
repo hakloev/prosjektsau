@@ -257,7 +257,12 @@ public class JsonHandler {
 		return listOfAlarms;
 	}
 	
-	public static ArrayList<Area> parseJsonAndReturnAreas(Response jsonObject, ProgramFrame pf){
+	/**
+	 * 
+	 * @param jsonObject
+	 * @return arraylist with area objects
+	 */
+	public static ArrayList<Area> parseJsonAndReturnAreas(Response jsonObject){
 		Map<String, JsonNode> areaMap = new HashMap<String, JsonNode>();
 		ArrayList<Area> areaList = new ArrayList<Area>();
 
@@ -277,9 +282,10 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		for (int i = 0; i < areaMap.get("count").asInt(); i++){
-			String[] latList = areaMap.get(""+i+1).get("area_latitude").asText().split(",");
+		int count = areaMap.get("count").asInt();
+		for (int i = 0; i < count; i++){
+			System.out.println(i);
+			String[] latList = areaMap.get(""+(i+1)).get("area_latitude").asText().split(",");
 			String[] longList = areaMap.get(""+(i+1)).get("area_longitude").asText().split(",");
 			ArrayList<Double> latListDouble = new ArrayList<Double>();
 			ArrayList<Double> longListDouble = new ArrayList<Double>();
@@ -297,7 +303,7 @@ public class JsonHandler {
 				areaPositionList.add(new Position(latListDouble.get(x), longListDouble.get(x)));
 			}
 	
-			areaList.add(new Area(areaMap.get(""+i+1).get("area_name").asText(), areaMap.get(""+i+1).get("farm_id").asInt(), areaPositionList));
+			areaList.add(new Area(areaMap.get(""+(i+1)).get("area_name").asText(), areaMap.get(""+(i+1)).get("farm_id").asInt(), areaPositionList));
 		}
 		return areaList;
 	
