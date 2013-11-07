@@ -243,6 +243,28 @@ public class UserPanel extends JPanel {
 	}
 
 	/**
+	 * Uses jsonHandler to get the farmer's areas from the server via netHandler.
+	 * @return
+	 */
+	public ArrayList<Area>fetchAreas(){
+		return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+	}
+	
+	/**
+	 * Gets the farmers areas from the server and adds them to the GUI-list.
+	 */
+	public void addFetchedAreasToGuiList(){
+		ArrayList<Area> serverAreas = fetchAreas();
+		for (Area area : serverAreas){
+			areaGuiList.add(0, area.getAreaPoints());
+		}
+	}
+	
+	//public void removeServerArea(ArrayList<Position> )
+	
+	//////////////////FIXFIXFIX
+	
+	/**
 	 * Adds an area to the area list and 
 	 * Sends the whole list as strings to mapPanel.addArea() 
 	 * Adds the area to the farmer's list.
@@ -452,10 +474,14 @@ public class UserPanel extends JPanel {
 
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
+				
+				//Fetches areas from server
+				addFetchedAreasToGuiList();
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
 
+				
 				// Activate other tabs
 				programFrame.getJTabbedPane().setEnabledAt(1, true);
 				programFrame.getJTabbedPane().setEnabledAt(2, true);
