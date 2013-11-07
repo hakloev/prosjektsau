@@ -275,7 +275,7 @@ public class NetHandler {
 	public Response updateFarm(String farmname, String address) {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 	    parameters.add(new BasicNameValuePair("UPDATE_USER", m_userCode));
-	    parameters.add(new BasicNameValuePair("farmname", farmname));
+	    parameters.add(new BasicNameValuePair("farm_name", farmname));
 	    parameters.add(new BasicNameValuePair("address", address));
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke oppdatere."; e.printStackTrace(); }

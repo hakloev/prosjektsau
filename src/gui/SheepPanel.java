@@ -120,6 +120,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		
 		sheepListText = new JLabel("Saueliste");
 		hasAlarm = new JLabel("Har alarm: NEI");
+		hasAlarm.setFont(new Font("Verdana", Font.BOLD, 12));
 		
 		sheepIdText = new JLabel("ID:");
 		sheepAgeText = new JLabel("Alder:");
@@ -458,6 +459,8 @@ public class SheepPanel extends JPanel implements ItemListener{
 		sheepPos.setText("Breddegrad: Lengdegrad: ");
 		radioGroup3.clearSelection();
 		hasAlarm.setText("Har Alarm: NEI");
+		hasAlarm.setFont(new Font("Verdana", Font.BOLD, 12));
+		hasAlarm.setForeground(Color.BLACK);
 	}
 	/**
 	 * Method that sets sheep etidable or not by what the parameter is. Sets the textareas to the sheep info currently displayed
@@ -520,10 +523,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 						} else {
 							sheepNick.setForeground(Color.BLACK);
 						}
+						hasAlarm.setFont(new Font("Verdana", Font.BOLD, 12));
 						if (sheep.getAlarmStatus()) {
 							hasAlarm.setText("Har alarm: JA");
+							hasAlarm.setForeground(Color.RED);
 						}  else {
 							hasAlarm.setText("Har alarm: NEI");
+							hasAlarm.setForeground(Color.BLACK);
 						}
 					}
 				} else {
