@@ -40,11 +40,16 @@ public class Farmer {
 	 * @param ArrayList<Position> area
 	 * @return 
 	 */
-	public Area addArea(ArrayList<Position> area) {
+	public Area addAreaAndReturn(ArrayList<Position> area) {
 		areaPositionList.add(area);
 		Area tempArea = new Area ("NewArea", farmId, area);
 		areaList.add(tempArea);
 		return (tempArea);
+	}
+	
+	public void addArea(Area area) {
+		areaPositionList.add(area.getAreaPoints());
+		areaList.add(area);
 	}
 
 	/**
