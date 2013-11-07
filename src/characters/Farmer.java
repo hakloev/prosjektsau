@@ -19,10 +19,8 @@ public class Farmer {
 	private ArrayList<ArrayList<Position>> areaPositionList = new ArrayList<ArrayList<Position>>();
 	private ArrayList<Area> areaList = new ArrayList<Area>();
 	private int farmId;
-
 	private Farm farm;
-	private ArrayList<ArrayList<Position>> areaList = new ArrayList<ArrayList<Position>>();
-	
+
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
 	 * @param farmerId the farmers identification number
@@ -139,6 +137,7 @@ public class Farmer {
 	 */
 	public ArrayList<ArrayList<Position>> getAreaList() {
 		return areaPositionList;
+	}
 
 	public void setFarm(Farm farm){
 		this.farm = farm;
