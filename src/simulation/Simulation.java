@@ -1,4 +1,5 @@
 package simulation;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -163,9 +164,15 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				
-				/*if (!isInArea(currentSheep)){
-					netHandler.sendMail(MailType.SHEEP_ESCAPE, MailTo.USER_ID, ""+currentSheep.getFarmer().getFarmerId(), new String[]{""+currentSheep.getIdNr()}, null);
-				}*/
+				//Sends a mail if currentSheep is outside it's farm's areas
+				if (!isInArea(currentSheep)){
+					System.out.println("Sheep " + currentSheep.getIdNr() + " HAS ESCAPED!");
+					try {
+						netHandler.sendMailToFarm(MailType.SHEEP_ESCAPE, ""+currentSheep.getFarmID());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
@@ -178,7 +185,6 @@ public class Simulation {
 			
 			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
-			
 		}
 	}
 	
@@ -271,14 +277,15 @@ public class Simulation {
 	 * @param sheep  The sheep to check
 	 * @return Returns true or false depending on whether the sheep is in it's are or not
 	 */
-	/*private boolean isInArea(Sheep sheep){
+	private boolean isInArea(Sheep sheep){
 		boolean inArea = false;
-		for (Area area : netHandler.getAreas(sheep.getFarmID())){
+		Farm farm = JsonHandler.parseJsonAndReturnFarm(netHandler.getFarmFromSheepID(sheep.getIdNr()));
+		for (Area area : farm.getAreaList()){
 			if (area.containsPosition(sheep.getLocation())){
 				inArea = true;
 			}
 		}
 		return inArea;
 		
-	}*/
+	}
 }

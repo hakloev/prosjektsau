@@ -3,6 +3,7 @@ package serverconnection;
 import characters.Area;
 import characters.Farm;
 import characters.Farmer;
+import characters.Position;
 import characters.Sheep;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Class to handle JsonObjects
  * @author Håkon Ødegård Løvdal
+ * @author maxmelander
  */
 public class JsonHandler {
 
@@ -158,8 +160,15 @@ public class JsonHandler {
 				farmerMap.get("username").getTextValue(), farmerMap.get("email").getTextValue());
 	}
 	
+	/**
+	 * Method for parsing getFarmFromSheepID json and returning a farm object which contains a list of area objects
+	 * @param jsonObject Respons containing a json
+	 * @return Returns a Farm object containing a list of Area objects
+	 */
 	public static Farm parseJsonAndReturnFarm(Response jsonObject) {
-		Map<String, JsonNode> farmerMap = new HashMap<String, JsonNode>();
+		//System.out.println(jsonObject.msg);
+		ArrayList<Area> areaList = new ArrayList<Area>();
+		Map<String, JsonNode> farmMap = new HashMap<String, JsonNode>();
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -170,15 +179,42 @@ public class JsonHandler {
 			Iterator<Entry<String, JsonNode>> nodeIterator = input.getFields();
 			while (nodeIterator.hasNext()) {
 				Entry<String, JsonNode> entry = nodeIterator.next();
-				farmerMap.put(entry.getKey(), entry.getValue());
+				farmMap.put(entry.getKey(), entry.getValue());
 			}			
 		} catch (IOException e) {
 			e.printStackTrace();	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new Farm(new ArrayList<Area>(), farmerMap.get("id").asInt(), farmerMap.get("owner_id").asInt(),
-				farmerMap.get("farm_name").getTextValue(), farmerMap.get("farm_address").getTextValue());
+		int count = farmMap.get("areas").get("count").asInt();	
+		for (int i = 0; i < count; i++){
+			int farmID = farmMap.get("areas").get(""+(i+1)).get("farm_id").asInt();
+			String areaName = farmMap.get("areas").get(""+(i+1)).get("area_name").asText();
+			String[] latList = farmMap.get("areas").get(""+(i+1)).get("area_latitude").asText().split(",");
+			String[] longList = farmMap.get("areas").get(""+(i+1)).get("area_longitude").asText().split(",");
+			ArrayList<Double> latListDouble = new ArrayList<Double>();
+			ArrayList<Double> longListDouble = new ArrayList<Double>();
+			ArrayList<Position> areaPositionList = new ArrayList<Position>();
+			
+			for (String d : latList){
+				latListDouble.add(Double.parseDouble(d));
+			}
+			
+			for (String d : longList){
+				longListDouble.add(Double.parseDouble(d));
+			}
+			
+			for (int x = 0; x < latListDouble.size(); x++){
+				areaPositionList.add(new Position(latListDouble.get(x), longListDouble.get(x)));
+			}
+			
+			areaList.add(new Area(areaName, farmID, areaPositionList));
+			
+		}
+		
+		return new Farm(areaList, farmMap.get("farm").get("id").asInt(), farmMap.get("farm").get("owner_id").asInt(), 
+				farmMap.get("farm").get("farm_name").asText(), farmMap.get("farm").get("farm_address").asText());
+
 	}
 
 	/**
