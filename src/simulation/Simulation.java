@@ -31,7 +31,7 @@ public class Simulation {
 	private 				Position 			sheepLocation;
 	public static final 	int 				EARTHRADIUS 			= 6378137;
 	public static final 	int 				MSINDAY 				= 86400000;
-	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 7000;
+	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 500;
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
 	public static final		int					MOVEMENTSCALE			= 1000;
