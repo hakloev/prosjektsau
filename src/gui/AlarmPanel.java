@@ -17,7 +17,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import characters.Sheep;
 import mail.GMail;
 import serverconnection.Alarm;
 
@@ -222,7 +221,7 @@ public class AlarmPanel extends JPanel{
 	 * Listener for the "Slett alarm"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class DeleteAlarmListener implements ActionListener {
+	private class DeleteAlarmListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -234,8 +233,8 @@ public class AlarmPanel extends JPanel{
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
 					programFrame.getNetHandler().updateAlarm(alarmList.get(index).getId(), true, true);
-					alarmList.remove(index);
 					list.clearSelection();
+					alarmList.remove(index);
 					clearAlarmSections();
 					changing = false;
 				}
@@ -248,7 +247,7 @@ public class AlarmPanel extends JPanel{
 	 * Class for showing the selected alarm
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ShowAlarmListener implements ListSelectionListener {
+	private class ShowAlarmListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
@@ -269,7 +268,7 @@ public class AlarmPanel extends JPanel{
 	 * Class to show alarm in map
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ShowAlarmInMapListener implements ActionListener {
+	private class ShowAlarmInMapListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -290,7 +289,7 @@ public class AlarmPanel extends JPanel{
 	 * Class to send alarm as mail
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class SendMailListener implements ActionListener {
+	private class SendMailListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -303,6 +302,9 @@ public class AlarmPanel extends JPanel{
 				    String text = "Du har blitt tilsendt en epost med informasjon om alarmen til " + alarm.getSheep().toString()
 						    + "\n\nTid: " + alarm.getAlarmDate() + "\nBeskrivelse: " + alarm.getAlarmDescription()
 						    + "\nPosisjon: " + alarm.getAlarmPostition()
+						    + "\nLink til kartblad: "
+						    + "http://beta.norgeskart.no/?sok=" + alarm.getSheep().getLocation().getLatitude()
+						    + "%2C%20" + alarm.getSheep().getLocation().getLongitude() + "#11/"
 						    + "\n\nHilsen " + programFrame.getUserPanel().getFarmer().getUserName();
 				    boolean sendStatus = sender.sendMail(recipient, subject, text);
 				    if (sendStatus) {

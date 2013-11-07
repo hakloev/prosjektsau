@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class AlarmThread extends Thread implements Runnable {
 
 	private SwingThread swingRef;
-	private boolean debug = false;
+	private boolean debug = true;
 
 	public AlarmThread(SwingThread swingRef) {
 		this.swingRef = swingRef;
@@ -37,13 +37,15 @@ public class AlarmThread extends Thread implements Runnable {
 			if (debug) {System.out.println("AlarmThread: Waiting for log in");}
 
 			while (!handler.isLoggedIn()) {
-				if (debug) {System.out.println("AlarmThread: Not logged in\nSleeping in one second");}
+				if (debug) {System.out.println("AlarmThread: Not logged in\nAlarmThread: Sleeping in half a second");}
 
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			}
 			if (debug) {System.out.println("AlarmThread: Logged in");}
 
 			while (true) {
+				if (debug) {System.out.println("AlarmThread: Sleeping ten seconds before getting alarms");}
+				Thread.sleep(10000); // Wait 10 seconds before getting alarms
 				if (debug) {System.out.println("AlarmThread: Getting all alarms");}
 
 				Response r = handler.getAlarm(-1);
@@ -52,13 +54,16 @@ public class AlarmThread extends Thread implements Runnable {
 					if (debug) {System.out.println(r.msg);}
 
 					ArrayList<Alarm> alarms = JsonHandler.parseJsonAndReturnAlarms(r, swingRef.pf);
-					for (Alarm a : alarms) {
-						alarmPanel.addAlarm(a);
+					if (!alarms.isEmpty()) {
+						for (Alarm a : alarms) {
+							alarmPanel.addAlarm(a);
+						}
+						if (debug) {System.out.println("AlarmThread: Added all alarms to alarmPanel");}
 					}
-					if (debug) {System.out.println("AlarmThread: Added all alarms to alarmPanel");}
-					if (debug) {System.out.println("AlarmThread: Sleeping for five seconds");}
 				}
-				Thread.sleep(5000);
+				if (debug) {System.out.println("AlarmThread: Sleeping for one minute");}
+
+				Thread.sleep(50000); // Check for new alarms every 60 seconds  50000 + 10000
 			}
 		} catch (InterruptedException e) {
 			System.out.println("Exception in AlarmThread");
