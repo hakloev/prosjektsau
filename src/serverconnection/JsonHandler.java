@@ -224,7 +224,7 @@ public class JsonHandler {
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
-		System.out.println(jsonObject.msg);
+
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getJsonFactory();
@@ -232,6 +232,9 @@ public class JsonHandler {
 			JsonNode input = mapper.readTree(parser);
 
 			int count = input.get("count").asInt();
+			if (count == 0)  {
+				return new ArrayList<Alarm>();
+			}
 			for (int i = 1; i <= count; i++) {
 				Map<String, JsonNode> alarmMap = new HashMap<String, JsonNode>();
 				JsonNode alarm = input.get(Integer.toString(i));
@@ -243,6 +246,7 @@ public class JsonHandler {
 
 				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
 						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
+				a.getSheep().setLocation(alarmMap.get("sheep_latitude").asDouble(), alarmMap.get("sheep_longitude").asDouble());
 				listOfAlarms.add(a);
 			}
 		} catch (IOException e) {
