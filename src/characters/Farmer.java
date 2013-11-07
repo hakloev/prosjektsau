@@ -20,6 +20,9 @@ public class Farmer {
 	private ArrayList<Area> areaList = new ArrayList<Area>();
 	private int farmId;
 
+	private Farm farm;
+	private ArrayList<ArrayList<Position>> areaList = new ArrayList<ArrayList<Position>>();
+	
 	/**
 	 * @param farmerHash the farmers unique hash-identification given by database
 	 * @param farmerId the farmers identification number
@@ -32,11 +35,7 @@ public class Farmer {
 		setEmail(email);
 		this.userName = userName;
 	}
-
-
-
-
-
+	
 	/**
 	 * Adds an area to the farmers list of areas "areaList".
 	 * Adds an array of the postition objects of the area to the list "areaPositionList".
@@ -140,9 +139,13 @@ public class Farmer {
 	 */
 	public ArrayList<ArrayList<Position>> getAreaList() {
 		return areaPositionList;
+
+	public void setFarm(Farm farm){
+		this.farm = farm;
 	}
 
-
-
+	public Farm getFarm(){
+		return this.farm;
+	}
 }
 

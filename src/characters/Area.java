@@ -24,9 +24,7 @@ public class Area {
 		this.farmID = farmID;
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
-		createPoly();	
-		System.out.println(name);
-		System.out.println(areaPoints);
+		createPoly();				
 	}
 	
 	/**
