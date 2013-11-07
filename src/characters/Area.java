@@ -75,6 +75,7 @@ public class Area {
 	public String getName() 				{ return name; 		}
 	public int getId() 						{ return id; 		}
 	public String getCoordinates() 			{ return coordinates; }
+	public ArrayList<Position> getPosition() { return areaPoints; }
 	
 	
 		
