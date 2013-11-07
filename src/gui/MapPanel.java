@@ -17,7 +17,7 @@ import javafx.scene.web.WebViewBuilder;
 /**
  * Class to generate map-panel
  * @author Håkon Ødegård Løvdal
- * @author Thomas Mathiesen
+ * @author Thomas Mathisen
  */
 public class MapPanel extends JPanel {
 
@@ -93,50 +93,36 @@ public class MapPanel extends JPanel {
 	}
 
 	
-	/**
-	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
-	 * @param coordinates 
-	 */
-	/*
-	public void sendAreas() {
-		Platform.runLater(new Runnable() {
-			
-
-			@Override
-			public void run() {
-				
-				//String yolo ="62.219955,9.555143,62.075598,9.139037,61.828282,9.518065,62.134708,10.005584,62.219956,9.555144";
-				webEngine.executeScript("addPoly('" + coordinates + "')");
-				webEngine.executeScript("showAreas()");
-			}
-		});
-	}
+	
 	
 	/**
-	 * Adds a polygon-area to the map, by calling a JavaScript in map.html
+	 * Adds a polygon-area to the map's list of areas, by calling a JavaScript in map.html
 	 * @param coordinates 
 	 */
-	
 	public void addArea(final String coordinates) {
 		Platform.runLater(new Runnable() {
-			
-
 			@Override
 			public void run() {
-				
-				//String yolo ="62.219955,9.555143,62.075598,9.139037,61.828282,9.518065,62.134708,10.005584,62.219956,9.555144";
-
 				webEngine.executeScript("addPoly('" + coordinates + "')");
+			}
+		});
+	}
+	
+	/**
+	 * Tells the javascript to show the areas contained in the javascript's list of areas.
+	 */
+	public void showArea() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
 				webEngine.executeScript("showAreas()");
 			}
 		});
 	}
 	
 	
-
-
 	/**
-	 * Hides all areas on map.
+	 * deletes all areas in the list used by the javascript to draw areas.
 	 */
 	public void deleteAreas() {
 		Platform.runLater(new Runnable() {

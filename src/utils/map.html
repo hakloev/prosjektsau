@@ -9,9 +9,8 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 </style>
 <script type="text/javascript">
 
-		  var farmerArea;
 		  var areas = [];
-		  
+		  var areasShown = [];
  
 		  function StatkartMapType(name, layer) {
 			  this.layer = layer
@@ -65,9 +64,9 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
             }
 
   			// Construct the polygon.
-  			farmerArea = new google.maps.Polygon({
+  			var farmerArea = new google.maps.Polygon({
   			paths: polygonCoords,
-    		strokeColor: '#212FFF', //Orange:'#FF9300'
+    		strokeColor: '#21AAFF', //Orange:'#FF9300'    Blue:'#21AAFF'
     		strokeOpacity: 0.8,
     		strokeWeight: 2,
     		fillColor: '#21AAFF',
@@ -78,11 +77,10 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
 		 }
 			
 		 function showAreas(){
-		 	//addPoly();
-		 	if (areas) {
-    			for (i in areas) {
-      			areas[i].setMap(map);
-    			}	
+		 	if (areas) {	
+    			for (var i = 0; i < areas.length; i+=1) {
+    				areas[i].setMap(map);
+    			}
   			}
 		 }
 
@@ -93,11 +91,15 @@ body{font:12px/1.231 arial,helvetica,clean,sans-serif;}
     				areas[i].setMap(null);
     			}	
   			}
-		 	farmerArea.setMap(null);
 		 }
 		 
 		 function deleteAreas(){
-    		areas.length = 0;
+		 if (areas) {
+    			for (i in areas) {
+    				areas[i].setMap(null);
+    			}	
+  			}
+		 areas=[];
 		 }
 	
 	

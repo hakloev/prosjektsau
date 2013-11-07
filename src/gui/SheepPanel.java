@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 
 import serverconnection.JsonHandler;
 import characters.Sheep;
-import serverconnection.Alarm;
 import serverconnection.Response;
 
 /**
@@ -37,7 +36,6 @@ import serverconnection.Response;
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
  */
-
 public class SheepPanel extends JPanel implements ItemListener{
 	
 	private ProgramFrame programFrame;
@@ -53,6 +51,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private JButton addSheep;
 	private JButton newSheep;
 	private JButton updateSheep;
+	private JButton updateList;
 	private JButton showMap;
 	private JButton deleteMap;
 	
@@ -88,7 +87,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 	private boolean creatingNewSheep;  // Boolean telling if a new sheep is being created
 	private boolean updatingSheep;   // Boolean telling if a user is changing a sheep
 
-	
+	/**
+	 * Constructor for the SheepPanel
+	 * @param programFrame the programFrame
+	 */
 	public SheepPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		this.changingSheep = false;
@@ -97,8 +99,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		initElements();
 		initDesign();
 	}
-	
-	public void initElements(){
+
+	/**
+	 * Method to initiate gui elements
+	 */
+	private void initElements(){
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -164,6 +169,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 		addSheep = new JButton("Legg til ny sau");
 		newSheep = new JButton("Ny sau");
 		updateSheep = new JButton("Oppdater sau");
+		updateList = new JButton("Oppdater liste");
 		showMap = new JButton("Vis på kart");
 		deleteMap = new JButton("Slett alle på kart");
 		
@@ -180,9 +186,13 @@ public class SheepPanel extends JPanel implements ItemListener{
 		updateMode.addActionListener(new UpdateModeListener());
 		infoMode.addActionListener(new InfoModeListener());
 		deleteSheep.addActionListener(new DeleteSheepListener());
+		updateList.addActionListener(new updateListListener());
 	}
-	
-	public void initDesign(){
+
+	/**
+	 * Method to initiate the gui-design
+	 */
+	private void initDesign(){
 		setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -220,6 +230,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 																				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 																						.addComponent(updateSheep)
+																						.addComponent(updateList)
 																				)
 																				.addComponent(infoMode)
 																				.addComponent(updateMode)
@@ -277,6 +288,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 												.addComponent(sheepWeightText)
 												.addComponent(sheepWeight)
+												.addComponent(updateList)
 										)
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -337,6 +349,15 @@ public class SheepPanel extends JPanel implements ItemListener{
 				addSheep(s);
 			}
 		}
+	}
+
+	public Sheep getSheep(int id) {
+		for (int i = 0; i < sheepList.size(); i++) {
+			if (sheepList.getElementAt(i).getIdNr() == id)  {
+				return sheepList.getElementAt(i);
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -464,7 +485,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for what sheep is currently marked in the sheepList
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ListListener implements ListSelectionListener {
+	private class ListListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
@@ -473,10 +494,12 @@ public class SheepPanel extends JPanel implements ItemListener{
 					if (!e.getValueIsAdjusting()) {
 						Sheep sheep = list.getSelectedValue();
 						Response json = programFrame.getNetHandler().getSheep(sheep.getIdNr());
-						// LAGRER IKKE BIRTHDATE I DB
 						System.out.print("Hente en sau i database: ");
 						json.consoletime();
 						sheep = JsonHandler.parseJsonAndReturnSheep(json, programFrame.getUserPanel().getFarmer());
+						if (programFrame.getAlarmPanel().hasAlarm(sheep.getIdNr())) {
+							sheep.setAlarmStatus(true);
+						}
 						sheepId.setText(Integer.toString(sheep.getIdNr()));
 						sheepNick.setText(sheep.getNick());
 						sheepAge.setText(Integer.toString(sheep.getAgeOfSheep()));
@@ -491,17 +514,16 @@ public class SheepPanel extends JPanel implements ItemListener{
 							sheepFemale.setEnabled(true);
 							sheepMale.setEnabled(false);
 						}
-						if (sheep.getAlarmStatus()) {
-							hasAlarm.setText("Har alarm: JA");
-						}  else {
-							hasAlarm.setText("Har alarm: NEI");
-						}
 						if (sheep.isDead())  {
 							sheepNick.setForeground(Color.RED);
 							sheepNick.setText("DØD: " + sheep.getNick());
 						} else {
 							sheepNick.setForeground(Color.BLACK);
-
+						}
+						if (sheep.getAlarmStatus()) {
+							hasAlarm.setText("Har alarm: JA");
+						}  else {
+							hasAlarm.setText("Har alarm: NEI");
 						}
 					}
 				} else {
@@ -519,7 +541,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Vis på kart"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ShowInMapListener implements ActionListener {
+	private class ShowInMapListener implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -532,10 +554,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
 						Sheep sheep = list.getSelectedValue();
-						if (sheep.getAlarmStatus()) {
-							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
-						} else if (sheep.isDead()) {
+						if (sheep.isDead()) {
 							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
@@ -547,10 +569,10 @@ public class SheepPanel extends JPanel implements ItemListener{
 				} else if (mapAll.isSelected() && (!sheepList.isEmpty())) {
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
-						if (sheep.getAlarmStatus()) {
-							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
-						} else if (sheep.isDead()) {
+						if (sheep.isDead()) {
 							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
+						} else if (sheep.getAlarmStatus()) {
+							map.addMarker("ALARM: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						} else {
 							map.addMarker(sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
 						}
@@ -569,7 +591,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Slett alle på kart"-button 
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class DeleteMapListener implements ActionListener {
+	private class DeleteMapListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -581,7 +603,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Ny sau"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class newSheepListener implements ActionListener {
+	private class newSheepListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -609,7 +631,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for "Legg til ny sau"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class addNewSheepListener implements ActionListener {
+	private class addNewSheepListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -660,7 +682,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Oppdater sau"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class EditSheepInfoListener implements ActionListener {
+	private class EditSheepInfoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -693,7 +715,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Oppdateringsmodus"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class UpdateModeListener implements ActionListener {
+	private class UpdateModeListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -718,7 +740,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Infomodus"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class InfoModeListener implements ActionListener {
+	private class InfoModeListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -746,7 +768,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 	 * Listener for the "Slett sau"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class DeleteSheepListener implements ActionListener {
+	private class DeleteSheepListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -769,6 +791,26 @@ public class SheepPanel extends JPanel implements ItemListener{
 					changingSheep = false;
 					// TO RETURN IF DONE??
 				} // The else-condition here should not happen
+			}
+		}
+	}
+
+	/**
+	 * Listner for the "Oppdater saueliste"-button
+	 * @author Håkon Ødegård Løvdal
+	 */
+	private class updateListListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!(updatingSheep) && !(creatingNewSheep)) {
+				changingSheep = true;
+				sheepList.clear();
+				initUserSheeps(programFrame.getNetHandler().getSheep(-1));
+				changingSheep = false;
+			}  else {
+				JOptionPane.showMessageDialog(programFrame.getAlarmPanel(), "Du kan ikke editere og lignende når du vil oppdatere liste",
+						"Seleksjonsfeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

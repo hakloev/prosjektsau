@@ -49,7 +49,7 @@ public class NetHandler {
 	private static 	String 		POST_URL 		= null;
 	private 		String 		m_lastError   	= null;
 	private 		boolean 	m_isLoggedIn  	= false;
-	private			boolean 	m_isDebugging 	= true;
+	private			boolean 	m_isDebugging 	= false;
 	private			boolean		m_hasConnection = false;
 	private			HttpClient	m_client;
 	private			HttpPost 	m_post;
@@ -69,6 +69,8 @@ public class NetHandler {
 		m_hasConnection = ping() ? true : false;
 	}
 
+	public int getFarmID() { return m_farmID; }
+	
 	public enum MailType { SHEEP_ESCAPE, SHEEP_HIGH_PULSE, 	SHEEP_LOW_PULSE, SHEEP_DEAD }
 	public enum MailTo   { USER_ID, 	 FARM_ID, 			SHEEP_ID   }
 	
@@ -84,6 +86,8 @@ public class NetHandler {
 	
 	public String getFarmCode() { return m_farmCode; }
 	
+	public void setFarmCode(String c) { m_farmCode = c; }
+	
 	//=======================================================//
 	// A U T H E N T I C A T I O N			  				//
 	//=====================================================//
@@ -95,7 +99,7 @@ public class NetHandler {
 						+_sha1("clientlogin");
 		
 		if(m_isDebugging) { System.out.println("Ber om innlogging for bruker " + username + " med passord " + password); }
-		
+
 		// Prepare POST data.
 		try { _prepare(url);
 		} catch (URISyntaxException e1) { m_lastError = "Feilformert URL"; e1.printStackTrace(); }
@@ -115,17 +119,23 @@ public class NetHandler {
 			HttpResponse response 	= m_client.execute(m_post);
 			int statuscode = response.getStatusLine().getStatusCode();
 			if(statuscode != 200) { System.out.println("Svar: " + response.toString() );
-			m_lastError = "Server kunne ikke ta i mot foresp���rselen akkurat n���"; }
+			m_lastError = "Server kunne ikke ta i mot forespørselen akkurat nå"; }
 			
 			// Get the server response message.
 			serverResponse.msg = _getStringFromResponse(response);
+			if(serverResponse.msg == null || serverResponse.msg.trim().equals("")) {
+				m_lastError = "Fikk ikke svar fra server";
+			}
+
+			System.out.println();
+			System.out.println(serverResponse.msg);
+			System.out.println();
 			
 			// If not error, get the data we need.
 			if(!isError(serverResponse.msg)) {
 				if(_setUserCode(searchJSON("usercode", serverResponse.msg))) {
 				m_farmCode = searchJSON("farm_share_code", serverResponse.msg);
 				m_farmID = Integer.parseInt( searchJSON("farm_id", serverResponse.msg) );
-				
 				m_isLoggedIn = true;
 				_setURLs();
 				if(m_isDebugging) { System.out.println( searchJSON("request_response_message", serverResponse.msg) ); }
@@ -165,7 +175,7 @@ public class NetHandler {
 				HttpResponse response = m_client.execute(m_post);
 				int statuscode = response.getStatusLine().getStatusCode();
 				if(statuscode != 200) { System.out.println("Svar: " + response.toString() ); 
-				m_lastError = "Server kunne ikke ta i mot foresp���rselen akkurat n���"; }
+				m_lastError = "Server kunne ikke ta i mot forespørselen akkurat nå"; }
 				serverResponse.msg = _getStringFromResponse(response);
 				m_isLoggedIn = false;
 				m_userCode = null;
@@ -261,6 +271,26 @@ public class NetHandler {
 	    return null;
 	}
 	
+	// Sends POST data to update a user from usercode.
+	public Response updateFarm(String farmname, String address) {
+	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+	    parameters.add(new BasicNameValuePair("UPDATE_USER", m_userCode));
+	    parameters.add(new BasicNameValuePair("farmname", farmname));
+	    parameters.add(new BasicNameValuePair("address", address));
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke oppdatere."; e.printStackTrace(); }
+	    return null;
+	}
+	
+	public Response deleteFarm() {
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+		parameters.add(new BasicNameValuePair("FARM_DELETE", m_userCode));
+		parameters.add(new BasicNameValuePair("farm_id", ""+m_farmID));
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;	
+	}
+	
 	private List<NameValuePair> _getSheepPostParameters(List<NameValuePair> parameters, Sheep s) {
 	    parameters.add(new BasicNameValuePair("id", ""+s.getIdNr() ) );
 	    //parameters.add(new BasicNameValuePair("farm_id", ""+s.getFarmID() ) );
@@ -295,14 +325,24 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;	
 	}
-
+	
 	// Update arraylist of sheep.
 	public Response updateArea(Area a) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("AREA_UPDATE", m_userCode));
 		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
 		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
-		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		// Create position
+		String latitudes = "";
+		String longitudes = "";
+		for(int i = 0; i < a.getPosition().size(); i++) {
+			latitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLatitude();
+		}
+		
+		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));
+		parameters.add(new BasicNameValuePair("area_longitude", ""+longitudes));
+		parameters.add(new BasicNameValuePair("area_name", ""+a.getName()));
 		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
 		
 	    try { return _post(parameters);
@@ -312,15 +352,28 @@ public class NetHandler {
 	
 	// Create an area.
 	public Response createArea(Area a) {
+		if(a != null)
+		{
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("AREA_CREATE", m_userCode));
-		parameters.add(new BasicNameValuePair("id", ""+a.getId()));
 		parameters.add(new BasicNameValuePair("farm_id", ""+a.getFarmID()));
-		parameters.add(new BasicNameValuePair("name", ""+a.getName()));
+		
+		// Create position
+		String latitudes = "";
+		String longitudes = "";
+		for(int i = 0; i < a.getPosition().size(); i++) {
+			latitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLongitude();
+		}
+		
+		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));
+		parameters.add(new BasicNameValuePair("area_longitude", ""+longitudes));
+		parameters.add(new BasicNameValuePair("area_name", ""+a.getName()));
 		parameters.add(new BasicNameValuePair("list_position", ""+a.getList_pos()));
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;	
+		} else return null;
 	}
 	
 	// Update arraylist of sheep.
@@ -360,6 +413,12 @@ public class NetHandler {
 	    return null;	
 	}
 	
+	
+	public int getM_farmID() {
+		System.out.println("yoloooooooooo");
+		return m_farmID;
+	}
+	
 	// Update a single sheep.
 	public Response updateSheep(Sheep s) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
@@ -387,7 +446,7 @@ public class NetHandler {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 	    parameters.add(new BasicNameValuePair("CREATE_FARM", m_userCode));
 	    try { return _post(parameters);
-		} catch (IOException e) { m_lastError = "Kunne ikke behandle foresp���rselen."; e.printStackTrace(); }
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;
 	}
 	
@@ -413,7 +472,42 @@ public class NetHandler {
 
 	    return _post(parameters);
 	}
-
+	
+	// Put that an alarm was read.
+	public Response updateAlarm(int alarmID, boolean isRead, boolean deleteAlarm) {
+	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+	    parameters.add(new BasicNameValuePair("UPDATE_ALARM", m_userCode));
+	    parameters.add(new BasicNameValuePair("id", ""+alarmID));
+	    if(isRead) 	{ parameters.add(new BasicNameValuePair("isread", "1")); } 
+	    else 		{ parameters.add(new BasicNameValuePair("isread", "0"));  }
+	    
+	    if(deleteAlarm) { parameters.add(new BasicNameValuePair("delete", "1")); } 
+	    else 			{ parameters.add(new BasicNameValuePair("delete", "0")); }
+	    
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;
+	}
+	
+	// Tell server to check alarms.
+		public Response requestAlarmCheck(int sheep_id, boolean isOutside, String altEmail) {
+			List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+			parameters.add(new BasicNameValuePair("ALARM_NOTIFY", m_userCode));
+			parameters.add(new BasicNameValuePair("farm_share_code", ""+m_farmCode));
+			parameters.add(new BasicNameValuePair("sheep_id", ""+sheep_id));
+			if(altEmail != null) {
+			parameters.add(new BasicNameValuePair("altEmail", ""+altEmail));
+			}
+			if(isOutside) {
+				parameters.add(new BasicNameValuePair("outside", "1"));
+			} else {
+				parameters.add(new BasicNameValuePair("outside", "0"));
+			}
+		    try { return _post(parameters);
+			} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+		    return null;	
+		}
+	
 	// Actual POSTing method over a connection. 
 	// Post a list over parameters to the server.
 	private Response _post(List<NameValuePair> parameters) throws IOException {		
@@ -437,6 +531,7 @@ public class NetHandler {
 				
 				// Here is the data the server responds with as send the POST form.
 				serverResponse.msg = _getStringFromResponse(response);
+				
 				if(isError(serverResponse.msg)) { m_lastError = serverResponse.msg; }
 			} 
 		    catch (ClientProtocolException e) 	{ m_lastError="Protokollfeil."; e.printStackTrace(); } 
@@ -448,10 +543,20 @@ public class NetHandler {
 		 // Retry connection 
 		} while(retryconnection(250));
 	}
+	
+	
 
 	//=========================================//
 	// GET JSON STRING FROM REQUEST			  //
 	//=======================================//
+	
+	// Tells the server to check alarms if it wants to.
+	public Response checkAlarms() {
+		if(m_isDebugging) { System.out.println("[GET] Alarm status check"); }
+		try { return _get("&rid=123", null);
+		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
+		return null;
+	}
 	
 	// Get system variables.
 	public Response getSystem() {
@@ -478,10 +583,18 @@ public class NetHandler {
 		return null;
 	}
 
+	public Response getFarm(String sharecode) {
+		if(m_isDebugging) { System.out.println("[GET] farm " + sharecode); }
+		if(sharecode.equals("SIMULATOR")) { sharecode = "-1"; }
+		try { return _get("&rid=10&=f"+sharecode, null);
+		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
+		return null;
+	}
+	
 	// Get sheep from ID.
 	// -1 means all sheep.
 	public Response getFarmFromSheepID(int id) {
-		if(m_isDebugging) { System.out.println("[GET] sheep " + id); }
+		if(m_isDebugging) { System.out.println("[GET] farm from sheep " + id); }
 		try { return _get("&rid=8&f="+id, null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
@@ -494,6 +607,8 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
+
+	
 	
 	// -1 means all sheep.
 	public Response getSimulatorSheep(int id) {
@@ -523,8 +638,8 @@ public class NetHandler {
 	}
 
 	// Get user's plotting of the map area.
-	public Response getMap() {
-		if(m_isDebugging) { System.out.println("[GET] map coordinates"); }
+	public Response getAreas() {
+		if(m_isDebugging) { System.out.println("[GET] get all areas"); }
 		try { return _get("&rid=5", null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
@@ -608,7 +723,8 @@ public class NetHandler {
 	
 	// Use this for setting post headers and URL. DRY.
 	private void _prepare(String url) throws URISyntaxException {
-		m_client = new DefaultHttpClient();
+		m_client = new DefaultHttpClient();	
+		if(m_isDebugging) { System.out.println("Bruker url: " + url); }
 		m_post.setURI( new URI(url) );
 		m_post.setHeader("Host", "org.ntnu.no");
 		m_post.setHeader("charset", "utf-8");
@@ -700,8 +816,7 @@ public class NetHandler {
 	}
 	
 	private void _warp() {
-		
-		
+			
 	}
 	
 }

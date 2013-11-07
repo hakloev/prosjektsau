@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -18,7 +17,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import characters.Sheep;
 import mail.GMail;
 import serverconnection.Alarm;
 
@@ -54,7 +52,11 @@ public class AlarmPanel extends JPanel{
 	
 	// Used to deactivate listSelectionListner when deleting a sheep
 	private boolean changing;
-	
+
+	/**
+	 * Constructor for AlarmPanel
+	 * @param programFrame the programFrame instance
+	 */
 	public AlarmPanel(ProgramFrame programFrame){
 		this.programFrame = programFrame;
 		initElements();
@@ -62,6 +64,9 @@ public class AlarmPanel extends JPanel{
 		changing = false;
 	}
 
+	/**
+	 * Method to init gui-elements
+	 */
 	private void initElements() {
 		layout = new GroupLayout(this);
 		setLayout(layout);
@@ -107,24 +112,11 @@ public class AlarmPanel extends JPanel{
 		showAlarm.addActionListener(new ShowAlarmInMapListener());
 		sendAlarm.addActionListener(new SendMailListener());
 		list.addListSelectionListener(new ShowAlarmListener());
-		
-		// Alarms and sheeps for testing
-		Sheep sheep1 = new Sheep(16, "Knut", 1994, "hanne", 10000, this.programFrame.getUserPanel().getFarmer(), 100, 62.10745, 9.76686, new Integer(0));
-		Sheep sheep2 = new Sheep(15, "Link", 1992, "hanne", 1023421, this.programFrame.getUserPanel().getFarmer(), 100, 61.99745, 9.46686, new Integer(0));
-		addAlarm(new Alarm(sheep1, "Killed in Action"));
-		addAlarm(new Alarm(sheep2, "Killed by a tourist bus from Germany"));
-		sheep1.setAlarmStatus(true);
-		sheep2.setAlarmStatus(true);
 	}
 
-	private void setEditable(boolean bool) {
-		sheepId.setEditable(bool);
-		alarmTime.setEditable(bool);
-		alarmDesc.setEditable(bool);
-		alarmPos.setEditable(bool);
-		alarmEmail.setEditable(true);
-	}
-	
+	/**
+	 * Method to initate gui-design
+	 */
 	private void initDesign() {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addComponent(listScrollPane)
@@ -168,15 +160,50 @@ public class AlarmPanel extends JPanel{
 		);
 		
 	}
-	
+
+	/**
+	 * Method to set textfields editiable defined by boolean
+	 * @param bool boolean to set editable or not
+	 */
+	private void setEditable(boolean bool) {
+		sheepId.setEditable(bool);
+		alarmTime.setEditable(bool);
+		alarmDesc.setEditable(bool);
+		alarmPos.setEditable(bool);
+		alarmEmail.setEditable(true);
+	}
+
+	/**
+	 * Method to tell if given sheep has alarm
+	 * @param sheepId Id of sheep
+	 * @return boolean value
+	 */
+	public boolean hasAlarm(int sheepId) {
+		for (int i = 0; i < alarmList.size(); i++) {
+			if (alarmList.getElementAt(i).getSheep().getIdNr() == sheepId) {
+				  return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Method for adding an alarm
 	 * @param alarm Takes in an alarm-object
 	 */
 	public void addAlarm(Alarm alarm) {
-		alarmList.addElement(alarm);
-		alarm.getSheep().setAlarmStatus(true);
-		list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
+		boolean exists = false;
+		for (int i = 0; i < alarmList.size(); i++) {
+			if (alarm.getSheep().getIdNr() == alarmList.getElementAt(i).getSheep().getIdNr()) {
+				exists = true;
+				break;
+			}
+		}
+		if (!exists) {
+			alarmList.addElement(alarm);
+			list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
+			programFrame.getJTabbedPane().setSelectedIndex(3);
+		}
 	}
 	
 	/**
@@ -188,21 +215,13 @@ public class AlarmPanel extends JPanel{
 		alarmDesc.setText("Beskrivelse");
 		alarmPos.setText("Posisjon");
 	}
-
-	/**
-	 * Method to get alarmList
-	 * @return DefaultListModel holding alarms
-	 */
-	public DefaultListModel<Alarm> getAlarmList() {
-		return alarmList;
-	}
 	
 	// Classes for listners to ListSelection and DeleteAlarmButton
 	/**
 	 * Listener for the "Slett alarm"-button
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class DeleteAlarmListener implements ActionListener {
+	private class DeleteAlarmListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -213,12 +232,12 @@ public class AlarmPanel extends JPanel{
 				changing = true;
 				int index = list.getSelectedIndex();
 				if (index >= 0) {
-					alarmList.getElementAt(index).getSheep().setAlarmStatus(false);
-					alarmList.remove(index);
+					programFrame.getNetHandler().updateAlarm(alarmList.get(index).getId(), true, true);
 					list.clearSelection();
+					alarmList.remove(index);
 					clearAlarmSections();
 					changing = false;
-				} // ELSE HERE? TO RETURN  IF DONE??
+				}
 			}
 		}
 		
@@ -228,18 +247,19 @@ public class AlarmPanel extends JPanel{
 	 * Class for showing the selected alarm
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ShowAlarmListener implements ListSelectionListener {
+	private class ShowAlarmListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!changing) { // Check if this event is called from DeleteAlarmListener
 				if (!e.getValueIsAdjusting()) {
 					Alarm alarm = list.getSelectedValue();
-					sheepId.setText(alarm.getSheepId());
+					sheepId.setText(String.valueOf(alarm.getSheep().getIdNr()));
 					alarmTime.setText(alarm.getAlarmDate());
 					alarmDesc.setText(alarm.getAlarmDescription());
 					alarmPos.setText(alarm.getAlarmPostition());
-				} // No need for ELSE?
+					programFrame.getNetHandler().updateAlarm(alarm.getId(), true, false);
+				}
 			}
 		}
 	}
@@ -248,7 +268,7 @@ public class AlarmPanel extends JPanel{
 	 * Class to show alarm in map
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class ShowAlarmInMapListener implements ActionListener {
+	private class ShowAlarmInMapListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -269,7 +289,7 @@ public class AlarmPanel extends JPanel{
 	 * Class to send alarm as mail
 	 * @author Håkon Ødegård Løvdal
 	 */
-	class SendMailListener implements ActionListener {
+	private class SendMailListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -282,6 +302,9 @@ public class AlarmPanel extends JPanel{
 				    String text = "Du har blitt tilsendt en epost med informasjon om alarmen til " + alarm.getSheep().toString()
 						    + "\n\nTid: " + alarm.getAlarmDate() + "\nBeskrivelse: " + alarm.getAlarmDescription()
 						    + "\nPosisjon: " + alarm.getAlarmPostition()
+						    + "\nLink til kartblad: "
+						    + "http://beta.norgeskart.no/?sok=" + alarm.getSheep().getLocation().getLatitude()
+						    + "%2C%20" + alarm.getSheep().getLocation().getLongitude() + "#11/"
 						    + "\n\nHilsen " + programFrame.getUserPanel().getFarmer().getUserName();
 				    boolean sendStatus = sender.sendMail(recipient, subject, text);
 				    if (sendStatus) {
