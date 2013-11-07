@@ -24,7 +24,9 @@ public class Area {
 		this.farmID = farmID;
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
-		createPoly();				
+		createPoly();	
+		System.out.println(name);
+		System.out.println(areaPoints);
 	}
 	
 	/**
@@ -77,5 +79,9 @@ public class Area {
 	public String getCoordinates() 			{ return coordinates; }
 	public ArrayList<Position> getPosition() { return areaPoints; }
 	
+<<<<<<< HEAD
+=======
+	
+>>>>>>> master
 		
 }

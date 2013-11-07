@@ -413,6 +413,12 @@ public class NetHandler {
 	    return null;	
 	}
 	
+	
+	public int getM_farmID() {
+		System.out.println("yoloooooooooo");
+		return m_farmID;
+	}
+	
 	// Update a single sheep.
 	public Response updateSheep(Sheep s) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
@@ -537,6 +543,8 @@ public class NetHandler {
 		 // Retry connection 
 		} while(retryconnection(250));
 	}
+	
+	
 
 	//=========================================//
 	// GET JSON STRING FROM REQUEST			  //
@@ -599,6 +607,8 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
+
+	
 	
 	// -1 means all sheep.
 	public Response getSimulatorSheep(int id) {

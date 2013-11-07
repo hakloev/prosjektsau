@@ -18,6 +18,7 @@ import serverconnection.JsonHandler;
  * Class holding the user information and login
  * @author Andreas Lyngby
  * @author Håkon Ødegård Løvdal
+ * @author Thomas Mathisen
  */
 public class UserPanel extends JPanel {
 
@@ -243,20 +244,25 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Adds an area to the area list and 
-	 * Sends the whole list to mapPanel.addArea() 
-	 * Also adds the area to the farmer's list.
+	 * Sends the whole list as strings to mapPanel.addArea() 
+	 * Adds the area to the farmer's list.
+	 * Sendt the area to the server.
+	 * 
 	 * @param list - ArrayList<Position>
 	 */
 	public void addArea(ArrayList<Position> list){
 		MapPanel map = programFrame.getMapPanel();
-		farmer.addArea(list);
+		Area tempArea = farmer.addArea(list);
+		programFrame.getNetHandler().createArea(tempArea);
 
 		areaGuiList.addElement(list);
+		map.deleteAreas ();
 		String coordinates = "";
-		for (int i = 0 ; i < areaGuiList.size() ; i++){
+		areaList = farmer.getAreaList();
+
+		for (ArrayList<Position> positionList : areaList){//for hvert area i storlista
 			coordinates = "";
-			ArrayList<Position> positionList = areaGuiList.get(i);
-			for (Position posObject : positionList){
+			for (Position posObject : positionList){//for hvert positionelement i area
 				coordinates+= posObject.getLatitude();
 				coordinates += ",";
 				coordinates+= posObject.getLongitude();
@@ -266,7 +272,9 @@ public class UserPanel extends JPanel {
 			coordinates += ",";
 			coordinates += positionList.get(0).getLongitude();
 			map.addArea (coordinates);
+		map.showArea();
 		}
+
 	}
 
 	// All listeners is implemented as classes that implements the ActionListener-interface
@@ -282,8 +290,9 @@ public class UserPanel extends JPanel {
 	}
 
 	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
+	 * Class for implementing ActionLister to make the button to edit the farm area.
+	 * @author Andreas
+	 *
 	 */
 
 	class AddAreaListener implements ActionListener{
@@ -410,7 +419,6 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
-
 
 	/**
 	 * Listener for the loginButton
