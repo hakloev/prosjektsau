@@ -297,7 +297,7 @@ public class JsonHandler {
 				areaPositionList.add(new Position(latListDouble.get(x), longListDouble.get(x)));
 			}
 	
-			areaList.add(new Area(areaMap.get("name").asText(), areaMap.get("farm_id").asInt(), areaPositionList));
+			areaList.add(new Area(areaMap.get(""+i+1).get("area_name").asText(), areaMap.get(""+i+1).get("farm_id").asInt(), areaPositionList));
 		}
 		return areaList;
 	
