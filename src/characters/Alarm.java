@@ -1,4 +1,4 @@
-package serverconnection;
+package characters;
 
 import java.text.*;
 import java.util.Date;
