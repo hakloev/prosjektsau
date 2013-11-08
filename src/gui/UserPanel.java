@@ -127,6 +127,8 @@ public class UserPanel extends JPanel {
 		loginButton.addActionListener(new LoginListener());
 		addArea.addActionListener(new AddAreaListener(this));
 		editArea.addActionListener(new EditAreaListener(this));
+		createFarm.addActionListener(new CreateFarmListener());
+		deleteFarm.addActionListener(new DeleteFarmListener());
 		deleteArea.addActionListener(new DeleteAreaListener());
 		addFarmCode.addActionListener(new AddFarmCode());
 	}
@@ -353,25 +355,57 @@ public class UserPanel extends JPanel {
 	class CreateFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			if(programFrame.getUserPanel().farmer.getFarm()==null){
-				String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
+			if(farmer.getFarm()==null){
+				String farmName = farmField.getText();
+				
 				NetHandler nh = programFrame.getNetHandler();
-				//nh.newFarm(farmName);
-				nh.getUser();
+				Response r;
+				r = nh.newFarm();
+				System.out.println(r.msg);
+				r = nh.getUser();
+				String farmCode = nh.getFarmCode();
+				System.out.println(r.msg);
+				farmer = JsonHandler.parseJsonAndReturnUser(r);
+				
+				System.out.println("farmid:" + nh.getFarmID());
+				System.out.println("userfarmid:" + farmer.getFarmId());
+				System.out.println("farm_share_code:" + farmCode);
+				
+				
+				r = nh.updateFarm(farmName, null);
+				System.out.println("2" + r.msg);
+				farmer = JsonHandler.parseJsonAndReturnUser(nh.getUser());
+				
+				r = nh.getFarm(farmCode);
+				System.out.println(r.msg);
+				farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
+				
+				String newFarmName = farmer.getFarm().getFarmName();
+				
+				farmField.setText(newFarmName);
+			}else{
+				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().toString());
 			}
 		}
 	}
 
-	/*
 	class DeleteFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			if(programFrame.getUserPanel().farmer.getFarm()!=null){
 				NetHandler nh = programFrame.getNetHandler();
+				System.out.println(nh.getFarmID());
+				System.out.println(nh.deleteFarm().msg);
+				Response userInfo = nh.getUser();
+				farmer = JsonHandler.parseJsonAndReturnUser(userInfo);
+				farmer.setFarm(null);
+				farmField.setText("Ingen farm");
 				//deletefarm
+			}else{
+				System.out.println("Kunne ikke slette farm");
 			}
 		}
-	}*/
+	}
 
 	/**
 	 * Creates a farm share code the farmer can use to share his farm
@@ -379,7 +413,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	class CreateFarmCode implements ActionListener{
+	class CreateFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
@@ -449,7 +483,18 @@ public class UserPanel extends JPanel {
 
 				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
-
+				if(handler.getFarmCode()!=""){
+					Response getFarmResult = handler.getFarm(handler.getFarmCode());
+					if(!handler.isError(getFarmResult.msg)){
+						farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(getFarmResult));
+						farmField.setText(farmer.getFarm().getFarmName());
+					}else{
+						farmField.setText("Ingen farm");
+					}
+				}else{
+					farmField.setText("Ingen farm");
+				}
+			
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
 

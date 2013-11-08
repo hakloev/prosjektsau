@@ -216,6 +216,36 @@ public class JsonHandler {
 				farmMap.get("farm").get("farm_name").asText(), farmMap.get("farm").get("farm_address").asText());
 
 	}
+	
+	/**
+	 * Method for parsing a new farm from farmcode after making a new farm.
+	 * @param jsonObject Respons containing a json
+	 * @return Returns a Farm object
+	 */
+	public static Farm parseJsonAndReturnNewFarm(Response jsonObject) {
+		System.out.println(jsonObject.msg);
+		ArrayList<Area> areaList = new ArrayList<Area>();
+		Map<String, JsonNode> farmMap = new HashMap<String, JsonNode>();
+		
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+			
+			Iterator<Entry<String, JsonNode>> nodeIterator = input.getFields();
+			while (nodeIterator.hasNext()) {
+				Entry<String, JsonNode> entry = nodeIterator.next();
+				farmMap.put(entry.getKey(), entry.getValue());
+			}			
+		} catch (IOException e) {
+			e.printStackTrace();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new Farm(areaList, farmMap.get("id").asInt(), farmMap.get("owner_id").asInt(), 
+				farmMap.get("farm_name").asText(), farmMap.get("farm_address").asText());
+	}
 
 	/**
 	 * Method to parse alarm-json and return ArrayList of alarm-objects
