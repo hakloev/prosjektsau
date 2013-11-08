@@ -1,13 +1,12 @@
 package characters;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: hakloev
- * Date: 08/11/13
- * Time: 09:54
- * To change this template use File | Settings | File Templates.
+ * Class for holding log-information
+ * @author Håkon Ødegård Løvdal
  */
 public class LogItem {
 
@@ -22,32 +21,51 @@ public class LogItem {
 	private String nick;
 	private int sheepId;
 
-	public LogItem(int logId, Date date, Position pos, int pulse, int highestPulse, Date pulseDate, int weight, int age, String nick, int sheepId) {
+	public LogItem(int logId, String date, double lat, double longt, int pulse, int highestPulse, String pulseDate, int weight, int age, String nick, int sheepId) {
 		this.logId = logId;
-		this.date = date;
-		this.pos = pos;
+		this.date = setDate(date);
+		this.pos = setPosition(lat, longt);
 		this.pulse = pulse;
 		this.highestPulse = highestPulse;
-		this.pulseDate = pulseDate;
+		this.pulseDate = setDate(pulseDate);
 		this.weight = weight;
 		this.age = age;
 		this.nick = nick;
 		this.sheepId = sheepId;
 	}
 
+	private Date setDate(String date) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date d = null;
+		try {
+			d = sf.parse(date);
+		} catch (ParseException e) {
+			System.out.println("Parse-date error in LogItem-class");
+		}
+		return d;
+	}
+
+	private Position setPosition(double lat, double longt) {
+		return new Position(lat, longt);
+	}
+
+	public String getDateAsString(){
+		return date.toString();
+	}
+
 	@Override
 	public String toString() {
-		return "derp" +
-				"LogID=" + logId +
-				", date=" + date +
-				", pos=" + pos +
-				", pulse=" + pulse +
-				", highestPulse=" + highestPulse +
-				", pulseDate=" + pulseDate +
-				", weight=" + weight +
-				", age=" + age +
-				", nick='" + nick + '\'' +
-				", sheepId=" + sheepId +
-				'}';
+		return  "Logg-ID: " + logId +
+				"\n\nDato: " + date +
+				"\n\nBreddegrad: " + pos.getLatitude() +
+				"\nLengdegrad: " + pos.getLongitude() +
+				"\n\nPulse: " + pulse +
+				"\nHøysete puls: " + highestPulse +
+				"\nDato for høyeste puls: " + pulseDate +
+				"\n\nVekt: " + weight +
+				"\nAlder: " + age +
+				"\nKallenavn: " + nick  +
+				"\nSau-ID: " + sheepId +
+				"\n\n====================================\n";
 	}
 }

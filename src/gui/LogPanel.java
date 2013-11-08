@@ -5,10 +5,12 @@ import characters.Sheep;
 import serverconnection.JsonHandler;
 import serverconnection.Response;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -73,7 +75,7 @@ public class LogPanel extends JPanel{
 		datoTidText = new JLabel("Dato: ");
 		logDescText = new JLabel("Logg:");
 		
-		datoTid = new JTextArea("Dato");
+		datoTid = new JTextArea("Du startet klienten: " + new Date().toString());
 		datoTid.setMinimumSize(new Dimension(200, 20));
 		datoTid.setMaximumSize(new Dimension(1000, 20));
 		logDescTextArea = new JTextArea("Velg en sau og trykk \"Hent Dagslogg\"");
@@ -131,18 +133,22 @@ public class LogPanel extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			Sheep s = (Sheep) logList.getElementAt(list.getSelectedIndex());
 			Response r = programFrame.getNetHandler().getSheepLog(s.getIdNr());
-			System.out.println(r.msg);
 			try {
 				if (programFrame.getNetHandler().searchJSON("count", r.msg).equals("0")) {
 					datoTid.setText("Ingen informasjon loggført enda");
 					logDescTextArea.setText("Ingen informasjon loggført enda");
 				}  else {
-					System.out.println("Setter masse informasjon fra LogItem");
+					ArrayList<LogItem> logs = JsonHandler.parseJsonAndReturnLog(r);
+					datoTid.setText("Siste logg: " + logs.get(logs.size() - 1).getDateAsString());
+					logDescTextArea.setText("");
+					for (LogItem l : logs) {
+						logDescTextArea.append(l.toString() + "\n");
+					}
 				}
+				logDescTextArea.setCaretPosition(0);
 			} catch (IOException e1) {
 				System.out.println("Exception in getLogListener");
 			}
-			//LogItem logItem = JsonHandler.parseJsonAndReturnLog(r);
 		}
 	}
 }

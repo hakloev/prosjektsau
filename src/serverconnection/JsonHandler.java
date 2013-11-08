@@ -310,7 +310,8 @@ public class JsonHandler {
 	 * @param jsonObject Response containing json
 	 * @return logItem-object with information about log
 	 */
-	public static LogItem parseJsonAndReturnLog(Response jsonObject) {
+	public static ArrayList<LogItem> parseJsonAndReturnLog(Response jsonObject) {
+	   	ArrayList<LogItem> logList = new ArrayList<LogItem>();
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -321,22 +322,24 @@ public class JsonHandler {
 			int count = input.get("count").asInt();
 			for (int i = 1; i <= count; i++) {
 				Map<String, JsonNode> logMap = new HashMap<String, JsonNode>();
-				JsonNode alarm = input.get(Integer.toString(i));
-				Iterator<Entry<String, JsonNode>> nodeIterator = alarm.getFields();
+				JsonNode log = input.get(Integer.toString(i));
+				Iterator<Entry<String, JsonNode>> nodeIterator = log.getFields();
 				while (nodeIterator.hasNext()) {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					logMap.put(entry.getKey(), entry.getValue());
 				}
 
-
+				LogItem l = new LogItem(logMap.get("id").asInt(), logMap.get("stat_date").asText(), logMap.get("last_latitude").asDouble(), logMap.get("last_longitude").asDouble()
+					, logMap.get("last_pulse").asInt(), logMap.get("last_highest_pulse").asInt(), logMap.get("last_highest_pulse_date").asText()
+					, logMap.get("last_weight_grams").asInt(), logMap.get("last_age").asInt(), logMap.get("last_nickname").asText(), logMap.get("sheep_id").asInt());
+				logList.add(l);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return whatNot;
+		return logList;
 	}
 
 
