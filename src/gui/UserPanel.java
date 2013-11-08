@@ -20,6 +20,7 @@ import serverconnection.JsonHandler;
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
  */
+
 public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
@@ -250,6 +251,26 @@ public class UserPanel extends JPanel {
 		return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
 	}
 
+	
+	/**
+	 * Method for deleting an area from the server.
+	 * Takes the area, gets the areaID and sends the request to server.
+	 * @param JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+	 */
+	public void deleteAreafromServer(ArrayList<Position> area){
+		ArrayList<Area>serverAreas = JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+		int areaId;
+		for (Area serverArea : serverAreas){
+			ArrayList<Position> serverAreaPoints = serverArea.getAreaPoints();
+			if (serverAreaPoints.equals(area)){
+				areaId = serverArea.getId();
+				programFrame.getNetHandler().deleteArea(areaId);
+				return;
+			}
+		}
+	}
+	
+	
 	/**
 	 * Gets the farmers areas from the server and adds them to the GUI-list.
 	 */
@@ -280,9 +301,6 @@ public class UserPanel extends JPanel {
 	}
 
 
-//public void removeServerArea(ArrayList<Position> )
-
-//////////////////FIXFIXFIX
 
 /**
  * Adds an area to the area list and 
@@ -327,6 +345,7 @@ class DeleteAreaListener implements ActionListener{
 		if(programFrame.getUserPanel().areaGuiList.size()!=0 && programFrame.getUserPanel().list.getSelectedIndex() != -1){
 			ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
 			programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
+			programFrame.getUserPanel().deleteAreafromServer(temp);
 		}
 	}
 }
@@ -375,7 +394,7 @@ class EditAreaListener implements ActionListener {
 	 *
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) {///////////////////////////////////ENDREEE
 		if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
 			ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 			panel.areaGuiList.remove(panel.list.getSelectedIndex());
