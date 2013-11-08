@@ -1,7 +1,7 @@
 package utils;
 
 import gui.AlarmPanel;
-import serverconnection.Alarm;
+import characters.Alarm;
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 import serverconnection.Response;
