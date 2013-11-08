@@ -42,7 +42,7 @@ public class Farmer {
 	 */
 	public Area addAreaAndReturn(ArrayList<Position> area) {
 		areaPositionList.add(area);
-		Area tempArea = new Area ("NewArea", farmId, area);
+		Area tempArea = new Area ("NewArea", farmId, area, 0);
 		areaList.add(tempArea);
 		return (tempArea);
 	}
@@ -51,6 +51,8 @@ public class Farmer {
 		areaPositionList.add(area.getAreaPoints());
 		areaList.add(area);
 	}
+	
+	
 
 	/**
 	 * removes an area from the farmers list of areas "areaList".
@@ -140,8 +142,12 @@ public class Farmer {
 	 * 
 	 * @return returns an array of arrays containing the position of the areas belonging to the farmer.
 	 */
-	public ArrayList<ArrayList<Position>> getAreaList() {
+	public ArrayList<ArrayList<Position>> getAreaPositionList() {
 		return areaPositionList;
+	}
+	
+	public ArrayList<Area> getAreaList() {
+		return areaList;
 	}
 
 	public void setFarm(Farm farm){

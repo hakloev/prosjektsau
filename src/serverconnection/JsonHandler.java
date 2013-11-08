@@ -204,7 +204,7 @@ public class JsonHandler {
 				areaPositionList.add(new Position(latListDouble.get(x), longListDouble.get(x)));
 			}
 			
-			areaList.add(new Area(areaName, farmID, areaPositionList));
+			areaList.add(new Area(areaName, farmID, areaPositionList, farmMap.get("areas").get(""+(i+1)).get("id").asInt()));
 			
 		}
 		
@@ -280,7 +280,6 @@ public class JsonHandler {
 		}
 		int count = areaMap.get("count").asInt();
 		for (int i = 0; i < count; i++){
-			System.out.println(i);
 			String[] latList = areaMap.get(""+(i+1)).get("area_latitude").asText().split(",");
 			String[] longList = areaMap.get(""+(i+1)).get("area_longitude").asText().split(",");
 			ArrayList<Double> latListDouble = new ArrayList<Double>();
@@ -299,7 +298,7 @@ public class JsonHandler {
 				areaPositionList.add(new Position(latListDouble.get(x), longListDouble.get(x)));
 			}
 	
-			areaList.add(new Area(areaMap.get(""+(i+1)).get("area_name").asText(), areaMap.get(""+(i+1)).get("farm_id").asInt(), areaPositionList));
+			areaList.add(new Area(areaMap.get(""+(i+1)).get("area_name").asText(), areaMap.get(""+(i+1)).get("farm_id").asInt(), areaPositionList, areaMap.get(""+(i+1)).get("id").asInt()));
 		}
 		return areaList;
 	

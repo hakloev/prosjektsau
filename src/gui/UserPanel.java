@@ -251,7 +251,7 @@ public class UserPanel extends JPanel {
 		return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
 	}
 
-	
+
 	/**
 	 * Method for deleting an area from the server.
 	 * Takes the area, gets the areaID and sends the request to server.
@@ -259,18 +259,30 @@ public class UserPanel extends JPanel {
 	 */
 	public void deleteAreafromServer(ArrayList<Position> area){
 		ArrayList<Area>serverAreas = JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
-		int areaId;
+
 		for (Area serverArea : serverAreas){
-			ArrayList<Position> serverAreaPoints = serverArea.getAreaPoints();
-			if (serverAreaPoints.equals(area)){
-				areaId = serverArea.getId();
-				programFrame.getNetHandler().deleteArea(areaId);
-				return;
+			int counter = 0;
+
+
+			for (int index = 0; index < area.size(); index++) {
+				if (area.size() == serverArea.getAreaPoints().size()){
+					if (area.get(index).getLatitude() == (serverArea.getAreaPoints().get(index).getLatitude())){
+						if (area.get(index).getLongitude() == (serverArea.getAreaPoints().get(index).getLongitude())){
+							counter++;
+
+						}
+					}
+				}
+			}if (counter == area.size()){
+				programFrame.getNetHandler().deleteArea(serverArea.getId());
 			}
 		}
+
+
 	}
-	
-	
+
+
+
 	/**
 	 * Gets the farmers areas from the server and adds them to the GUI-list.
 	 */
@@ -283,7 +295,7 @@ public class UserPanel extends JPanel {
 		}
 		map.deleteAreas ();
 		String coordinates = "";
-		areaList = farmer.getAreaList();
+		areaList = farmer.getAreaPositionList();
 		for (ArrayList<Position> positionList : areaList){//for hvert area i storlista
 			coordinates = "";
 			for (Position posObject : positionList){//for hvert positionelement i area
@@ -302,128 +314,129 @@ public class UserPanel extends JPanel {
 
 
 
-/**
- * Adds an area to the area list and 
- * Sends the whole list as strings to mapPanel.addArea() 
- * Adds the area to the farmer's list.
- * Sendt the area to the server.
- * 
- * @param list - ArrayList<Position>
- */
-public void addArea(ArrayList<Position> list){
-	MapPanel map = programFrame.getMapPanel();
-	Area tempArea = farmer.addAreaAndReturn(list);
-	programFrame.getNetHandler().createArea(tempArea);
+	/**
+	 * Adds an area to the area list and 
+	 * Sends the whole list as strings to mapPanel.addArea() 
+	 * Adds the area to the farmer's list.
+	 * Sendt the area to the server.
+	 * 
+	 * @param list - ArrayList<Position>
+	 */
+	public void addArea(ArrayList<Position> list){
+		MapPanel map = programFrame.getMapPanel();
+		Area tempArea = farmer.addAreaAndReturn(list);
+		programFrame.getNetHandler().createArea(tempArea);
 
-	areaGuiList.addElement(list);
-	map.deleteAreas ();
-	String coordinates = "";
-	areaList = farmer.getAreaList();
+		areaGuiList.addElement(list);
+		map.deleteAreas ();
+		String coordinates = "";
+		areaList = farmer.getAreaPositionList();
 
-	for (ArrayList<Position> positionList : areaList){//for hvert area i storlista
-		coordinates = "";
-		for (Position posObject : positionList){//for hvert positionelement i area
-			coordinates+= posObject.getLatitude();
+		for (ArrayList<Position> positionList : areaList){//for hvert area i storlista
+			coordinates = "";
+			for (Position posObject : positionList){//for hvert positionelement i area
+				coordinates+= posObject.getLatitude();
+				coordinates += ",";
+				coordinates+= posObject.getLongitude();
+				coordinates += ",";
+			}
+			coordinates += positionList.get(0).getLatitude();
 			coordinates += ",";
-			coordinates+= posObject.getLongitude();
-			coordinates += ",";
+			coordinates += positionList.get(0).getLongitude();
+			map.addArea (coordinates);
+			map.showArea();
 		}
-		coordinates += positionList.get(0).getLatitude();
-		coordinates += ",";
-		coordinates += positionList.get(0).getLongitude();
-		map.addArea (coordinates);
-		map.showArea();
+
 	}
 
-}
+	// All listeners is implemented as classes that implements the ActionListener-interface
 
-// All listeners is implemented as classes that implements the ActionListener-interface
-
-class DeleteAreaListener implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e){
-		if(programFrame.getUserPanel().areaGuiList.size()!=0 && programFrame.getUserPanel().list.getSelectedIndex() != -1){
-			ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
-			programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
-			programFrame.getUserPanel().deleteAreafromServer(temp);
+	class DeleteAreaListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(programFrame.getUserPanel().areaGuiList.size()!=0 && programFrame.getUserPanel().list.getSelectedIndex() != -1){
+				ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
+				programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
+				programFrame.getUserPanel().deleteAreafromServer(temp);
+			}
 		}
 	}
-}
-
-/**
- * Class for implementing ActionLister to make the button to edit the farm area.
- * @author Andreas
- *
- */
-
-class AddAreaListener implements ActionListener{
-
-	private UserPanel panel;
-	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
-	 */
-	public AddAreaListener(UserPanel panel){
-		this.panel = panel;
-	}
 
 	/**
-	 * Called when clicking the button to create a new area. Opens AreaEditFrame.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		new AreaEditFrame(panel.programFrame, null);
-		panel.setAreaOpenable(false);
-	}
-}
-
-class EditAreaListener implements ActionListener {
-
-	private UserPanel panel;
-
-	/**
-	 * Constructor
-	 * @param panel - Userpanel for later use
-	 */
-	public EditAreaListener(UserPanel panel){
-		this.panel = panel;
-	}
-
-	/**
-	 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+	 * Class for implementing ActionLister to make the button to edit the farm area.
+	 * @author Andreas
 	 *
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {///////////////////////////////////ENDREEE
-		if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
-			ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
-			panel.areaGuiList.remove(panel.list.getSelectedIndex());
-			new AreaEditFrame(panel.programFrame,temp);
+
+	class AddAreaListener implements ActionListener{
+
+		private UserPanel panel;
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
+		public AddAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+
+		/**
+		 * Called when clicking the button to create a new area. Opens AreaEditFrame.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new AreaEditFrame(panel.programFrame, null);
 			panel.setAreaOpenable(false);
 		}
 	}
-}
 
-/**
- * CreateFarmListener - creates a farm for the user.
- *
- * @author Andreas
- *
- */
+	class EditAreaListener implements ActionListener {
 
-class CreateFarmListener implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e){
-		if(programFrame.getUserPanel().farmer.getFarm()==null){
-			String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
-			NetHandler nh = programFrame.getNetHandler();
-			//nh.newFarm(farmName);
-			nh.getUser();
+		private UserPanel panel;
+
+		/**
+		 * Constructor
+		 * @param panel - Userpanel for later use
+		 */
+		public EditAreaListener(UserPanel panel){
+			this.panel = panel;
+		}
+
+		/**
+		 * Action performed function to open AreaEditFrame to edit or make your area. Supposed to remove the selected item to handle multiples(not yet done).
+		 *
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {///////////////////////////////////ENDREEE
+			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
+				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
+				panel.areaGuiList.remove(panel.list.getSelectedIndex());
+				panel.deleteAreafromServer(temp);
+				new AreaEditFrame(panel.programFrame,temp);
+				panel.setAreaOpenable(false);
+			}
 		}
 	}
-}
 
-/*
+	/**
+	 * CreateFarmListener - creates a farm for the user.
+	 *
+	 * @author Andreas
+	 *
+	 */
+
+	class CreateFarmListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(programFrame.getUserPanel().farmer.getFarm()==null){
+				String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
+				NetHandler nh = programFrame.getNetHandler();
+				//nh.newFarm(farmName);
+				nh.getUser();
+			}
+		}
+	}
+
+	/*
 	class DeleteFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -434,105 +447,105 @@ class CreateFarmListener implements ActionListener{
 		}
 	}*/
 
-/**
- * Creates a farm share code the farmer can use to share his farm
- * @author Andreas
- *
- */
-
-class CreateFarmCode implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e){
-		//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
-		NetHandler nh = programFrame.getNetHandler();
-		nh.newFarmShareCode();
-		nh.getUser();
-		//String farmCode = programFrame.getUserPanel().farmer.getFarmCode();
-
-		//}
-	}
-}
-
-class AddFarmCode implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e){
-		String farmCode = programFrame.getUserPanel().farmCodeField.getText();
-		NetHandler nh = programFrame.getNetHandler();
-		if(nh.getFarmCode()==null){
-			//nh.addFarmCode(farmCode);
-		}
-		System.out.println(nh.getFarmCode());
-	}
-}
-
-/**
- * Removes the farmcode from the user who requests to remove it.
- * @author Andreas
- *
- */
-
-class RemoveFarmCode implements ActionListener{
-	@Override
-	public void actionPerformed(ActionEvent e){
-		NetHandler nh = programFrame.getNetHandler();
-		if(nh.getFarmCode()!=null){
-			//noe for å fjerne farmcode
-		}
-	}
-}
-
-/**
- * Listener for the loginButton
- * @author Håkon Ødegård Løvdal
- *
- */
-class LoginListener implements ActionListener {
 	/**
-	 * Method that checks if user is valid and logs in
-	 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps.
+	 * Creates a farm share code the farmer can use to share his farm
+	 * @author Andreas
+	 *
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		NetHandler handler = programFrame.getNetHandler();
-		Response loginResult = handler.login(usernameField.getText(),
-				new String(passwordField.getPassword()));
-		System.out.print("Logge inn: ");
-		loginResult.consoletime();
-		if (!handler.isError(loginResult.msg)) {
-			loginButton.setEnabled(false);
-			usernameField.setEditable(false);
-			passwordField.setEditable(false);
 
-			listScrollPane.setEnabled(true);
-			addArea.setEnabled(true);
-			editArea.setEnabled(true);
-			farmerEmail.setEnabled(true);
+	class CreateFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
+			NetHandler nh = programFrame.getNetHandler();
+			nh.newFarmShareCode();
+			nh.getUser();
+			//String farmCode = programFrame.getUserPanel().farmer.getFarmCode();
 
-			// Parse Response to create farmer
-			farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
-
-			//Get farmer info
-			farmerEmail.setText(farmer.getEmail());
-
-			//Fetches areas from server
-			addFetchedAreasToGuiList();
-
-			// Initiate sheeps
-			programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
-
-
-			// Activate other tabs
-			programFrame.getJTabbedPane().setEnabledAt(1, true);
-			programFrame.getJTabbedPane().setEnabledAt(2, true);
-			programFrame.getJTabbedPane().setEnabledAt(3, true);
-			programFrame.getJTabbedPane().setEnabledAt(4, true);
-
-			// Set panel to SheepPanel
-			programFrame.getJTabbedPane().setSelectedIndex(1);
-		} else {
-			JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
-					"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+			//}
 		}
 	}
-}
+
+	class AddFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
+			NetHandler nh = programFrame.getNetHandler();
+			if(nh.getFarmCode()==null){
+				//nh.addFarmCode(farmCode);
+			}
+			System.out.println(nh.getFarmCode());
+		}
+	}
+
+	/**
+	 * Removes the farmcode from the user who requests to remove it.
+	 * @author Andreas
+	 *
+	 */
+
+	class RemoveFarmCode implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			NetHandler nh = programFrame.getNetHandler();
+			if(nh.getFarmCode()!=null){
+				//noe for å fjerne farmcode
+			}
+		}
+	}
+
+	/**
+	 * Listener for the loginButton
+	 * @author Håkon Ødegård Løvdal
+	 *
+	 */
+	class LoginListener implements ActionListener {
+		/**
+		 * Method that checks if user is valid and logs in
+		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NetHandler handler = programFrame.getNetHandler();
+			Response loginResult = handler.login(usernameField.getText(),
+					new String(passwordField.getPassword()));
+			System.out.print("Logge inn: ");
+			loginResult.consoletime();
+			if (!handler.isError(loginResult.msg)) {
+				loginButton.setEnabled(false);
+				usernameField.setEditable(false);
+				passwordField.setEditable(false);
+
+				listScrollPane.setEnabled(true);
+				addArea.setEnabled(true);
+				editArea.setEnabled(true);
+				farmerEmail.setEnabled(true);
+
+				// Parse Response to create farmer
+				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+
+				//Get farmer info
+				farmerEmail.setText(farmer.getEmail());
+
+				//Fetches areas from server
+				addFetchedAreasToGuiList();
+
+				// Initiate sheeps
+				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
+
+
+				// Activate other tabs
+				programFrame.getJTabbedPane().setEnabledAt(1, true);
+				programFrame.getJTabbedPane().setEnabledAt(2, true);
+				programFrame.getJTabbedPane().setEnabledAt(3, true);
+				programFrame.getJTabbedPane().setEnabledAt(4, true);
+
+				// Set panel to SheepPanel
+				programFrame.getJTabbedPane().setSelectedIndex(1);
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
+						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
 }

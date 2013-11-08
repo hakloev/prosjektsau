@@ -19,11 +19,12 @@ public class Area {
 	 * 
 	 * @param areaPoints The coordinate points used to create the area polygon
 	 */
-	public Area(String name, int farmID, ArrayList<Position> areaPoints){
+	public Area(String name, int farmID, ArrayList<Position> areaPoints, int id){
 		this.name = name;
 		this.farmID = farmID;
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
+		this.id = id;
 		createPoly();				
 	}
 	
