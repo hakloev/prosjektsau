@@ -1,16 +1,16 @@
 package gui;
 
-import java.awt.Dimension;
+import characters.LogItem;
+import characters.Sheep;
+import serverconnection.JsonHandler;
+import serverconnection.Response;
 
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.*;
 
 public class LogPanel extends JPanel{
 	
@@ -33,6 +33,7 @@ public class LogPanel extends JPanel{
 	private JButton getDateList;
 	
 	private GroupLayout layout;
+	private JTextArea logDescTextArea;
 
 	public LogPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -41,17 +42,15 @@ public class LogPanel extends JPanel{
 		initDesign();
 	}
 
-
-
 	private void initElements() {
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-        logList = new DefaultListModel();
+        logList = new DefaultListModel<Sheep>();
         
-		list = new JList(logList);
+		list = new JList<Sheep>(logList);
 		listScrollPane = new JScrollPane(list);
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
@@ -71,13 +70,17 @@ public class LogPanel extends JPanel{
 		
 		getDateList = new JButton("Hent dagslogg");
 		
-		datoTidText = new JLabel("Dato & tid: ");
-		logDescText = new JLabel("Log:");
+		datoTidText = new JLabel("Dato: ");
+		logDescText = new JLabel("Logg:");
 		
-		datoTid = new JTextArea("Dato & tid");
-		datoTid.setMinimumSize(new Dimension(200,20));
-		datoTid.setMaximumSize(new Dimension(1000,20));
-		logDesc = new JScrollPane(new JTextArea("Logggggg"));
+		datoTid = new JTextArea("Dato");
+		datoTid.setMinimumSize(new Dimension(200, 20));
+		datoTid.setMaximumSize(new Dimension(1000, 20));
+		logDescTextArea = new JTextArea("Velg en sau og trykk \"Hent Dagslogg\"");
+		logDesc = new JScrollPane(logDescTextArea);
+
+		// Listners for buttons
+		getDateList.addActionListener(new getLogListener());
 	}
 	
 	private void initDesign() {
@@ -115,5 +118,31 @@ public class LogPanel extends JPanel{
 					)
 				)
 		);	
+	}
+
+	public void updateLogList(ListModel<Sheep> sheepList) {
+		this.list.setModel(sheepList);
+		logList = (DefaultListModel<Sheep>) sheepList;
+	}
+
+	private class getLogListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Sheep s = (Sheep) logList.getElementAt(list.getSelectedIndex());
+			Response r = programFrame.getNetHandler().getSheepLog(s.getIdNr());
+			System.out.println(r.msg);
+			try {
+				if (programFrame.getNetHandler().searchJSON("count", r.msg).equals("0")) {
+					datoTid.setText("Ingen informasjon loggført enda");
+					logDescTextArea.setText("Ingen informasjon loggført enda");
+				}  else {
+					System.out.println("Setter masse informasjon fra LogItem");
+				}
+			} catch (IOException e1) {
+				System.out.println("Exception in getLogListener");
+			}
+			//LogItem logItem = JsonHandler.parseJsonAndReturnLog(r);
+		}
 	}
 }

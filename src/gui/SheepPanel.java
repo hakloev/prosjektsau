@@ -350,6 +350,7 @@ public class SheepPanel extends JPanel implements ItemListener{
 				addSheep(s);
 			}
 		}
+		programFrame.getLogPanel().updateLogList(list.getModel());
 	}
 
 	public Sheep getSheep(int id) {

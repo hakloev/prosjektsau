@@ -1,10 +1,6 @@
 package serverconnection;
 
-import characters.Area;
-import characters.Farm;
-import characters.Farmer;
-import characters.Position;
-import characters.Sheep;
+import characters.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -308,4 +304,41 @@ public class JsonHandler {
 		return areaList;
 	
 	}
+
+	/**
+	 * Method to parse json and return Log-object
+	 * @param jsonObject Response containing json
+	 * @return logItem-object with information about log
+	 */
+	public static LogItem parseJsonAndReturnLog(Response jsonObject) {
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getJsonFactory();
+			JsonParser parser = factory.createJsonParser(jsonObject.msg);
+			JsonNode input = mapper.readTree(parser);
+
+			int count = input.get("count").asInt();
+			for (int i = 1; i <= count; i++) {
+				Map<String, JsonNode> logMap = new HashMap<String, JsonNode>();
+				JsonNode alarm = input.get(Integer.toString(i));
+				Iterator<Entry<String, JsonNode>> nodeIterator = alarm.getFields();
+				while (nodeIterator.hasNext()) {
+					Entry<String, JsonNode> entry = nodeIterator.next();
+					logMap.put(entry.getKey(), entry.getValue());
+				}
+
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return whatNot;
+	}
+
+
+
 }
