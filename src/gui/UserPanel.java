@@ -490,6 +490,11 @@ public class UserPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Adds a farm share code to the user to access a farm
+	 * @author Andreas
+	 *
+	 */
 	class AddFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
