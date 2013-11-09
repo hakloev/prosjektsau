@@ -141,10 +141,18 @@ public class Farmer {
 	public ArrayList<ArrayList<Position>> getAreaPositionList() {
 		return areaPositionList;
 	}
+<<<<<<< HEAD
+	
+	public ArrayList<Area> getAreaList() {
+		return areaList;
+	}
+
+=======
 	/**
 	 * Sets a farm to this farmer
 	 * @param farm
 	 */
+>>>>>>> master
 	public void setFarm(Farm farm){
 		this.farm = farm;
 	}

@@ -157,7 +157,7 @@ public class JsonHandler {
 	}
 	
 	/**
-	 * Method for parsing getFarmFromSheepID json and returning a farm object which contains a list of area objects
+	 * Method for parsing getFarmFromSheepID json from nethandler and returning a farm object which contains a list of area objects
 	 * @param jsonObject Respons containing a json
 	 * @return Returns a Farm object containing a list of Area objects
 	 */
@@ -254,8 +254,8 @@ public class JsonHandler {
 	}
 	
 	/**
-	 * 
-	 * @param jsonObject
+	 * Method for parsing getAlarms json from nethandler and returning an array list with area objects
+	 * @param jsonObject json from the getAlarms method in the NetHandler class
 	 * @return arraylist with area objects
 	 */
 	public static ArrayList<Area> parseJsonAndReturnAreas(Response jsonObject){
