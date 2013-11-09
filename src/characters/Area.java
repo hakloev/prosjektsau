@@ -9,6 +9,7 @@ import java.util.ArrayList;
  *
  */
 public class Area {
+
 	private Path2D areaPoly;
 	private ArrayList<Position> areaPoints;
 	private String name;

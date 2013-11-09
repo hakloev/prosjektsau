@@ -72,7 +72,7 @@ public class UserPanel extends JPanel {
 	}
 
 
-	public void initElements(){
+	private void initElements(){
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -133,7 +133,7 @@ public class UserPanel extends JPanel {
 	}
 
 
-	public void initDesign(){
+	private void initDesign(){
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
@@ -351,7 +351,7 @@ public class UserPanel extends JPanel {
 
 	// All listeners is implemented as classes that implements the ActionListener-interface
 
-	class DeleteAreaListener implements ActionListener{
+	private class DeleteAreaListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			if(programFrame.getUserPanel().areaGuiList.size()!=0 && programFrame.getUserPanel().list.getSelectedIndex() != -1){
@@ -368,7 +368,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	class AddAreaListener implements ActionListener{
+	private class AddAreaListener implements ActionListener{
 
 		private UserPanel panel;
 		/**
@@ -389,7 +389,7 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-	class EditAreaListener implements ActionListener {
+	private class EditAreaListener implements ActionListener {
 
 		private UserPanel panel;
 
@@ -424,7 +424,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	class CreateFarmListener implements ActionListener{
+	private class CreateFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			if(programFrame.getUserPanel().farmer.getFarm()==null){
@@ -453,7 +453,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	class CreateFarmCode implements ActionListener{
+	private class CreateFarmCode implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
@@ -466,7 +466,7 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-	class AddFarmCode implements ActionListener{
+	private class AddFarmCode implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
@@ -484,7 +484,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	class RemoveFarmCode implements ActionListener{
+	private class RemoveFarmCode implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
@@ -499,7 +499,7 @@ public class UserPanel extends JPanel {
 	 * @author Håkon Ødegård Løvdal
 	 *
 	 */
-	class LoginListener implements ActionListener {
+	private class LoginListener implements ActionListener {
 		/**
 		 * Method that checks if user is valid and logs in
 		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps.

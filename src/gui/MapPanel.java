@@ -82,7 +82,7 @@ public class MapPanel extends JPanel {
 	 * @param lat latiude position
 	 * @param lng longtiude position
 	 */
-	public void addMarker(final String title, final double lat, final double lng) {
+	protected void addMarker(final String title, final double lat, final double lng) {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -99,7 +99,7 @@ public class MapPanel extends JPanel {
 	 * Adds a polygon-area to the map's list of areas, by calling a JavaScript in map.html
 	 * @param coordinates 
 	 */
-	public void addArea(final String coordinates) {
+	protected void addArea(final String coordinates) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -111,7 +111,7 @@ public class MapPanel extends JPanel {
 	/**
 	 * Tells the javascript to show the areas contained in the javascript's list of areas.
 	 */
-	public void showArea() {
+	protected void showArea() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -124,7 +124,7 @@ public class MapPanel extends JPanel {
 	/**
 	 * deletes all areas in the list used by the javascript to draw areas.
 	 */
-	public void deleteAreas() {
+	protected void deleteAreas() {
 		Platform.runLater(new Runnable() {
 
 			@Override
@@ -147,23 +147,6 @@ public class MapPanel extends JPanel {
 			}
 		});
 	}
-
-	
-
-	/**
-	 * Main method for testing 
-	 * 
-	 * @param String[] args
-	 */
-	//	public static void main(String[] args) {
-	//		SwingUtilities.invokeLater(new Runnable() {
-	//		
-	//		@Override
-	//		public void run() {
-	//			MapPanel p = new MapPanel();
-	//		}
-	//	});
-	//   }
 
 }
 
