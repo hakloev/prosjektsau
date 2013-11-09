@@ -461,6 +461,16 @@ public class NetHandler {
 	    return null;
 	}
 	
+	//Uses a farm share code and adds to a farmer
+	public Response useFarmShareCode(String code) {
+	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+	    parameters.add(new BasicNameValuePair("USE_FARM", m_userCode));
+	    parameters.add(new BasicNameValuePair("farm_share_code", code));  
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;
+	}
+
 	// Use this to post an array of [fieldname]+[value] data to the server.
 	public Response postArrays(String[] fieldNames, String[] fieldValues) throws IOException {
 	    if(fieldNames.length != fieldValues.length) {
@@ -574,7 +584,7 @@ public class NetHandler {
 			Response r = _get("&rid=1", null);
 			if(!isError(r.msg) && m_isLoggedIn) {
 				m_farmID = Integer.parseInt( searchJSON("farm_id", r.msg) );
-				m_farmCode =searchJSON("farm_share_code", r.msg);
+				m_farmCode = searchJSON("farm_share_code", r.msg);
 			}
 			return r;
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
