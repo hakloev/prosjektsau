@@ -53,6 +53,10 @@ public class LogItem {
 		return date.toString();
 	}
 
+	public int getLogId() {
+		return logId;
+	}
+
 	@Override
 	public String toString() {
 		return  "Logg-ID: " + logId +

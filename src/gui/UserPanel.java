@@ -38,7 +38,9 @@ public class UserPanel extends JPanel {
 	private JButton editArea;
 	private JButton deleteArea;
 	private JButton createFarm;
+	private JButton editFarm;
 	private JButton deleteFarm;
+	private JButton createFarmCode;
 	private JButton addFarmCode;
 	private JButton removeFarmCode;
 
@@ -84,6 +86,8 @@ public class UserPanel extends JPanel {
 		deleteArea = new JButton("Slett område");
 		createFarm = new JButton("Lag gård");
 		deleteFarm = new JButton("Slett gård");
+		editFarm = new JButton("Nytt navn");
+		createFarmCode = new JButton("Lag delekode");
 		addFarmCode = new JButton("Legg til kode");
 		removeFarmCode = new JButton("Fjern kode");
 
@@ -123,13 +127,30 @@ public class UserPanel extends JPanel {
 		addArea.setEnabled(false);
 		editArea.setEnabled(false);
 		farmerEmail.setEnabled(false);
-
+		farmField.setEnabled(false);
+		farmCodeField.setEnabled(false);
+		deleteArea.setEnabled(false);
+		createFarm.setEnabled(false);
+		editFarm.setEnabled(false);
+		deleteFarm.setEnabled(false);
+		createFarmCode.setEnabled(false);
+		addFarmCode.setEnabled(false);
+		removeFarmCode.setEnabled(false);
+		areaBoxText.setEnabled(false);
+		farmerEmailText.setEnabled(false);
+		farmText.setEnabled(false);
+		farmCodeText.setEnabled(false);
+		
 		// Listeners
 		loginButton.addActionListener(new LoginListener());
 		addArea.addActionListener(new AddAreaListener(this));
 		editArea.addActionListener(new EditAreaListener(this));
+		createFarm.addActionListener(new CreateFarmListener());
+		editFarm.addActionListener(new EditFarmNameListener());
+		deleteFarm.addActionListener(new DeleteFarmListener());
 		deleteArea.addActionListener(new DeleteAreaListener());
-		addFarmCode.addActionListener(new AddFarmCode());
+		createFarmCode.addActionListener(new CreateFarmCodeListener());
+		addFarmCode.addActionListener(new AddFarmCodeListener());
 	}
 
 
@@ -255,7 +276,7 @@ public class UserPanel extends JPanel {
 	/**
 	 * Method for deleting an area from the server.
 	 * Takes the area, gets the areaID and sends the request to server.
-	 * @param JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+	 * @param area
 	 */
 	public void deleteAreafromServer(ArrayList<Position> area){
 		ArrayList<Area>serverAreas = JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
@@ -427,25 +448,92 @@ public class UserPanel extends JPanel {
 	private class CreateFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			if(programFrame.getUserPanel().farmer.getFarm()==null){
-				String farmName = programFrame.getUserPanel().farmer.getFarm().toString();
+			if(farmer.getFarm()==null){
+				String farmName = farmField.getText();
 				NetHandler nh = programFrame.getNetHandler();
-				//nh.newFarm(farmName);
-				nh.getUser();
+				Response r;
+				r = nh.newFarm();
+				if(r == null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke lage gård",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					r = nh.getUser();
+					String farmCode = nh.getFarmCode();
+					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					r = nh.updateFarm(farmName, null);
+					if(r == null){
+						JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke opprette navn.",
+								"Databasefeil", JOptionPane.WARNING_MESSAGE);
+					}
+					r = nh.getUser();
+					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					r = nh.getFarm(farmCode);
+					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
+					String newFarmName = farmer.getFarm().getFarmName();
+					farmField.setText(newFarmName);
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Laget gård med navn: " + newFarmName,
+							"Laget ny gård", JOptionPane.OK_OPTION);
+				}
+			}else{
+				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().toString());
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Har allerede gård",
+						"Har gård allerede", JOptionPane.OK_OPTION);
 			}
 		}
 	}
 
-	/*
+	/**
+	 * Deletes the farm you have. Gives error message if you can't delete it.
+	 * @author Andreas
+	 *
+	 */
 	class DeleteFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			if(programFrame.getUserPanel().farmer.getFarm()!=null){
+			if(farmer.getFarm()!=null){
 				NetHandler nh = programFrame.getNetHandler();
-				//deletefarm
+				Response r = nh.deleteFarm();
+				if(r==null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette gård",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					Response userInfo = nh.getUser();
+					farmer = JsonHandler.parseJsonAndReturnUser(userInfo);
+					farmer.setFarm(null);
+					farmField.setText("Ingen farm");
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Slettet gård",
+							"Slettet gård", JOptionPane.OK_OPTION);
+				}
+			}else{
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette gård",
+						"Ingen gård å slette/Databasefeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
-	}*/
+	}
+	/**
+	 * Class for a possible edit farm name button. Needs more logic for proper functionality.
+	 * Takes the tekst of the farmfield(gård - tekstboks) and uses the current text to give the current farm a new name.
+	 * Probably needs some checkboxes or radio buttons, and/or its own text field.
+	 * @author Andreas
+	 *
+	 */
+	class EditFarmNameListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e){
+			if(farmer.getFarm()!=null){
+				NetHandler nh = programFrame.getNetHandler();
+				String editedFarmName = farmField.getText();
+				nh.updateFarm(editedFarmName, null);
+				Response r = nh.getUser();
+				farmer = JsonHandler.parseJsonAndReturnUser(r);
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Endret gård sitt navn til: " + editedFarmName,
+						"Endret navn på gård", JOptionPane.OK_OPTION);
+			}else{
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke endre navn",
+						"Ingen gård å endre/Databasefeil", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
 
 	/**
 	 * Creates a farm share code the farmer can use to share his farm
@@ -453,28 +541,45 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	private class CreateFarmCode implements ActionListener{
+	private class CreateFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
-			//if(programFrame.getUserPanel().farmer.getFarmCode()==null){
-			NetHandler nh = programFrame.getNetHandler();
-			nh.newFarmShareCode();
-			nh.getUser();
-			//String farmCode = programFrame.getUserPanel().farmer.getFarmCode();
-
-			//}
+			if(farmer.getFarm() != null){
+				NetHandler nh = programFrame.getNetHandler();
+				Response r = nh.newFarmShareCode();
+				if(r == null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke lage ny delekode",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					nh.getUser();
+					String farmCode = nh.getFarmCode();
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Ny delekode for gård: " + farmCode,
+							"Ny delekode.", JOptionPane.OK_OPTION);
+				}
+			}
 		}
 	}
 
-	private class AddFarmCode implements ActionListener{
+	private class AddFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
 			NetHandler nh = programFrame.getNetHandler();
-			if(nh.getFarmCode()==null){
-				//nh.addFarmCode(farmCode);
+			if(nh.getFarmCode() == ""){
+				String farmShareCode = farmCodeField.getText();
+				Response r = nh.useFarmShareCode(farmShareCode);
+				if(r == null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke legge til delekode",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					r = nh.getUser();
+					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					r = nh.getFarm(farmCode);
+					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
+							"Databasefeil", JOptionPane.OK_OPTION);
+				}
 			}
-			System.out.println(nh.getFarmCode());
 		}
 	}
 
@@ -484,12 +589,28 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	private class RemoveFarmCode implements ActionListener{
+	private class RemoveFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
-			if(nh.getFarmCode()!=null){
-				//noe for å fjerne farmcode
+			if(nh.getFarmCode()!=null && farmer.getFarm().getOwnerID()!=farmer.getFarmerId()){
+				String farmShareCode = "";
+				Response r = nh.useFarmShareCode(farmShareCode);
+				if(r == null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette delekode",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					r = nh.getUser();
+					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					farmer.setFarm(null);
+					programFrame.getSheepPanel().clearSheepList();
+					nh.setFarmCode("");
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet for best effekt.",
+							"Databasefeil", JOptionPane.OK_OPTION);
+				}
+			}else{
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier",
+						"Databasefeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
@@ -520,15 +641,41 @@ public class UserPanel extends JPanel {
 				addArea.setEnabled(true);
 				editArea.setEnabled(true);
 				farmerEmail.setEnabled(true);
+				farmField.setEnabled(true);
+				farmCodeField.setEnabled(true);
+				deleteArea.setEnabled(true);
+				createFarm.setEnabled(true);
+				editFarm.setEnabled(true);
+				deleteFarm.setEnabled(true);
+				createFarmCode.setEnabled(true);
+				addFarmCode.setEnabled(true);
+				removeFarmCode.setEnabled(true);
+				areaBoxText.setEnabled(true);
+				farmerEmailText.setEnabled(true);
+				farmText.setEnabled(true);
+				farmCodeText.setEnabled(true);
 
 				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
-
+				if(handler.getFarmCode()!=""){
+					Response getFarmResult = handler.getFarm(handler.getFarmCode());
+					if(!handler.isError(getFarmResult.msg)){
+						farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(getFarmResult));
+						farmField.setText(farmer.getFarm().getFarmName());
+					}else{
+						farmField.setText("Ingen farm");
+						farmer.setFarm(null);
+					}
+				}else{
+					farmField.setText("Ingen farm");
+					farmer.setFarm(null);
+				}
+			
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
 
 				//Fetches areas from server
-				addFetchedAreasToGuiList();
+				//addFetchedAreasToGuiList();
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));

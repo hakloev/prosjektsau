@@ -274,9 +274,10 @@ public class NetHandler {
 	// Sends POST data to update a user from usercode.
 	public Response updateFarm(String farmname, String address) {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
-	    parameters.add(new BasicNameValuePair("UPDATE_USER", m_userCode));
+	    parameters.add(new BasicNameValuePair("UPDATE_FARM", m_userCode));
 	    parameters.add(new BasicNameValuePair("farm_name", farmname));
-	    parameters.add(new BasicNameValuePair("address", address));
+	    parameters.add(new BasicNameValuePair("farm_address", address));
+	    parameters.add(new BasicNameValuePair("id", ""+m_farmID));
 	    try { return _post(parameters);
 		} catch (IOException e) { m_lastError = "Kunne ikke oppdatere."; e.printStackTrace(); }
 	    return null;
@@ -460,6 +461,16 @@ public class NetHandler {
 	    return null;
 	}
 	
+	//Uses a farm share code and adds to a farmer
+	public Response useFarmShareCode(String code) {
+	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
+	    parameters.add(new BasicNameValuePair("USE_FARM", m_userCode));
+	    parameters.add(new BasicNameValuePair("farm_share_code", code));  
+	    try { return _post(parameters);
+		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
+	    return null;
+	}
+
 	// Use this to post an array of [fieldname]+[value] data to the server.
 	public Response postArrays(String[] fieldNames, String[] fieldValues) throws IOException {
 	    if(fieldNames.length != fieldValues.length) {
@@ -569,7 +580,13 @@ public class NetHandler {
 	// Get user from ID.
 	public Response getUser() {
 		if(m_isDebugging) { System.out.println("[GET] user"); }
-		try { return _get("&rid=1", null);
+		try { 
+			Response r = _get("&rid=1", null);
+			if(!isError(r.msg) && m_isLoggedIn) {
+				m_farmID = Integer.parseInt( searchJSON("farm_id", r.msg) );
+				m_farmCode = searchJSON("farm_share_code", r.msg);
+			}
+			return r;
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
@@ -586,7 +603,7 @@ public class NetHandler {
 	public Response getFarm(String sharecode) {
 		if(m_isDebugging) { System.out.println("[GET] farm " + sharecode); }
 		if(sharecode.equals("SIMULATOR")) { sharecode = "-1"; }
-		try { return _get("&rid=10&=f"+sharecode, null);
+		try { return _get("&rid=10&f="+sharecode, null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
