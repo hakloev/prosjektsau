@@ -40,12 +40,22 @@ public class Farmer {
 	 * @param ArrayList<Position> area
 	 * @return 
 	 */
-	public Area addArea(ArrayList<Position> area) {
+	public Area addAreaAndReturn(ArrayList<Position> area) {
 		areaPositionList.add(area);
-		Area tempArea = new Area ("NewArea", farmId, area);
+		Area tempArea = new Area ("NewArea", farmId, area, 0);
 		areaList.add(tempArea);
 		return (tempArea);
 	}
+	/**
+	 * Dunno if this method is used. Fuck it.
+	 * @param area An Area object to be added to this farmer's areaposition list. 
+	 */
+	public void addArea(Area area) {
+		areaPositionList.add(area.getAreaPoints());
+		areaList.add(area);
+	}
+	
+	
 
 	/**
 	 * removes an area from the farmers list of areas "areaList".
@@ -82,26 +92,21 @@ public class Farmer {
 	public String getUserName() {
 		return userName;
 	}
-
-	
-	
-	
+	/**
+	 * 
+	 * @return Returns this farmer's farm id
+	 */
 	public int getFarmId() {
 		return farmId;
 	}
-
-
-
-
-
+	/**
+	 * Sets a farm id to this farmer
+	 * @param farmId
+	 */
 	public void setFarmId(int farmId) {
 		this.farmId = farmId;
 	}
-
-
-
-
-
+	
 	/**
 	 * Get the farmers identification number
 	 * @return returns the farmer's owner ID
@@ -129,20 +134,24 @@ public class Farmer {
 				+ ", userName=" + userName + "]";
 	}
 
-
-	
 	/**
 	 * 
 	 * @return returns an array of arrays containing the position of the areas belonging to the farmer.
 	 */
-	public ArrayList<ArrayList<Position>> getAreaList() {
+	public ArrayList<ArrayList<Position>> getAreaPositionList() {
 		return areaPositionList;
 	}
-
+	/**
+	 * Sets a farm to this farmer
+	 * @param farm
+	 */
 	public void setFarm(Farm farm){
 		this.farm = farm;
 	}
-
+	/**
+	 * 
+	 * @return Returns this farmer's farm
+	 */
 	public Farm getFarm(){
 		return this.farm;
 	}

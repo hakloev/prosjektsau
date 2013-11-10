@@ -170,7 +170,7 @@ public class Simulation {
 				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
 									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
-									+ " Name: " + currentSheep.getNick() + " Infected: " + currentSheep.isInfected());
+									+ " In Area: " + isInArea(currentSheep) + " Infected: " + currentSheep.isInfected());
 				
 				netHandler.updateSheep(currentSheep);
 				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);

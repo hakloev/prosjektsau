@@ -77,7 +77,7 @@ public class NetHandler {
 	public void isDebugging(boolean b) { m_isDebugging = b; }
 	
 	// Temp method? Use to search JSON string.
-	private String searchJSON(String findField, String json) throws JsonProcessingException, IOException {
+	public String searchJSON(String findField, String json) throws JsonProcessingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = mapper.readTree(json);
 		JsonNode field = root.get(findField);
@@ -364,7 +364,7 @@ public class NetHandler {
 		String longitudes = "";
 		for(int i = 0; i < a.getPosition().size(); i++) {
 			latitudes += ","+a.getPosition().get(i).getLatitude();
-			longitudes += ","+a.getPosition().get(i).getLatitude();
+			longitudes += ","+a.getPosition().get(i).getLongitude();
 		}
 		
 		parameters.add(new BasicNameValuePair("area_latitude", ""+latitudes));

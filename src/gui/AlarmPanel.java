@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import mail.GMail;
-import serverconnection.Alarm;
+import characters.Alarm;
 
 /**
  * Class to show and handle alarms

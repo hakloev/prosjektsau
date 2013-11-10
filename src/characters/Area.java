@@ -9,6 +9,7 @@ import java.util.ArrayList;
  *
  */
 public class Area {
+
 	private Path2D areaPoly;
 	private ArrayList<Position> areaPoints;
 	private String name;
@@ -19,11 +20,12 @@ public class Area {
 	 * 
 	 * @param areaPoints The coordinate points used to create the area polygon
 	 */
-	public Area(String name, int farmID, ArrayList<Position> areaPoints){
+	public Area(String name, int farmID, ArrayList<Position> areaPoints, int id){
 		this.name = name;
 		this.farmID = farmID;
 		areaPoly = new Path2D.Double();
 		this.areaPoints = areaPoints;
+		this.id = id;
 		createPoly();				
 	}
 	
@@ -35,6 +37,7 @@ public class Area {
 		for (Position position : areaPoints){
 			if (isFirst){
 				areaPoly.moveTo(position.getLatitude(), position.getLongitude());
+				isFirst = false;
 			}
 			else{
 				areaPoly.lineTo(position.getLatitude(), position.getLongitude());
