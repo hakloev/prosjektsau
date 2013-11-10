@@ -528,8 +528,24 @@ public class UserPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
-			if(nh.getFarmCode()!=null){
-				//noe for å fjerne farmcode
+			if(nh.getFarmCode()!=null && farmer.getFarm().getOwnerID()!=farmer.getFarmerId()){
+				String farmShareCode = "";
+				Response r = nh.useFarmShareCode(farmShareCode);
+				if(r == null){
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette delekode",
+							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+				}else{
+					r = nh.getUser();
+					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					farmer.setFarm(null);
+					programFrame.getSheepPanel().clearSheepList();
+					nh.setFarmCode("");
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet. For best effekt.",
+							"Databasefeil", JOptionPane.OK_OPTION);
+				}
+			}else{
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier",
+						"Databasefeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

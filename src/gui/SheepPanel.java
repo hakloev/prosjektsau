@@ -814,4 +814,17 @@ public class SheepPanel extends JPanel implements ItemListener{
 			}
 		}
 	}
+	
+	
+	//--------------
+	//Sheeplist fix
+	//--------------
+
+	/**
+	 * Removes the objects in the sheep list.
+	 * Used by UserPanel.RemoveShareCodeListener.
+	 */
+	public void clearSheepList(){
+		sheepList.clear();
+	}
 }
