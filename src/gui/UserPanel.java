@@ -541,7 +541,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	private class CreateFarmCode implements ActionListener{
+	private class CreateFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			if(farmer.getFarm() != null){
@@ -560,7 +560,7 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-	private class AddFarmCode implements ActionListener{
+	private class AddFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
@@ -589,7 +589,7 @@ public class UserPanel extends JPanel {
 	 *
 	 */
 
-	private class RemoveFarmCode implements ActionListener{
+	private class RemoveFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
@@ -675,7 +675,7 @@ public class UserPanel extends JPanel {
 				farmerEmail.setText(farmer.getEmail());
 
 				//Fetches areas from server
-				addFetchedAreasToGuiList();
+				//addFetchedAreasToGuiList();
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
