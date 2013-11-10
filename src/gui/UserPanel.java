@@ -540,7 +540,7 @@ public class UserPanel extends JPanel {
 					farmer.setFarm(null);
 					programFrame.getSheepPanel().clearSheepList();
 					nh.setFarmCode("");
-					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet. For best effekt.",
+					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet for best effekt.",
 							"Databasefeil", JOptionPane.OK_OPTION);
 				}
 			}else{
