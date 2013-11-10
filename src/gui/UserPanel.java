@@ -276,7 +276,7 @@ public class UserPanel extends JPanel {
 	/**
 	 * Method for deleting an area from the server.
 	 * Takes the area, gets the areaID and sends the request to server.
-	 * @param JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+	 * @param area
 	 */
 	public void deleteAreafromServer(ArrayList<Position> area){
 		ArrayList<Area>serverAreas = JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
