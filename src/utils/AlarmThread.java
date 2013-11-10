@@ -1,7 +1,7 @@
 package utils;
 
 import gui.AlarmPanel;
-import serverconnection.Alarm;
+import characters.Alarm;
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
 import serverconnection.Response;
@@ -45,7 +45,7 @@ public class AlarmThread extends Thread implements Runnable {
 
 			while (true) {
 				if (debug) {System.out.println("AlarmThread: Sleeping ten seconds before getting alarms");}
-				Thread.sleep(10000); // Wait 10 seconds before getting alarms
+				Thread.sleep(5000); // Wait 10 seconds before getting alarms
 				if (debug) {System.out.println("AlarmThread: Getting all alarms");}
 
 				Response r = handler.getAlarm(-1);
@@ -63,7 +63,7 @@ public class AlarmThread extends Thread implements Runnable {
 				}
 				if (debug) {System.out.println("AlarmThread: Sleeping for one minute");}
 
-				Thread.sleep(50000); // Check for new alarms every 60 seconds  50000 + 10000
+				Thread.sleep(55000); // Check for new alarms every 60 seconds  55000 + 5000
 			}
 		} catch (InterruptedException e) {
 			System.out.println("Exception in AlarmThread");

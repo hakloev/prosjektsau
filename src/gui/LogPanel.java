@@ -1,16 +1,20 @@
 package gui;
 
-import java.awt.Dimension;
+import characters.LogItem;
+import characters.Sheep;
+import serverconnection.JsonHandler;
+import serverconnection.Response;
 
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class LogPanel extends JPanel{
 	
@@ -20,19 +24,19 @@ public class LogPanel extends JPanel{
 	private DefaultListModel logList;
 	private JScrollPane listScrollPane;
 	
-	private JComboBox yearBox;
-	private JComboBox monthBox;
-	private JComboBox dayBox;
+	private JComboBox logIdBox;
 	private JLabel datoTidText;
 	private JLabel logDescText;
 	
 	private JTextArea datoTid;
 	private JScrollPane logDesc;
 	
-	private JButton deleteLogItem;
-	private JButton getDateList;
-	
 	private GroupLayout layout;
+	private JTextArea logDescTextArea;
+
+	private boolean editingLog;
+
+	private ArrayList<LogItem> logCurrentSheep;
 
 	public LogPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
@@ -41,53 +45,43 @@ public class LogPanel extends JPanel{
 		initDesign();
 	}
 
-
-
 	private void initElements() {
 		layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
-        logList = new DefaultListModel();
+        logList = new DefaultListModel<Sheep>();
         
-		list = new JList(logList);
+		list = new JList<Sheep>(logList);
 		listScrollPane = new JScrollPane(list);
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
+
+		logIdBox = new JComboBox(new String[]{"Logger:"});
+		logIdBox.setMinimumSize(new Dimension(120, 20));
+		logIdBox.setMaximumSize(new Dimension(120, 20));
+
+		datoTidText = new JLabel("Dato: ");
+		logDescText = new JLabel("Logg:");
 		
-		String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig", "Fox", "Elephat", "Fish", "1", "3", "2", "5"};
-		
-		yearBox = new JComboBox(petStrings);
-		yearBox.setMinimumSize(new Dimension(120,20));
-		yearBox.setMaximumSize(new Dimension(120,20));
-		monthBox = new JComboBox(petStrings);
-		monthBox.setMinimumSize(new Dimension(120,20));
-		monthBox.setMaximumSize(new Dimension(120,20));
-		dayBox = new JComboBox(petStrings);
-		dayBox.setMaximumRowCount(15);
-		dayBox.setMinimumSize(new Dimension(120,20));
-		dayBox.setMaximumSize(new Dimension(120,20));
-		
-		getDateList = new JButton("Hent dagslogg");
-		
-		datoTidText = new JLabel("Dato & tid: ");
-		logDescText = new JLabel("Log:");
-		
-		datoTid = new JTextArea("Dato & tid");
-		datoTid.setMinimumSize(new Dimension(200,20));
-		datoTid.setMaximumSize(new Dimension(1000,20));
-		logDesc = new JScrollPane(new JTextArea("Logggggg"));
+		datoTid = new JTextArea("Du startet klienten: " + new Date().toString());
+		datoTid.setMinimumSize(new Dimension(200, 20));
+		datoTid.setMaximumSize(new Dimension(1000, 20));
+		logDescTextArea = new JTextArea("Velg en sau og trykk \"Hent Dagslogg\"");
+		logDesc = new JScrollPane(logDescTextArea);
+		logCurrentSheep = new ArrayList<LogItem>();
+
+		// Listners for buttons
+		list.addListSelectionListener(new ListListener());
+		logIdBox.addActionListener(new ComboBoxListner());
 	}
 	
 	private void initDesign() {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(yearBox)
-					.addComponent(monthBox)
-					.addComponent(dayBox)
+					.addComponent(logIdBox)
 					.addComponent(listScrollPane)
-					.addComponent(getDateList)
 			)
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(datoTidText)
@@ -100,11 +94,8 @@ public class LogPanel extends JPanel{
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addGroup(layout.createSequentialGroup()
-						.addComponent(yearBox)
-						.addComponent(monthBox)
-						.addComponent(dayBox)
+						.addComponent(logIdBox)
 						.addComponent(listScrollPane)
-						.addComponent(getDateList)
 					)
 					.addGroup(layout.createSequentialGroup()
 						.addComponent(datoTidText)
@@ -115,5 +106,68 @@ public class LogPanel extends JPanel{
 					)
 				)
 		);	
+	}
+
+	public void updateLogList(ListModel<Sheep> sheepList) {
+		this.list.setModel(sheepList);
+		logList = (DefaultListModel<Sheep>) sheepList;
+	}
+
+	private class ComboBoxListner implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!editingLog) {
+				if ((logCurrentSheep.size() > 0)) {
+					logDescTextArea.setText("");
+					for (LogItem l : logCurrentSheep) {
+						String idNr = (String) logIdBox.getSelectedItem();
+						if (Integer.parseInt(idNr) == l.getLogId()) {
+							datoTid.setText(l.getDateAsString());
+							logDescTextArea.append(l.toString() + "\n");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private class ListListener implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			if (!list.isSelectionEmpty())  {
+				Sheep s = (Sheep) logList.getElementAt(list.getSelectedIndex());
+				Response r = programFrame.getNetHandler().getSheepLog(s.getIdNr());
+				editingLog = true;
+				try {
+					if (programFrame.getNetHandler().searchJSON("count", r.msg).equals("0")) {
+						logIdBox.removeAllItems();
+						logIdBox.addItem("Logger:");
+						datoTid.setText("Ingen informasjon loggført enda");
+						logDescTextArea.setText("Ingen informasjon loggført enda");
+						logCurrentSheep.clear();
+					}  else {
+						logCurrentSheep = JsonHandler.parseJsonAndReturnLog(r);
+						datoTid.setText("Siste logg: " + logCurrentSheep.get(logCurrentSheep.size() - 1).getDateAsString());
+						logDescTextArea.setText("Velg logg i lista \"Logger\"");
+						String[] logIds = new String[logCurrentSheep.size()];
+						int count = 0;
+						for (LogItem l : logCurrentSheep) {
+							logIds[count] = String.valueOf(l.getLogId());
+							count++;
+						}
+						logIdBox.removeAllItems();
+						for (int i = 0; i < count; i++) {
+							logIdBox.addItem(logIds[i]);
+						}
+					}
+					editingLog = false;
+					logDescTextArea.setCaretPosition(0);
+				} catch (IOException e1) {
+					System.out.println("Exception in ListListner");
+				}
+			}
+		}
 	}
 }

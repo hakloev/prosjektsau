@@ -234,98 +234,169 @@ public class Sheep {
 		return "(" + sheepId + ") " + nick;
 	}
 	
+	/**
+	 * 
+	 * @return Returns the boolean infected
+	 */
 	public boolean isInfected(){
 		return infected;
 	}
-	
+	/**
+	 * Infects this sheep. Never mind the spelling error, bro.
+	 */
 	public void innfect(){
 		infected = true;
 	}
-	
+	/**
+	 * Cures this sheep
+	 */
 	public void cure(){
 		infected = false;
 	}
-	
+	/**
+	 * 
+	 * @return Returns the gender of this sheep
+	 */
 	public String getGender() {
 		return gender;
 	}
-
+	/**
+	 * Sets the gender of this sheep
+	 * @param gender
+	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-
+	/**
+	 * 
+	 * @return Returns this sheep's farm id
+	 */
 	public int getFarmID() {
 		return farmID;
 	}
-
+	/**
+	 * Sets a farm id to this sheep
+	 * @param farmID
+	 */
 	public void setFarmID(int farmID) {
 		this.farmID = farmID;
 	}
-
+	/**
+	 * 
+	 * @return Returns this sheep's last update time
+	 */
 	public int getLastUpdate() {
 		return lastUpdate;
 	}
-
+	/**
+	 * Sets this sheep's last update time
+	 * @param lastUpdate
+	 */
 	public void setLastUpdate(int lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-
+	/**
+	 * 
+	 * @return Returns this sheep's age
+	 */
 	public int getAge() {
 		return age;
 	}
-
+	/**
+	 * Sets this sheep's age
+	 * @param age
+	 */
 	public void setAge(int age) {
 		this.age = age;
 	}
-
+	/**
+	 * 
+	 * @return Returns true if this sheep is pregnant. Male sheep can probably get pregnant to. Let's call it progressive. 
+	 */
 	public boolean isPregnant() {
 		return isPregnant;
 	}
-
+	/**
+	 * Sets the pregnant state of this sheep
+	 * @param isPregnant
+	 */
 	public void setPregnant(boolean isPregnant) {
 		this.isPregnant = isPregnant;
 	}
-
+	/**
+	 * 
+	 * @return Returns the highest pulse recorded for this sheep
+	 */
 	public int getHighestPulse() {
 		return highestPulse;
 	}
-
+	/**
+	 * Sets the highest pulse recorded for this sheep
+	 * @param highestPulse
+	 */
 	public void setHighestPulse(int highestPulse) {
 		this.highestPulse = highestPulse;
 	}
-
+	/**
+	 * 
+	 * @return Returns the date of the highest pulse recorded
+	 */
 	public int getHighestPulseDate() {
 		return highestPulseDate;
 	}
-
+	/**
+	 * Sets the date of the highest pulse recorded
+	 * @param highestPulseDate
+	 */
 	public void setHighestPulseDate(int highestPulseDate) {
 		this.highestPulseDate = highestPulseDate;
 	}
-
+	/**
+	 * 
+	 * @return Returns this sheep's wool color
+	 */
 	public String getWoolColor() {
 		return woolColor;
 	}
-
+	/**
+	 * Sets this sheep's wool color
+	 * @param woolColor
+	 */
 	public void setWoolColor(String woolColor) {
 		this.woolColor = woolColor;
 	}
-
+	/**
+	 * 
+	 * @return Returns a description of this sheep
+	 */
 	public String getDescription() {
 		return description;
 	}
-
+	/**
+	 * Sets a happy little description to this sheep
+	 * @param description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	/**
+	 * 
+	 * @return Returns the date of the last time this sheep was updated
+	 */
 	public int getLastUpdateDate() {
 		return lastUpdateDate;
 	}
-
+	/**
+	 * Sets the date of the last time this sheep was updated
+	 * @param lastUpdateDate
+	 */
 	public void setLastUpdateDate(int lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
-
+	/**
+	 * 
+	 * @return Returns the date that this sheep was created on. It was a happy day for all involved. 
+	 */
 	public int getSheepCreatedDate() {
 		return sheepCreatedDate;
 	}
