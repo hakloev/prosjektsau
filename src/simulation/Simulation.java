@@ -238,7 +238,7 @@ public class Simulation {
 	 */
 	public void infectSheep(int index){
 		if (!sheepList.get(index).isInfected()){
-			System.out.println("Sheep: " + index + " got infected");
+			System.out.println("Sheep: " + sheepList.get(index).getIdNr() + " got infected");
 			sheepList.get(index).innfect();
 			
 		}
