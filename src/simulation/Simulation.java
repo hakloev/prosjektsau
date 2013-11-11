@@ -37,7 +37,6 @@ public class Simulation {
 	private					Response			response				= new Response();
 	/**
 	 * The simulation constructor
-	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
 	 */
 	public Simulation() {
 		netHandler = new NetHandler();

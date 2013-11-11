@@ -225,8 +225,6 @@ public class Sheep {
 
 	/**
 	 * Used to print sheep identification in sheep list (Sheep Panel)
-	 *
-	 * @override overrides toString
 	 * @return a string of sheep identification and nickname
 	 */
 	@Override

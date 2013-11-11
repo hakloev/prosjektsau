@@ -37,8 +37,8 @@ public class Farmer {
 	/**
 	 * Adds an area to the farmers list of areas "areaList".
 	 * Adds an array of the postition objects of the area to the list "areaPositionList".
-	 * @param ArrayList<Position> area
-	 * @return 
+	 * @param area
+	 * @return area-object
 	 */
 	public Area addAreaAndReturn(ArrayList<Position> area) {
 		areaPositionList.add(area);
@@ -58,7 +58,7 @@ public class Farmer {
 
 	/**
 	 * removes an area from the farmers list of areas "areaList".
-	 * @param ArrayList<Position> area
+	 * @param area
 	 */
 	public void removeArea(ArrayList<Position> area) {
 		if (areaPositionList.contains(area)){
@@ -127,7 +127,6 @@ public class Farmer {
 
 	/**
 	 * Override the toString method
-	 * @override
 	 * @return Returns the farmer's information as a string
 	 */
 	@Override

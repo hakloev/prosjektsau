@@ -249,7 +249,7 @@ public class JsonHandler {
 	/**
 	 * Method to parse alarm-json and return ArrayList of alarm-objects
 	 * @param jsonObject Response containing a json
-	 * @return
+	 * @return arraylist with alarm-objects
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();

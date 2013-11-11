@@ -267,7 +267,7 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Uses jsonHandler to get the farmer's areas from the server via netHandler.
-	 * @return
+	 * @return arraylist of areas
 	 */
 	public ArrayList<Area>fetchAreas(){
 		if (farmer.getFarmId() != 0){
