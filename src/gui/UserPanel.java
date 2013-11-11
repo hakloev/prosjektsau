@@ -571,6 +571,8 @@ public class UserPanel extends JPanel {
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
 							"Databasefeil", JOptionPane.OK_OPTION);
+					Response rr = nh.getSheep(-1);
+					programFrame.getSheepPanel().initUserSheeps(rr);
 				}
 			}
 		}
