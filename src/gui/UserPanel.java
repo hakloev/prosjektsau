@@ -269,7 +269,10 @@ public class UserPanel extends JPanel {
 	 * @return
 	 */
 	public ArrayList<Area>fetchAreas(){
-		return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+		if (farmer.getFarmId() != 0){
+			return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
+		}
+		return new ArrayList<Area>();
 	}
 
 	/**
@@ -296,13 +299,6 @@ public class UserPanel extends JPanel {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public void setFarmIdFromServer() {
-		int farmID = programFrame.getNetHandler().getFarmID();
-		farmer.setFarmId(farmID);
-	}
 
 
 	/**
@@ -349,8 +345,7 @@ public class UserPanel extends JPanel {
 		MapPanel map = programFrame.getMapPanel();
 		Area tempArea = farmer.addAreaAndReturn(list);
 		programFrame.getNetHandler().createArea(tempArea);
-		
-		
+
 		areaGuiList.addElement(list);
 		map.deleteAreas ();
 		String coordinates = "";
@@ -380,7 +375,6 @@ public class UserPanel extends JPanel {
 				ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().deleteAreafromServer(temp);
-				programFrame.getUserPanel().farmer.removeArea(temp);
 			}
 		}
 	}
@@ -436,7 +430,6 @@ public class UserPanel extends JPanel {
 				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 				panel.areaGuiList.remove(panel.list.getSelectedIndex());
 				panel.deleteAreafromServer(temp);
-				panel.farmer.removeArea(temp);
 				new AreaEditFrame(panel.programFrame,temp);
 				panel.setAreaOpenable(false);
 			}
@@ -474,12 +467,12 @@ public class UserPanel extends JPanel {
 					String newFarmName = farmer.getFarm().getFarmName();
 					farmField.setText(newFarmName);
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Laget gård med navn: " + newFarmName,
-							"Laget ny gård", JOptionPane.INFORMATION_MESSAGE);
+							"Laget ny gård", JOptionPane.OK_OPTION);
 				}
 			}else{
 				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().toString());
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Har allerede gård",
-						"Har gård allerede", JOptionPane.WARNING_MESSAGE);
+						"Har gård allerede", JOptionPane.OK_OPTION);
 			}
 		}
 	}
@@ -503,7 +496,7 @@ public class UserPanel extends JPanel {
 					farmer.setFarm(null);
 					farmField.setText("Ingen farm");
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Slettet gård",
-							"Slettet gård", JOptionPane.INFORMATION_MESSAGE);
+							"Slettet gård", JOptionPane.OK_OPTION);
 				}
 			}else{
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette gård",
@@ -528,7 +521,7 @@ public class UserPanel extends JPanel {
 				Response r = nh.getUser();
 				farmer = JsonHandler.parseJsonAndReturnUser(r);
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Endret gård sitt navn til: " + editedFarmName,
-						"Endret navn på gård", JOptionPane.INFORMATION_MESSAGE);
+						"Endret navn på gård", JOptionPane.OK_OPTION);
 			}else{
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke endre navn",
 						"Ingen gård å endre/Databasefeil", JOptionPane.WARNING_MESSAGE);
@@ -553,7 +546,7 @@ public class UserPanel extends JPanel {
 					nh.getUser();
 					String farmCode = nh.getFarmCode();
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Ny delekode for gård: " + farmCode,
-							"Ny delekode.", JOptionPane.INFORMATION_MESSAGE);
+							"Ny delekode.", JOptionPane.OK_OPTION);
 				}
 			}
 		}
@@ -580,9 +573,7 @@ public class UserPanel extends JPanel {
 					r = nh.getFarm(farmCode);
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
-							"Databasefeil", JOptionPane.INFORMATION_MESSAGE);
-					Response rr = nh.getSheep(-1);
-					programFrame.getSheepPanel().initUserSheeps(rr);
+							"Databasefeil", JOptionPane.OK_OPTION);
 				}
 			}
 		}
@@ -596,7 +587,7 @@ public class UserPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e){
 			NetHandler nh = programFrame.getNetHandler();
-			if(nh.getFarmCode()!="" && farmer.getFarm().getOwnerID()!=farmer.getFarmerId()){
+			if(nh.getFarmCode()!=null && farmer.getFarm().getOwnerID()!=farmer.getFarmerId()){
 				String farmShareCode = "";
 				Response r = nh.useFarmShareCode(farmShareCode);
 				if(r == null){
@@ -609,10 +600,10 @@ public class UserPanel extends JPanel {
 					programFrame.getSheepPanel().clearSheepList();
 					nh.setFarmCode("");
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet for best effekt.",
-							"Databasefeil", JOptionPane.INFORMATION_MESSAGE);
+							"Databasefeil", JOptionPane.OK_OPTION);
 				}
 			}else{
-				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier/ingen delkode å slette",
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier",
 						"Databasefeil", JOptionPane.WARNING_MESSAGE);
 			}
 		}
@@ -674,16 +665,11 @@ public class UserPanel extends JPanel {
 					farmer.setFarm(null);
 				}
 			
-				//Sets the farmers's farmID
-				setFarmIdFromServer();
-				
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
 
 				//Fetches areas from server
 				addFetchedAreasToGuiList();
-				
-				
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
@@ -703,6 +689,4 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
-
-	
 }
