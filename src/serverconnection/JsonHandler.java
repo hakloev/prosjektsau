@@ -253,7 +253,6 @@ public class JsonHandler {
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
-		System.out.println(jsonObject.msg);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -265,18 +264,29 @@ public class JsonHandler {
 			if (count == 0)  {
 				return new ArrayList<Alarm>();
 			}
-			for (int i = 1; i <= count; i++) {
+			Iterator<Entry<String,JsonNode>> nodeIt = input.getFields();
+			int countField = 0;
+			while (nodeIt.hasNext()) {
+				Entry<String, JsonNode> alarm = nodeIt.next();
+				if (countField <= 2) {
+					countField++;
+					continue;
+				}
 				Map<String, JsonNode> alarmMap = new HashMap<String, JsonNode>();
-				JsonNode alarm = input.get(Integer.toString(i));
-				Iterator<Entry<String, JsonNode>> nodeIterator = alarm.getFields();
-				while (nodeIterator.hasNext()) {
-					Entry<String, JsonNode> entry = nodeIterator.next();
+				JsonNode alarmString = alarm.getValue();
+				Iterator<Entry<String, JsonNode>> alarmIterator = alarmString.getFields();
+				while (alarmIterator.hasNext()) {
+
+					Entry<String, JsonNode> entry = alarmIterator.next();
 					alarmMap.put(entry.getKey(), entry.getValue());
+					System.out.println(entry.toString());
 				}
 				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
 						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
 				a.getSheep().setLocation(alarmMap.get("sheep_latitude").asDouble(), alarmMap.get("sheep_longitude").asDouble());
 				listOfAlarms.add(a);
+
+				// LEGGER NÅ KUN TIL FØRSTE ALARM
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

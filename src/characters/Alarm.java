@@ -22,6 +22,7 @@ public class Alarm {
 	public Alarm(int id, Sheep sheep, String date, String description) {
 		this.id = id;
 		this.sheep = sheep;
+		sheep.setAlarmStatus(true);
 		this.description = description;
 		setDate(date);
 	}
@@ -86,6 +87,6 @@ public class Alarm {
 	 */
 	@Override
 	public String toString() {
-		return "(" + sheep.getIdNr() + ") " +  sheep.getNick();
+		return id + ": " +  sheep.getNick();
 	}
 }

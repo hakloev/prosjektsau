@@ -81,7 +81,7 @@ public class AlarmPanel extends JPanel{
 		listScrollPane.setMinimumSize(new Dimension(120,100));
 		listScrollPane.setMaximumSize(new Dimension(120,2000));
 		
-		sheepIdText = new JLabel("Id:");
+		sheepIdText = new JLabel("Sau-ID og kallenavn:");
 		alarmTimeText = new JLabel("Alarmtid:");
 		alarmDescText = new JLabel("Beskrivelse:");
 		alarmPosText = new JLabel("Posisjon:");
@@ -194,7 +194,7 @@ public class AlarmPanel extends JPanel{
 	public void addAlarm(Alarm alarm) {
 		boolean exists = false;
 		for (int i = 0; i < alarmList.size(); i++) {
-			if (alarm.getSheep().getIdNr() == alarmList.getElementAt(i).getSheep().getIdNr()) {
+			if (alarm.getId() == alarmList.getElementAt(i).getId()) {
 				exists = true;
 				break;
 			}
@@ -254,7 +254,7 @@ public class AlarmPanel extends JPanel{
 			if (!changing) { // Check if this event is called from DeleteAlarmListener
 				if (!e.getValueIsAdjusting()) {
 					Alarm alarm = list.getSelectedValue();
-					sheepId.setText(String.valueOf(alarm.getSheep().getIdNr()));
+					sheepId.setText(String.valueOf(alarm.getSheep().getIdNr()) + ": " + alarm.getSheep().getNick());
 					alarmTime.setText(alarm.getAlarmDate());
 					alarmDesc.setText(alarm.getAlarmDescription());
 					alarmPos.setText(alarm.getAlarmPostition());

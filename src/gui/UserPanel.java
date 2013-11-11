@@ -573,14 +573,14 @@ public class UserPanel extends JPanel {
 				Response r = nh.useFarmShareCode(farmShareCode);
 				if(r == null){
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke legge til delekode",
-							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+							"Gårdkode", JOptionPane.WARNING_MESSAGE);
 				}else{
 					r = nh.getUser();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
 					r = nh.getFarm(farmCode);
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
-							"Databasefeil", JOptionPane.INFORMATION_MESSAGE);
+							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					Response rr = nh.getSheep(-1);
 					programFrame.getSheepPanel().initUserSheeps(rr);
 				}
@@ -601,7 +601,7 @@ public class UserPanel extends JPanel {
 				Response r = nh.useFarmShareCode(farmShareCode);
 				if(r == null){
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke slette delekode",
-							"Databasefeil", JOptionPane.WARNING_MESSAGE);
+							"Gårdkode", JOptionPane.WARNING_MESSAGE);
 				}else{
 					r = nh.getUser();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
@@ -609,11 +609,12 @@ public class UserPanel extends JPanel {
 					programFrame.getSheepPanel().clearSheepList();
 					nh.setFarmCode("");
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet for best effekt.",
-							"Databasefeil", JOptionPane.INFORMATION_MESSAGE);
+							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
+					farmField.setText("Ingen gård");
 				}
 			}else{
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier/ingen delkode å slette",
-						"Databasefeil", JOptionPane.WARNING_MESSAGE);
+						"Gårdkode", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
