@@ -188,7 +188,7 @@ public class Sheep {
 	 * @return boolean pulse > 0
 	 */
 	public boolean isDead() {
-		return (pulse < 1);
+		return (pulse <= 0);
 	}
 
 	/**
