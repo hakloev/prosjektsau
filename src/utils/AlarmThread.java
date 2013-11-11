@@ -48,8 +48,8 @@ public class AlarmThread extends Thread implements Runnable {
 			if (debug) {System.out.println("AlarmThread: Logged in");}
 
 			while (true) {
-				if (debug) {System.out.println("AlarmThread: Sleeping ten seconds before getting alarms");}
-				Thread.sleep(5000); // Wait 10 seconds before getting alarms
+				if (debug) {System.out.println("AlarmThread: Sleeping one second before getting alarms");}
+				Thread.sleep(1000); // Wait 1 seconds before getting alarms
 				if (debug) {System.out.println("AlarmThread: Getting all alarms");}
 
 				Response r = handler.getAlarm(-1);

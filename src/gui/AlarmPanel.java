@@ -203,6 +203,7 @@ public class AlarmPanel extends JPanel{
 			alarmList.addElement(alarm);
 			list.setSelectedIndex(alarmList.size() - 1); // Set alarm to the latest
 			programFrame.getJTabbedPane().setSelectedIndex(3);
+
 		}
 	}
 	

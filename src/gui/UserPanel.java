@@ -471,7 +471,7 @@ public class UserPanel extends JPanel {
 							"Laget ny gård", JOptionPane.OK_OPTION);
 				}
 			}else{
-				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().toString());
+				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().getFarmName());
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Har allerede gård",
 						"Har gård allerede", JOptionPane.OK_OPTION);
 			}
@@ -576,6 +576,7 @@ public class UserPanel extends JPanel {
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					Response rr = nh.getSheep(-1);
+					farmField.setText(farmer.getFarm().getFarmName());
 					programFrame.getSheepPanel().initUserSheeps(rr);
 				}
 			} else {
@@ -609,6 +610,7 @@ public class UserPanel extends JPanel {
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode for gård fjernet. \nRestart programmet for best effekt.",
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					farmField.setText("Ingen gård");
+					farmCodeField.setText("");
 				}
 			}else{
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier/ingen delkode å slette",
