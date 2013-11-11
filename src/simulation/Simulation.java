@@ -1,11 +1,18 @@
 package simulation;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import mail.GMail;
+
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
+import serverconnection.NetHandler.MailTo;
+import serverconnection.NetHandler.MailType;
+import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Area;
+import characters.Farmer;
 import characters.Farm;
 import characters.Position;
 import characters.Sheep;
@@ -160,9 +167,8 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				
-				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
-									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
+									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse()
 									+ " In Area: " + isInArea(currentSheep) + " Infected: " + currentSheep.isInfected());
 				
 				netHandler.updateSheep(currentSheep);
@@ -268,6 +274,12 @@ public class Simulation {
 	private boolean isInArea(Sheep sheep){
 		boolean inArea = false;
 		Farm farm = JsonHandler.parseJsonAndReturnFarm(netHandler.getFarmFromSheepID(sheep.getIdNr()));
+		try{
+			farm.getAreaList();
+		}
+		catch(NullPointerException e){
+			return true;
+		}
 		for (Area area : farm.getAreaList()){
 			if (area.containsPosition(sheep.getLocation())){
 				inArea = true;
