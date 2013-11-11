@@ -296,6 +296,13 @@ public class UserPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 */
+	public void setFarmIdFromServer() {
+		int farmID = programFrame.getNetHandler().getFarmID();
+		farmer.setFarmId(farmID);
+	}
 
 
 	/**
@@ -342,7 +349,8 @@ public class UserPanel extends JPanel {
 		MapPanel map = programFrame.getMapPanel();
 		Area tempArea = farmer.addAreaAndReturn(list);
 		programFrame.getNetHandler().createArea(tempArea);
-
+		
+		
 		areaGuiList.addElement(list);
 		map.deleteAreas ();
 		String coordinates = "";
@@ -372,6 +380,7 @@ public class UserPanel extends JPanel {
 				ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().deleteAreafromServer(temp);
+				programFrame.getUserPanel().farmer.removeArea(temp);
 			}
 		}
 	}
@@ -427,6 +436,7 @@ public class UserPanel extends JPanel {
 				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 				panel.areaGuiList.remove(panel.list.getSelectedIndex());
 				panel.deleteAreafromServer(temp);
+				panel.farmer.removeArea(temp);
 				new AreaEditFrame(panel.programFrame,temp);
 				panel.setAreaOpenable(false);
 			}
@@ -664,11 +674,16 @@ public class UserPanel extends JPanel {
 					farmer.setFarm(null);
 				}
 			
+				//Sets the farmers's farmID
+				setFarmIdFromServer();
+				
 				//Get farmer info
 				farmerEmail.setText(farmer.getEmail());
 
 				//Fetches areas from server
 				addFetchedAreasToGuiList();
+				
+				
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));
@@ -688,4 +703,6 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
+
+	
 }

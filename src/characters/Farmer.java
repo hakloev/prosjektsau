@@ -1,5 +1,7 @@
 package characters;
 
+import gui.ProgramFrame;
+
 import java.util.ArrayList;
 
 /**
@@ -42,6 +44,7 @@ public class Farmer {
 		areaPositionList.add(area);
 		Area tempArea = new Area ("NewArea", farmId, area, 0);
 		areaList.add(tempArea);
+		
 		return (tempArea);
 	}
 	/**
@@ -58,7 +61,9 @@ public class Farmer {
 	 * @param ArrayList<Position> area
 	 */
 	public void removeArea(ArrayList<Position> area) {
-		areaPositionList.remove(area);
+		if (areaPositionList.contains(area)){
+			areaPositionList.remove(area);
+		}
 	}
 
 
