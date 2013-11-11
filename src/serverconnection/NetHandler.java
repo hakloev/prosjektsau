@@ -52,7 +52,7 @@ public class NetHandler {
 	private static 	String 		POST_URL 		= null;
 	private 		String 		m_lastError   	= null;
 	private 		boolean 	m_isLoggedIn  	= false;
-	private			boolean 	m_isDebugging 	= true;
+	private			boolean 	m_isDebugging 	= false;
 	private			boolean		m_hasConnection = false;
 	private			HttpClient	m_client;
 	private			HttpPost 	m_post;

@@ -123,6 +123,7 @@ public class UserPanel extends JPanel {
 		farmerEmail.setMinimumSize(new Dimension(100,20));
 		farmerEmail.setPreferredSize(new Dimension(100,20));
 		farmerEmail.setMaximumSize(new Dimension(200,20));
+		farmerEmail.setEditable(false);
 
 		listScrollPane.setEnabled(false);
 		addArea.setEnabled(false);
@@ -561,7 +562,7 @@ public class UserPanel extends JPanel {
 		public void actionPerformed(ActionEvent e){
 			String farmCode = programFrame.getUserPanel().farmCodeField.getText();
 			NetHandler nh = programFrame.getNetHandler();
-			if(nh.getFarmCode() == ""){
+			if(nh.getFarmCode().equals("")){
 				String farmShareCode = farmCodeField.getText();
 				Response r = nh.useFarmShareCode(farmShareCode);
 				if(r == null){
@@ -577,6 +578,10 @@ public class UserPanel extends JPanel {
 					Response rr = nh.getSheep(-1);
 					programFrame.getSheepPanel().initUserSheeps(rr);
 				}
+			} else {
+				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Har allerede gårdkode",
+						"Gårdkode", JOptionPane.WARNING_MESSAGE);
+				farmCodeField.setText(nh.getFarmCode());
 			}
 		}
 	}
@@ -659,6 +664,7 @@ public class UserPanel extends JPanel {
 					if(!handler.isError(getFarmResult.msg)){
 						farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(getFarmResult));
 						farmField.setText(farmer.getFarm().getFarmName());
+						farmCodeField.setText(handler.getFarmCode());
 					}else{
 						farmField.setText("Ingen farm");
 						farmer.setFarm(null);
