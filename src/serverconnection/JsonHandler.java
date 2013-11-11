@@ -311,6 +311,9 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (areaMap.get("request_response_message").asText().equals("Feil: Ugyldig farmID")) {
+			return new ArrayList<Area>();
+		}
 		int count = areaMap.get("count").asInt();
 		for (int i = 0; i < count; i++){
 			String[] latList = areaMap.get(""+(i+1)).get("area_latitude").asText().split(",");

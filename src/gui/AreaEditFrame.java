@@ -98,10 +98,12 @@ public class AreaEditFrame extends JFrame{
 		longitude.setMinimumSize(new Dimension(100,20));
 		longitude.setPreferredSize(new Dimension(100,20));
 		longitude.setMaximumSize(new Dimension(100,20));
+		longitude.setEditable(true);
 		latitude = new JTextField(); //Breddegrad
 		latitude.setMinimumSize(new Dimension(100,20));
 		latitude.setPreferredSize(new Dimension(100,20));
 		latitude.setMaximumSize(new Dimension(100,20));
+		latitude.setEditable(true);
 		
 		addToList.addActionListener(new BAdapter(this,addToList.getName()));
 		deleteFromList.addActionListener(new BAdapter(this,deleteFromList.getName()));

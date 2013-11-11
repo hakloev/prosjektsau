@@ -1,18 +1,12 @@
 package simulation;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-import mail.GMail;
-
 import serverconnection.JsonHandler;
 import serverconnection.NetHandler;
-import serverconnection.NetHandler.MailTo;
-import serverconnection.NetHandler.MailType;
-import serverconnection.NetMain;
 import serverconnection.Response;
 import characters.Area;
-import characters.Farmer;
 import characters.Farm;
 import characters.Position;
 import characters.Sheep;
