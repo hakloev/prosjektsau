@@ -415,11 +415,6 @@ public class NetHandler {
 	}
 	
 	
-	public int getM_farmID() {
-		System.out.println("yoloooooooooo");
-		return m_farmID;
-	}
-	
 	// Update a single sheep.
 	public Response updateSheep(Sheep s) {
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
@@ -657,7 +652,7 @@ public class NetHandler {
 	// Get user's plotting of the map area.
 	public Response getAreas() {
 		if(m_isDebugging) { System.out.println("[GET] get all areas"); }
-		try { return _get("&rid=5", null);
+		try {return _get("&rid=5", null);
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
