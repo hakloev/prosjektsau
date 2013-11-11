@@ -272,7 +272,6 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					alarmMap.put(entry.getKey(), entry.getValue());
 				}
-
 				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
 						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
 				a.getSheep().setLocation(alarmMap.get("sheep_latitude").asDouble(), alarmMap.get("sheep_longitude").asDouble());

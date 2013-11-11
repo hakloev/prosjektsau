@@ -13,7 +13,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
@@ -42,7 +41,7 @@ import characters.Sheep;
  * 8 = get sheep's farm and area
  */
 /**
- * @author Mads
+ * @author Mads Midtlyng
  * <b>Sends and receives data over a network.</b>
  * <b>All data received is given as Response objects.</b>
  */
@@ -962,7 +961,7 @@ public class NetHandler {
 	 */
 	public boolean ping(String url) {
 		String thisURL = PING_URL;
-		if(!url.equals("") && url != null) { thisURL = url; }
+		if(url != null && !url.equals("")) { thisURL = url; }
 		  HttpURLConnection connection = null;
 		    try {
 		        URL u = new URL(thisURL);
@@ -983,7 +982,7 @@ public class NetHandler {
 	private boolean retryconnection(int sec, String url) {
 		if(!m_hasConnection) {
 			String thisURL = PING_URL;
-			if(!url.equals("") && url != null) { thisURL = url; }
+			if(url != null && !url.equals("")) { thisURL = url; }
 			while((m_retryCounter < m_retryMax) || !m_hasConnection) {
 				try {
 					m_retryCounter++;
