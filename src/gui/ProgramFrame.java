@@ -38,10 +38,9 @@ public class ProgramFrame extends JFrame {
 	 * ProgramFrame Constructor
 	 */
 	public ProgramFrame() {
+		handler = new NetHandler();
 		initFrame();
 		initGuiTabs();
-		handler = new NetHandler();
-		//jTabPane.setEnabled(false);
 	}
 	
 	/**

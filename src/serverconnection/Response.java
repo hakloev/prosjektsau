@@ -1,9 +1,9 @@
 package serverconnection;
 
 // Use this to handle server responses and track time elapsed from method start to return.
-
 /**
- * Class used to encapsule and hold data about server-connection and result message
+ * @author Mads
+ * <b> Response contains server feedback such as text data and time the process took.</b>
  */
 public class Response {
 	long start = 0, stop = 0, elapsed = 0;

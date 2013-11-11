@@ -541,11 +541,17 @@ public class NetHandler {
 	    return null;	
 	}
 	
+<<<<<<< HEAD
+	
+	// Update a single sheep.
+	public Response updateSheep(Sheep s) {
+=======
 	/**
 	 * @param id Sheep object to create on serverside.
 	 * @return Response object from request result and time of request.
 	 */
 	public Response deleteSheep(int id) {
+>>>>>>> master
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 		parameters.add(new BasicNameValuePair("SHEEP_DELETE", m_userCode));
 		parameters.add(new BasicNameValuePair("id", ""+id));
@@ -760,6 +766,13 @@ public class NetHandler {
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
+<<<<<<< HEAD
+
+	// Get user's plotting of the map area.
+	public Response getAreas() {
+		if(m_isDebugging) { System.out.println("[GET] get all areas"); }
+		try {return _get("&rid=5", null);
+=======
 	
 	//===============================================//
 	// [GET] F A R M	& AREA						//
@@ -773,6 +786,7 @@ public class NetHandler {
 		if(m_isDebugging) { System.out.println("[GET] farm " + sharecode); }
 		if(sharecode.equals("SIMULATOR")) { sharecode = "-1"; }
 		try { return _get("&rid=10&f="+sharecode, null);
+>>>>>>> master
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}

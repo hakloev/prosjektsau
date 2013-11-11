@@ -1,10 +1,13 @@
 package characters;
 
+import simulation.Disease;
+
 /**
  * Class holding information about a sheep
  * @author Håkon Ødegård Løvdal
  * @author Max Melander
  */
+
 public class Sheep {
 	
 	private final int sheepId;
@@ -21,22 +24,22 @@ public class Sheep {
 	private int age;
 	private String gender;
 	private boolean isPregnant;
+	private int highestPulse;
+	private int highestPulseDate;
 	private String woolColor;
 	private String description;
+	private int lastUpdateDate;
 	private int sheepCreatedDate;
+	
 
 	/**
-	 * Constructor for sheep
-	 * @param sheepId sheep's id
-	 * @param nick sheep's nick
-	 * @param birthYear sheep's birth year
-	 * @param gender sheep's gender
-	 * @param weight sheep's weight
-	 * @param farmer sheep's farmer
-	 * @param pulse sheep's pulse
-	 * @param latitude sheep's latitude
-	 * @param longitude sheep's longitude
-	 * @param infected if sheep is infected of disease or not
+	 * 
+	 * @param sheepId Sheep's identification number
+	 * @param nick Sheep's nickname
+	 * @param birthYear Sheep's birthyear
+	 * @param farmer Sheep's owner, farmer-object
+	 * @param latitude Latitude position of the sheep
+	 * @param longitude Longitude position of the sheep
 	 */
 	public Sheep(int sheepId, String nick, int birthYear, String gender, int weight, Farmer farmer, int pulse, double latitude, double longitude, int infected) {
 		this.sheepId = sheepId;
@@ -56,7 +59,7 @@ public class Sheep {
 		}
 	}
 	/**
-	 * Equal to other constructor, but also takes farmID
+	 * 
 	 * @param sheepId
 	 * @param nick
 	 * @param birthYear
@@ -222,6 +225,7 @@ public class Sheep {
 
 	/**
 	 * Used to print sheep identification in sheep list (Sheep Panel)
+	 *
 	 * @override overrides toString
 	 * @return a string of sheep identification and nickname
 	 */
@@ -231,13 +235,12 @@ public class Sheep {
 	}
 	
 	/**
-	 * Method to det boolean containing info is sheep is infected or not
+	 * Returns the boolean infected
 	 * @return Returns the boolean infected
 	 */
 	public boolean isInfected(){
 		return infected;
 	}
-
 	/**
 	 * Infects this sheep. Never mind the spelling error, bro.
 	 */
@@ -251,7 +254,7 @@ public class Sheep {
 		infected = false;
 	}
 	/**
-	 * Get the sheep's gender
+	 * Returns the gender of this sheep
 	 * @return Returns the gender of this sheep
 	 */
 	public String getGender() {
@@ -264,15 +267,13 @@ public class Sheep {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-
 	/**
-	 * Get the farms id
+	 * Returns this sheep's farm id
 	 * @return Returns this sheep's farm id
 	 */
 	public int getFarmID() {
 		return farmID;
 	}
-
 	/**
 	 * Sets a farm id to this sheep
 	 * @param farmID
@@ -280,15 +281,13 @@ public class Sheep {
 	public void setFarmID(int farmID) {
 		this.farmID = farmID;
 	}
-
 	/**
-	 * Get sheeps last update time
+	 * Returns this sheep's last update time
 	 * @return Returns this sheep's last update time
 	 */
 	public int getLastUpdate() {
 		return lastUpdate;
 	}
-
 	/**
 	 * Sets this sheep's last update time
 	 * @param lastUpdate
@@ -296,15 +295,13 @@ public class Sheep {
 	public void setLastUpdate(int lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-
 	/**
-	 * Get sheeps age
+	 * Returns this sheep's age
 	 * @return Returns this sheep's age
 	 */
 	public int getAge() {
 		return age;
 	}
-
 	/**
 	 * Sets this sheep's age
 	 * @param age
@@ -312,15 +309,13 @@ public class Sheep {
 	public void setAge(int age) {
 		this.age = age;
 	}
-
 	/**
-	 * Is sheep pregnant?
+	 * Returns true if this sheep is pregnant. Male sheep can probably get pregnant to. Let's call it progressive.
 	 * @return Returns true if this sheep is pregnant. Male sheep can probably get pregnant to. Let's call it progressive. 
 	 */
 	public boolean isPregnant() {
 		return isPregnant;
 	}
-
 	/**
 	 * Sets the pregnant state of this sheep
 	 * @param isPregnant
@@ -328,9 +323,36 @@ public class Sheep {
 	public void setPregnant(boolean isPregnant) {
 		this.isPregnant = isPregnant;
 	}
-
 	/**
-	 * Get the sheep's wool color
+	 * Returns the highest pulse recorded for this sheep
+	 * @return Returns the highest pulse recorded for this sheep
+	 */
+	public int getHighestPulse() {
+		return highestPulse;
+	}
+	/**
+	 * Sets the highest pulse recorded for this sheep
+	 * @param highestPulse
+	 */
+	public void setHighestPulse(int highestPulse) {
+		this.highestPulse = highestPulse;
+	}
+	/**
+	 * Returns the date of the highest pulse recorded
+	 * @return Returns the date of the highest pulse recorded
+	 */
+	public int getHighestPulseDate() {
+		return highestPulseDate;
+	}
+	/**
+	 * Sets the date of the highest pulse recorded
+	 * @param highestPulseDate
+	 */
+	public void setHighestPulseDate(int highestPulseDate) {
+		this.highestPulseDate = highestPulseDate;
+	}
+	/**
+	 * Returns this sheep's wool color
 	 * @return Returns this sheep's wool color
 	 */
 	public String getWoolColor() {
@@ -343,15 +365,13 @@ public class Sheep {
 	public void setWoolColor(String woolColor) {
 		this.woolColor = woolColor;
 	}
-
 	/**
-	 * Get sheep's description
+	 * Returns a description of this sheep
 	 * @return Returns a description of this sheep
 	 */
 	public String getDescription() {
 		return description;
 	}
-
 	/**
 	 * Sets a happy little description to this sheep
 	 * @param description
@@ -359,10 +379,24 @@ public class Sheep {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	/**
-	 * Get the date sheep was created
-	 * @return Returns the date that this sheep was created on. It was a happy day for all involved.
+	 * Returns the date of the last time this sheep was updated
+	 * @return Returns the date of the last time this sheep was updated
+	 */
+	public int getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	/**
+	 * Sets the date of the last time this sheep was updated
+	 * Sets the date of the last time this sheep was updated
+	 * @param lastUpdateDate
+	 */
+	public void setLastUpdateDate(int lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	/**
+	 * Returns the date this sheep was created on. It was a happy day for all involved. 
+	 * @return Returns the date this sheep was created on. It was a happy day for all involved. 
 	 */
 	public int getSheepCreatedDate() {
 		return sheepCreatedDate;

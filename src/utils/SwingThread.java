@@ -22,6 +22,7 @@ public class SwingThread extends Thread implements Runnable {
 
 			if (debug) {System.out.println("Swing: Init ProgramFrame Completed");}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Exception in SwingThread");
 		}
 	}

@@ -1,4 +1,5 @@
 package simulation;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -160,9 +161,8 @@ public class Simulation {
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
 				
-				
 				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
-									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse() 
+									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse()
 									+ " In Area: " + isInArea(currentSheep) + " Infected: " + currentSheep.isInfected());
 				
 				netHandler.updateSheep(currentSheep);
@@ -238,7 +238,7 @@ public class Simulation {
 	 */
 	public void infectSheep(int index){
 		if (!sheepList.get(index).isInfected()){
-			System.out.println("Sheep: " + index + " got infected");
+			System.out.println("Sheep: " + sheepList.get(index).getIdNr() + " got infected");
 			sheepList.get(index).innfect();
 			
 		}
@@ -268,6 +268,12 @@ public class Simulation {
 	private boolean isInArea(Sheep sheep){
 		boolean inArea = false;
 		Farm farm = JsonHandler.parseJsonAndReturnFarm(netHandler.getFarmFromSheepID(sheep.getIdNr()));
+		try{
+			farm.getAreaList();
+		}
+		catch(NullPointerException e){
+			return true;
+		}
 		for (Area area : farm.getAreaList()){
 			if (area.containsPosition(sheep.getLocation())){
 				inArea = true;

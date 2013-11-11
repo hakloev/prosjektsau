@@ -1,29 +1,20 @@
 package gui;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import characters.Position;
 
 /**
  * @author Andreas Lyngby
  */
-public class AreaEditFrame extends JFrame{
-
+public class AreaEditFrame extends JDialog{
 
 	private JList<Position> list;
 	private DefaultListModel<Position> vertList;
@@ -35,29 +26,35 @@ public class AreaEditFrame extends JFrame{
 	
 	private JLabel longitudeText;
 	private JLabel latitudeText;
-	private JTextField longitude; //Lengdegrad
-	private JTextField latitude; //Breddegrad
+	private JTextArea longitude; //Lengdegrad
+	private JTextArea latitude; //Breddegrad
 	
 	private GroupLayout layout;
-	private JPanel contentPanel;
-	
+
 	private ProgramFrame frame;
 	private ArrayList<Position> areaList;
 	
+	/**
+	 * Constructor. Takes inn ProgramFrame and Arraylist with points if you've clicked the button to edit areas in UserPanel.
+	 * @param frame - ProgramFrame
+	 * @param list - ArrayList<Position>
+	 */
 	public AreaEditFrame(ProgramFrame frame, ArrayList<Position> list) {
 		this.frame = frame;  
 		this.areaList = list;
 		this.setVisible(true);
 		this.setResizable(false);
-
 		this.addWindowListener(new WAdapter(this, frame));
-		
+
 		initElements();
 		initDisplay();
-		
+
 		this.pack();
 	}
 
+	/**
+	 * Initializes the components.
+	 */
 	private void initElements() {
 		layout = new GroupLayout(this.getContentPane());
 		layout.setAutoCreateGaps(true);
@@ -94,20 +91,27 @@ public class AreaEditFrame extends JFrame{
 		
 		longitudeText = new JLabel("Lengdegrad:");
 		latitudeText = new JLabel("Breddegrad:");
-		longitude = new JTextField(); //Lengdegrad
+		longitude = new JTextArea(); //Lengdegrad
 		longitude.setMinimumSize(new Dimension(100,20));
-		longitude.setPreferredSize(new Dimension(100,20));
-		longitude.setMaximumSize(new Dimension(100,20));
-		latitude = new JTextField(); //Breddegrad
+		longitude.setPreferredSize(new Dimension(100, 20));
+		longitude.setMaximumSize(new Dimension(100, 20));
+		longitude.setEnabled(true);
+		longitude.setEditable(true);
+		latitude = new JTextArea(); //Breddegrad
 		latitude.setMinimumSize(new Dimension(100,20));
-		latitude.setPreferredSize(new Dimension(100,20));
-		latitude.setMaximumSize(new Dimension(100,20));
+		latitude.setPreferredSize(new Dimension(100, 20));
+		latitude.setMaximumSize(new Dimension(100, 20));
+		latitude.setEnabled(true);
+		latitude.setEditable(true);
 		
 		addToList.addActionListener(new BAdapter(this,addToList.getName()));
 		deleteFromList.addActionListener(new BAdapter(this,deleteFromList.getName()));
 		createArea.addActionListener(new BAdapter(this,createArea.getName()));
 	}
 	
+	/**
+	 * Initializes the design for the components in the frame.
+	 */
 	private void initDisplay() {
 		this.getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -154,13 +158,17 @@ public class AreaEditFrame extends JFrame{
 		);
 	}
 	
+	/**
+	 * Button adapter class with actionlistener for the butons to create the area and get it ready to send to userpanel,
+	 * deleting points in the list in this frame and to add points to the list.
+	 * @author Andreas
+	 *
+	 */
 	private class BAdapter implements ActionListener{
 		private String button;
-		private AreaEditFrame frame;
-		
+
 		public BAdapter(AreaEditFrame frame, String button){
 			this.button = button;
-			this.frame = frame;
 		}
 
 		@Override
@@ -169,27 +177,32 @@ public class AreaEditFrame extends JFrame{
 				if(!latitude.getText().matches("^[0-9]{1,2}\\.[0-9]{2,15}$") || !longitude.getText().matches("^[0-9]{2}\\.[0-9]{2,15}$")){
 					System.out.println("BAdapter in AreaEditFrame");
 				}else{
-					frame.vertList.addElement(new Position(Double.parseDouble(frame.latitude.getText()), Double.parseDouble(frame.longitude.getText())));
+					vertList.addElement(new Position(Double.parseDouble(latitude.getText()), Double.parseDouble(longitude.getText())));
 				}
 			}else if(button.equals("delete")){
-				if(!frame.list.isSelectionEmpty()){
-					frame.vertList.remove(frame.list.getSelectedIndex());
+				if(!list.isSelectionEmpty()){
+					vertList.remove(list.getSelectedIndex());
 				}
 				
 			}else if(button.equals("create")){
-				if(frame.vertList.size() != 0){
+				if(vertList.size() != 0){
 					ArrayList<Position> nodes = new ArrayList<Position>();
-					for(int i = 0;i<frame.vertList.getSize();i++){
+					for(int i = 0;i<vertList.getSize();i++){
 						nodes.add(vertList.getElementAt(i));
 					}
-					frame.frame.getUserPanel().addArea(nodes);
-					frame.frame.getUserPanel().setAreaOpenable(true);
-					frame.dispose();
+					frame.getUserPanel().addArea(nodes);
+					frame.getUserPanel().setAreaOpenable(true);
+					dispose();
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Window adapter for this frame. Containing methods for pass areas to programframe.userpanel. 
+	 * @author Andreas
+	 *
+	 */
 	private class WAdapter extends WindowAdapter{
 		private ProgramFrame pframe;
 		AreaEditFrame frame;

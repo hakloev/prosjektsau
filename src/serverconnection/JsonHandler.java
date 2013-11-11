@@ -15,6 +15,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
+
 /**
  * Class to handle JsonObjects
  * @author Håkon Ødegård Løvdal
@@ -181,6 +182,9 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (farmMap.get("areas").get("count") == null){
+			return null;
+		}
 		int count = farmMap.get("areas").get("count").asInt();	
 		for (int i = 0; i < count; i++){
 			int farmID = farmMap.get("areas").get(""+(i+1)).get("farm_id").asInt();
@@ -245,10 +249,11 @@ public class JsonHandler {
 	/**
 	 * Method to parse alarm-json and return ArrayList of alarm-objects
 	 * @param jsonObject Response containing a json
-	 * @return ArrayList containing alarm-objects
+	 * @return
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
+		System.out.println(jsonObject.msg);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -268,7 +273,6 @@ public class JsonHandler {
 					Entry<String, JsonNode> entry = nodeIterator.next();
 					alarmMap.put(entry.getKey(), entry.getValue());
 				}
-
 				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
 						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
 				a.getSheep().setLocation(alarmMap.get("sheep_latitude").asDouble(), alarmMap.get("sheep_longitude").asDouble());
