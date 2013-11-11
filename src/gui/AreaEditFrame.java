@@ -25,7 +25,6 @@ import characters.Position;
  */
 public class AreaEditFrame extends JDialog{
 
-
 	private JList<Position> list;
 	private DefaultListModel<Position> vertList;
 	private JScrollPane listScrollPane;
@@ -45,6 +44,11 @@ public class AreaEditFrame extends JDialog{
 	private ProgramFrame frame;
 	private ArrayList<Position> areaList;
 	
+	/**
+	 * Constructor. Takes inn ProgramFrame and Arraylist with points if you've clicked the button to edit areas in UserPanel.
+	 * @param frame - ProgramFrame
+	 * @param list - ArrayList<Position>
+	 */
 	public AreaEditFrame(ProgramFrame frame, ArrayList<Position> list) {
 		this.frame = frame;  
 		this.areaList = list;
@@ -59,6 +63,9 @@ public class AreaEditFrame extends JDialog{
 		this.pack();
 	}
 
+	/**
+	 * Initializes the components.
+	 */
 	private void initElements() {
 		layout = new GroupLayout(this.getContentPane());
 		layout.setAutoCreateGaps(true);
@@ -111,6 +118,9 @@ public class AreaEditFrame extends JDialog{
 		createArea.addActionListener(new BAdapter(this,createArea.getName()));
 	}
 	
+	/**
+	 * Initializes the design for the components in the frame.
+	 */
 	private void initDisplay() {
 		this.getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -157,6 +167,12 @@ public class AreaEditFrame extends JDialog{
 		);
 	}
 	
+	/**
+	 * Button adapter class with actionlistener for the butons to create the area and get it ready to send to userpanel,
+	 * deleting points in the list in this frame and to add points to the list.
+	 * @author Andreas
+	 *
+	 */
 	private class BAdapter implements ActionListener{
 		private String button;
 		private AreaEditFrame frame;
@@ -193,6 +209,11 @@ public class AreaEditFrame extends JDialog{
 		}
 	}
 	
+	/**
+	 * Window adapter for this frame. Containing methods for pass areas to programframe.userpanel. 
+	 * @author Andreas
+	 *
+	 */
 	private class WAdapter extends WindowAdapter{
 		private ProgramFrame pframe;
 		AreaEditFrame frame;
