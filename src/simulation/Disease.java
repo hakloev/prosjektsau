@@ -43,7 +43,7 @@ public class Disease {
 		}
 	}
 	/**
-	 * 
+	 * Returns the maximum spread distance
 	 * @return Returns the maximum spread distance
 	 */
 	public double getSpreadDistance() {
@@ -51,7 +51,7 @@ public class Disease {
 	}
 	
 	/**
-	 * 
+	 * Returns the chance of the disease spreading
 	 * @return Returns the chance of the disease spreading
 	 */
 	public int getSpreadChance() {
@@ -59,7 +59,7 @@ public class Disease {
 	}
 	
 	/**
-	 * 
+	 * Returns damage
 	 * @return Returns damage
 	 */
 	public int getDamage() {
@@ -67,7 +67,7 @@ public class Disease {
 	}
 	
 	/**
-	 * 
+	 * Returns the incubation period
 	 * @return Returns the incubation period
 	 */
 	public int getIncubationPeriod() {
@@ -75,7 +75,7 @@ public class Disease {
 	}
 	
 	/**
-	 * 
+	 * Returns how long the disease lasts
 	 * @return Returns how long the disease lasts
 	 */
 	public int getDiseaseLength() {
