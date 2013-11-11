@@ -1,7 +1,7 @@
 # Java class filer
 /bin
 *.class
-# /out
+/out
 
 /jar_lib
 /gui
