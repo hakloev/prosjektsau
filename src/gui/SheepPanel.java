@@ -829,6 +829,8 @@ public class SheepPanel extends JPanel {
 	 * Used by UserPanel.RemoveShareCodeListener.
 	 */
 	public void clearSheepList(){
+		changingSheep = true;
 		sheepList.clear();
+		changingSheep = false;
 	}
 }
