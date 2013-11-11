@@ -253,6 +253,7 @@ public class JsonHandler {
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
+		System.out.println(jsonObject.msg);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
