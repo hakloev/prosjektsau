@@ -1,8 +1,5 @@
 package characters;
 
-import gui.MapPanel;
-import gui.ProgramFrame;
-
 import java.util.ArrayList;
 
 /**
@@ -22,6 +19,7 @@ public class Farmer {
 	private Farm farm;
 
 	/**
+	 * Constructor for farmer-class
 	 * @param farmerHash the farmers unique hash-identification given by database
 	 * @param farmerId the farmers identification number
 	 * @param userName the farmer's user name
@@ -47,15 +45,13 @@ public class Farmer {
 		return (tempArea);
 	}
 	/**
-	 * Dunno if this method is used. Fuck it.
-	 * @param area An Area object to be added to this farmer's areaposition list. 
+	 * Method to add area to farmer
+	 * @param area An Area object to be added to this farmer's areaposition list.
 	 */
 	public void addArea(Area area) {
 		areaPositionList.add(area.getAreaPoints());
 		areaList.add(area);
 	}
-	
-	
 
 	/**
 	 * removes an area from the farmers list of areas "areaList".
@@ -78,7 +74,6 @@ public class Farmer {
 	 * Sets the farmer's Email address
 	 * @param email set the email-address
 	 */
-	//Trenger exception handler
 	private void setEmail(String email) {
 		if(email.contains("@")){
 			this.email = email;
@@ -92,6 +87,7 @@ public class Farmer {
 	public String getUserName() {
 		return userName;
 	}
+
 	/**
 	 * 
 	 * @return Returns this farmer's farm id
@@ -99,6 +95,7 @@ public class Farmer {
 	public int getFarmId() {
 		return farmId;
 	}
+
 	/**
 	 * Sets a farm id to this farmer
 	 * @param farmId
@@ -135,12 +132,13 @@ public class Farmer {
 	}
 
 	/**
-	 * 
+	 * Method to get the areas that belong to the farmer
 	 * @return returns an array of arrays containing the position of the areas belonging to the farmer.
 	 */
 	public ArrayList<ArrayList<Position>> getAreaPositionList() {
 		return areaPositionList;
 	}
+
 	/**
 	 * Sets a farm to this farmer
 	 * @param farm
@@ -148,8 +146,9 @@ public class Farmer {
 	public void setFarm(Farm farm){
 		this.farm = farm;
 	}
+
 	/**
-	 * 
+	 * Method to get the farmers farm
 	 * @return Returns this farmer's farm
 	 */
 	public Farm getFarm(){

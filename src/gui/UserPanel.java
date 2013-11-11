@@ -20,7 +20,6 @@ import serverconnection.JsonHandler;
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
  */
-
 public class UserPanel extends JPanel {
 
 	private ProgramFrame programFrame;
@@ -66,13 +65,15 @@ public class UserPanel extends JPanel {
 
 	private Farmer farmer;
 
-
+	/**
+	 * Constructor for UserPanel
+	 * @param programFrame
+	 */
 	public UserPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initElements();
 		initDesign();
 	}
-
 
 	private void initElements(){
 		layout = new GroupLayout(this);
@@ -151,8 +152,8 @@ public class UserPanel extends JPanel {
 		deleteArea.addActionListener(new DeleteAreaListener());
 		createFarmCode.addActionListener(new CreateFarmCodeListener());
 		addFarmCode.addActionListener(new AddFarmCodeListener());
+		removeFarmCode.addActionListener(new RemoveFarmCodeListener());
 	}
-
 
 	private void initDesign(){
 		layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -246,7 +247,6 @@ public class UserPanel extends JPanel {
 				);
 	}
 
-
 	/**
 	 * Method that returns the farmer-object currently logged in
 	 * @return farmer-object
@@ -272,7 +272,6 @@ public class UserPanel extends JPanel {
 		return JsonHandler.parseJsonAndReturnAreas(programFrame.getNetHandler().getAreas());
 	}
 
-
 	/**
 	 * Method for deleting an area from the server.
 	 * Takes the area, gets the areaID and sends the request to server.
@@ -283,14 +282,11 @@ public class UserPanel extends JPanel {
 
 		for (Area serverArea : serverAreas){
 			int counter = 0;
-
-
 			for (int index = 0; index < area.size(); index++) {
 				if (area.size() == serverArea.getAreaPoints().size()){
 					if (area.get(index).getLatitude() == (serverArea.getAreaPoints().get(index).getLatitude())){
 						if (area.get(index).getLongitude() == (serverArea.getAreaPoints().get(index).getLongitude())){
 							counter++;
-
 						}
 					}
 				}
@@ -298,8 +294,6 @@ public class UserPanel extends JPanel {
 				programFrame.getNetHandler().deleteArea(serverArea.getId());
 			}
 		}
-
-
 	}
 
 
@@ -310,6 +304,9 @@ public class UserPanel extends JPanel {
 	public void addFetchedAreasToGuiList(){
 		MapPanel map = programFrame.getMapPanel();
 		ArrayList<Area> serverAreas = fetchAreas();
+		if (serverAreas.isEmpty()) {
+			return;
+		}
 		for (Area area : serverAreas){
 			areaGuiList.add(0, area.getAreaPoints());
 			farmer.addArea(area);
@@ -332,8 +329,6 @@ public class UserPanel extends JPanel {
 			map.showArea();
 		}
 	}
-
-
 
 	/**
 	 * Adds an area to the area list and 
@@ -367,11 +362,9 @@ public class UserPanel extends JPanel {
 			map.addArea (coordinates);
 			map.showArea();
 		}
-
 	}
 
 	// All listeners is implemented as classes that implements the ActionListener-interface
-
 	private class DeleteAreaListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -385,10 +378,8 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Class for implementing ActionLister to make the button to edit the farm area.
-	 * @author Andreas
-	 *
+	 * @author Andreas Lynby
 	 */
-
 	private class AddAreaListener implements ActionListener{
 
 		private UserPanel panel;
@@ -410,6 +401,10 @@ public class UserPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Class for the button to edit area
+	 * @author Andreas Lyngby
+	 */
 	private class EditAreaListener implements ActionListener {
 
 		private UserPanel panel;
@@ -440,11 +435,8 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * CreateFarmListener - creates a farm for the user.
-	 *
-	 * @author Andreas
-	 *
+	 * @author Andreas Lyngby
 	 */
-
 	private class CreateFarmListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -484,8 +476,7 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Deletes the farm you have. Gives error message if you can't delete it.
-	 * @author Andreas
-	 *
+	 * @author Andreas Lyngby
 	 */
 	class DeleteFarmListener implements ActionListener{
 		@Override
@@ -510,12 +501,12 @@ public class UserPanel extends JPanel {
 			}
 		}
 	}
+
 	/**
 	 * Class for a possible edit farm name button. Needs more logic for proper functionality.
 	 * Takes the tekst of the farmfield(gård - tekstboks) and uses the current text to give the current farm a new name.
 	 * Probably needs some checkboxes or radio buttons, and/or its own text field.
-	 * @author Andreas
-	 *
+	 * @author Andreas Lyngby
 	 */
 	class EditFarmNameListener implements ActionListener{
 		@Override
@@ -537,10 +528,8 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Creates a farm share code the farmer can use to share his farm
-	 * @author Andreas
-	 *
+	 * @author Andreas Lyngby
 	 */
-
 	private class CreateFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -560,6 +549,10 @@ public class UserPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Listener to add farmcode to farmer
+	 * @author Andreas Lyngby
+	 */
 	private class AddFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -585,10 +578,8 @@ public class UserPanel extends JPanel {
 
 	/**
 	 * Removes the farmcode from the user who requests to remove it.
-	 * @author Andreas
-	 *
+	 * @author Andreas Lyngby
 	 */
-
 	private class RemoveFarmCodeListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e){
@@ -618,9 +609,9 @@ public class UserPanel extends JPanel {
 	/**
 	 * Listener for the loginButton
 	 * @author Håkon Ødegård Løvdal
-	 *
 	 */
 	private class LoginListener implements ActionListener {
+
 		/**
 		 * Method that checks if user is valid and logs in
 		 * It also calls the initUserSheeps()-method in SheepPanel to init sheeps.
@@ -675,7 +666,7 @@ public class UserPanel extends JPanel {
 				farmerEmail.setText(farmer.getEmail());
 
 				//Fetches areas from server
-				//addFetchedAreasToGuiList();
+				addFetchedAreasToGuiList();
 
 				// Initiate sheeps
 				programFrame.getSheepPanel().initUserSheeps(handler.getSheep(-1));

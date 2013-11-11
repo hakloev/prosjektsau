@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import characters.Farmer;
 import characters.Sheep;
 
-public class NetMain {
+public class NetMainExampleClass {
 
 	public static void main(String[] args) {
 

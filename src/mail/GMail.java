@@ -17,8 +17,10 @@ public class GMail {
 	private String username = "sauer.er.konge@gmail.com" ;
 	private String password = "prosjektsau";
 	private Properties props;
-	
-	
+
+	/**
+	 * Constructor for mail-sender
+	 */
 	public GMail(){
 		
 		props = new Properties();
