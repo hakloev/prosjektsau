@@ -535,7 +535,7 @@ public class UserPanel extends JPanel {
 		public void actionPerformed(ActionEvent e){
 			if(farmer.getFarm() != null){
 				NetHandler nh = programFrame.getNetHandler();
-				Response r = nh.newFarmShareCode();
+				Response r = nh.newFarmShareCode(false);
 				if(r == null){
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke lage ny delekode",
 							"Databasefeil", JOptionPane.WARNING_MESSAGE);

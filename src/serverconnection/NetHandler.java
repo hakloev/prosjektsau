@@ -87,7 +87,7 @@ public class NetHandler {
 	 * @param findField Field to find
 	 * @param json String to search in
 	 */
-	private String searchJSON(String findField, String json) throws JsonProcessingException, IOException {
+	public String searchJSON(String findField, String json) throws JsonProcessingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = mapper.readTree(json);
 		JsonNode field = root.get(findField);
@@ -543,7 +543,7 @@ public class NetHandler {
 	}
 	
 	/**
-	 * @param s Sheep object to create on serverside.
+	 * @param id Sheep object to create on serverside.
 	 * @return Response object from request result and time of request.
 	 */
 	public Response deleteSheep(int id) {
