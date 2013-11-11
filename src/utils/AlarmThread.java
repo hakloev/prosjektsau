@@ -17,6 +17,10 @@ public class AlarmThread extends Thread implements Runnable {
 	private SwingThread swingRef;
 	private boolean debug = false;
 
+	/**
+	 * Constructor for AlarmThread
+	 * @param swingRef reference to swingthread
+	 */
 	public AlarmThread(SwingThread swingRef) {
 		this.swingRef = swingRef;
 	}

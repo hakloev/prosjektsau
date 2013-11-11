@@ -15,7 +15,6 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
-
 /**
  * Class to handle JsonObjects
  * @author Håkon Ødegård Løvdal
@@ -246,7 +245,7 @@ public class JsonHandler {
 	/**
 	 * Method to parse alarm-json and return ArrayList of alarm-objects
 	 * @param jsonObject Response containing a json
-	 * @return
+	 * @return ArrayList containing alarm-objects
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
@@ -307,6 +306,9 @@ public class JsonHandler {
 			e.printStackTrace();	
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		if (areaMap.get("request_response_message").asText().equals("Feil: Ugyldig farmID")) {
+			return new ArrayList<Area>();
 		}
 		int count = areaMap.get("count").asInt();
 		for (int i = 0; i < count; i++){

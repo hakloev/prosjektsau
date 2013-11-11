@@ -13,6 +13,7 @@ import utils.SwingThread;
 import javax.swing.*;
 
 /**
+ * The main frame, with main method, invokes client-program
  * @author Andreas Lynbgy
  */
 public class ProgramFrame extends JFrame {

@@ -36,7 +36,7 @@ import serverconnection.Response;
  * @author Håkon Ødegård Løvdal
  * @author Thomas Mathisen
  */
-public class SheepPanel extends JPanel implements ItemListener{
+public class SheepPanel extends JPanel {
 	
 	private ProgramFrame programFrame;
 	
@@ -331,12 +331,6 @@ public class SheepPanel extends JPanel implements ItemListener{
 		);
 	}
 	
-	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stub
-		// WHAT DOES THE FOX SAY
-	}
-	
 	/**
 	 * Method called when user is logged in, adds all the sheep that the current user owns
 	 * Should take a parameter userId or something like that.
@@ -353,6 +347,11 @@ public class SheepPanel extends JPanel implements ItemListener{
 		programFrame.getLogPanel().updateLogList(list.getModel());
 	}
 
+	/**
+	 * Method to get sheep with given id from sheepList
+	 * @param id int telling what sheep
+	 * @return sheep-object
+	 */
 	public Sheep getSheep(int id) {
 		for (int i = 0; i < sheepList.size(); i++) {
 			if (sheepList.getElementAt(i).getIdNr() == id)  {
@@ -822,11 +821,9 @@ public class SheepPanel extends JPanel implements ItemListener{
 		}
 	}
 	
-	
 	//--------------
 	//Sheeplist fix
 	//--------------
-
 	/**
 	 * Removes the objects in the sheep list.
 	 * Used by UserPanel.RemoveShareCodeListener.

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 /**
  * Class with area polygon. Used to check if a position is contained within the area.
- * @author maxmelander, madsmidtlyng
- *
+ * @author Max Melander
+ * @author Mads Midtlyng
  */
 public class Area {
 
@@ -17,7 +17,7 @@ public class Area {
 	private String coordinates;
 	
 	/**
-	 * 
+	 * Constructor for Area-class
 	 * @param areaPoints The coordinate points used to create the area polygon
 	 */
 	public Area(String name, int farmID, ArrayList<Position> areaPoints, int id){
@@ -45,19 +45,25 @@ public class Area {
 		}
 		areaPoly.closePath();
 	}
+
 	/**
-	 * 
+	 * Method to return area-polygon
 	 * @return returns the area polygon
 	 */
 	public Path2D returnAreaPoly(){
 		return areaPoly;
 	}
-	
+
+	/**
+	 * Method to get all areapoints
+	 * @return ArrayList containing areapoints
+	 */
 	public ArrayList<Position> getAreaPoints(){
 		return areaPoints;
 	}
+
 	/**
-	 * 
+	 * Method to check if position is in area
 	 * @param position 	the position to check
 	 * @return 			returns true or false depending on if the given position if contained within the area polygon or not
 	 */

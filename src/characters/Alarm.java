@@ -3,8 +3,6 @@ package characters;
 import java.text.*;
 import java.util.Date;
 
-import characters.Sheep;
-
 /**
  * Class holding information about an alarm
  * @author Håkon Ødegård Løvdal
@@ -90,8 +88,4 @@ public class Alarm {
 	public String toString() {
 		return "(" + sheep.getIdNr() + ") " +  sheep.getNick();
 	}
-	
-	
-	
-	
 }

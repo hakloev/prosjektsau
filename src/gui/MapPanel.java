@@ -26,6 +26,10 @@ public class MapPanel extends JPanel {
 	private WebEngine webEngine;
 	private WebView webView;
 
+	/**
+	 * Constructor for map panel
+	 * @param programFrame the program frame instance
+	 */
 	public MapPanel(ProgramFrame programFrame) {
 		this.programFrame = programFrame;
 		initAndShowMap();
@@ -49,7 +53,6 @@ public class MapPanel extends JPanel {
 		add(fxPanel);
 		setSize(600, 400);
 		setVisible(true);
-
 	}
 
 	/**
@@ -73,7 +76,6 @@ public class MapPanel extends JPanel {
 		webEngine = webView.getEngine();
 		webEngine.javaScriptEnabledProperty().set(true); 
 		webEngine.load(MapPanel.class.getResource(url).toExternalForm());
-
 	}
 
 	/**
@@ -92,9 +94,6 @@ public class MapPanel extends JPanel {
 		});
 	}
 
-	
-	
-	
 	/**
 	 * Adds a polygon-area to the map's list of areas, by calling a JavaScript in map.html
 	 * @param coordinates 
@@ -147,6 +146,5 @@ public class MapPanel extends JPanel {
 			}
 		});
 	}
-
 }
 
