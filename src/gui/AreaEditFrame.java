@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -22,7 +23,7 @@ import characters.Position;
 /**
  * @author Andreas Lyngby
  */
-public class AreaEditFrame extends JFrame{
+public class AreaEditFrame extends JDialog{
 
 
 	private JList<Position> list;
@@ -49,7 +50,7 @@ public class AreaEditFrame extends JFrame{
 		this.areaList = list;
 		this.setVisible(true);
 		this.setResizable(false);
-
+	
 		this.addWindowListener(new WAdapter(this, frame));
 		
 		initElements();
