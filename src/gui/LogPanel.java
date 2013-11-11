@@ -68,7 +68,7 @@ public class LogPanel extends JPanel{
 		datoTid = new JTextArea("Du startet klienten: " + new Date().toString());
 		datoTid.setMinimumSize(new Dimension(200, 20));
 		datoTid.setMaximumSize(new Dimension(1000, 20));
-		logDescTextArea = new JTextArea("Velg en sau og trykk \"Hent Dagslogg\"");
+		logDescTextArea = new JTextArea("Velg en sau og velg fra lista \"Logger\"");
 		logDesc = new JScrollPane(logDescTextArea);
 		logCurrentSheep = new ArrayList<LogItem>();
 
