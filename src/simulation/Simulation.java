@@ -108,6 +108,9 @@ public class Simulation {
 					System.out.println("ID: " + currentSheep.getIdNr() + "\t IS DEAD");
 
 					netHandler.updateSheep(currentSheep);
+					while (timeNow - previousUpdateTime <= updateInterval){
+						timeNow = System.currentTimeMillis() % MSINDAY;
+					}
 					continue;
 				}
 				sheepLocation = currentSheep.getLocation();
