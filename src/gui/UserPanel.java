@@ -448,6 +448,7 @@ public class UserPanel extends JPanel {
 				panel.deleteAreafromServer(temp);
 				new AreaEditFrame(panel.programFrame,temp);
 				panel.setAreaOpenable(false);
+				panel.farmer.removeArea(temp);
 			}
 		}
 	}
