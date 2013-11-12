@@ -761,6 +761,10 @@ public class UserPanel extends JPanel {
 			farmCodeField.setText("");
 			areaBoxText.setText("");
 
+			areaGuiList.clear();
+			list.clearSelection();
+			areaList.clear();
+
 			programFrame.getSheepPanel().clearSheepList();
 			programFrame.getLogPanel().clearLogList();
 			programFrame.getAlarmPanel().clearAlarmList();
