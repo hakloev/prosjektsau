@@ -629,6 +629,9 @@ public class UserPanel extends JPanel {
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					farmField.setText("Ingen gård");
 					farmCodeField.setText("");
+					areaGuiList.clear();
+					list.clearSelection();
+					areaList.clear();
 					programFrame.getAlarmPanel().clearAlarmList();
 				}
 			}else{
