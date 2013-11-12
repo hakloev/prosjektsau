@@ -65,7 +65,7 @@ public class LogPanel extends JPanel{
 		datoTidText = new JLabel("Dato: ");
 		logDescText = new JLabel("Logg:");
 		
-		datoTid = new JTextArea("Du startet klienten: " + new Date().toString());
+		datoTid = new JTextArea("Du logget inn: " + new Date().toString());
 		datoTid.setMinimumSize(new Dimension(200, 20));
 		datoTid.setMaximumSize(new Dimension(1000, 20));
 		logDescTextArea = new JTextArea("Velg en sau og velg fra lista \"Logger\"");
@@ -108,11 +108,33 @@ public class LogPanel extends JPanel{
 		);	
 	}
 
+	/**
+	 * Method to clear logList
+	 */
+	public void clearLogList() {
+		editingLog = true;
+		list.clearSelection();
+		logList.clear();
+		datoTid.setText("Dato");
+		logDescTextArea.setText("Velg en sau og velg fra lista \"Logger\"");
+		logIdBox.removeAllItems();
+		logIdBox.addItem("Logger:");
+		logCurrentSheep.clear();
+		editingLog = false;
+	}
+
+	/**
+	 * Method to update log list to current
+	 * @param sheepList a list of users sheep's
+	 */
 	public void updateLogList(ListModel<Sheep> sheepList) {
 		this.list.setModel(sheepList);
 		logList = (DefaultListModel<Sheep>) sheepList;
 	}
 
+	/**
+	 * Listener for dropdown-list of logs
+	 */
 	private class ComboBoxListner implements ActionListener {
 
 		@Override
@@ -132,6 +154,9 @@ public class LogPanel extends JPanel{
 		}
 	}
 
+	/**
+	 * Listnerer for selection in log list
+	 */
 	private class ListListener implements ListSelectionListener {
 
 		@Override

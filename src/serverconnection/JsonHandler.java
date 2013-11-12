@@ -303,7 +303,9 @@ public class JsonHandler {
 	public static ArrayList<Area> parseJsonAndReturnAreas(Response jsonObject){
 		Map<String, JsonNode> areaMap = new HashMap<String, JsonNode>();
 		ArrayList<Area> areaList = new ArrayList<Area>();
-
+		if (new NetHandler().isError(jsonObject.msg)) {
+			return new ArrayList<Area>();
+		}
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getJsonFactory();
@@ -320,9 +322,7 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (areaMap.get("request_response_message").asText().equals("Feil: Ugyldig farmID")) {
-			return new ArrayList<Area>();
-		}
+
 		int count = areaMap.get("count").asInt();
 		for (int i = 0; i < count; i++){
 			String[] latList = areaMap.get(""+(i+1)).get("area_latitude").asText().split(",");

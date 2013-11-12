@@ -33,6 +33,7 @@ public class UserPanel extends JPanel {
 	private JLabel areaBoxText;
 
 	private JButton loginButton;
+	private JButton logoutButton;
 	private JButton addArea;
 	private JButton editArea;
 	private JButton deleteArea;
@@ -82,6 +83,8 @@ public class UserPanel extends JPanel {
 		layout.setAutoCreateContainerGaps(true);
 
 		loginButton = new JButton("Logg inn");
+		logoutButton = new JButton("Logg ut");
+		logoutButton.setEnabled(false);
 		addArea = new JButton("Legg til område");
 		editArea = new JButton("Endre område");
 		deleteArea = new JButton("Slett område");
@@ -142,9 +145,11 @@ public class UserPanel extends JPanel {
 		farmerEmailText.setEnabled(false);
 		farmText.setEnabled(false);
 		farmCodeText.setEnabled(false);
-		
+
+
 		// Listeners
 		loginButton.addActionListener(new LoginListener());
+		logoutButton.addActionListener(new LogoutListener());
 		addArea.addActionListener(new AddAreaListener(this));
 		editArea.addActionListener(new EditAreaListener(this));
 		createFarm.addActionListener(new CreateFarmListener());
@@ -163,44 +168,49 @@ public class UserPanel extends JPanel {
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 										.addComponent(usernameText)
 										.addComponent(loginButton)
-										)
-										.addComponent(usernameField)
-										.addComponent(passwordText)
-										.addComponent(passwordField)
 								)
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(js)
-										)
-										.addGroup(layout.createSequentialGroup() 
-												.addComponent(farmCodeText)
-												.addComponent(farmCodeField)
-												.addComponent(addFarmCode)
-												.addComponent(removeFarmCode)
-												)
-												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-														.addComponent(js1)
-														)
-														.addGroup(layout.createSequentialGroup()
-																.addComponent(farmText)
-																.addComponent(farmField)
-																.addComponent(createFarm)
-																.addComponent(deleteFarm)
-																)
-																.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																		.addComponent(js2)
-																		)
-																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-																				.addComponent(farmerEmailText)
-																				.addComponent(farmerEmail)
-																				.addComponent(areaBoxText)
-																				.addComponent(listScrollPane)
-																				.addGroup(layout.createSequentialGroup()
-																						.addComponent(editArea)
-																						.addComponent(addArea)
-																						.addComponent(deleteArea)
-																						)
-																				)
+										.addComponent(usernameField)
+										.addComponent(logoutButton)
+								)
+								.addComponent(passwordText)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addComponent(passwordField)
+								)
 						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(js)
+						)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(farmCodeText)
+								.addComponent(farmCodeField)
+								.addComponent(addFarmCode)
+								.addComponent(removeFarmCode)
+						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(js1)
+						)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(farmText)
+								.addComponent(farmField)
+								.addComponent(createFarm)
+								.addComponent(deleteFarm)
+						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(js2)
+						)
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+								.addComponent(farmerEmailText)
+								.addComponent(farmerEmail)
+								.addComponent(areaBoxText)
+								.addComponent(listScrollPane)
+								.addGroup(layout.createSequentialGroup()
+										.addComponent(editArea)
+										.addComponent(addArea)
+										.addComponent(deleteArea)
+								)
+						)
+				)
 				);
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -210,40 +220,43 @@ public class UserPanel extends JPanel {
 										.addComponent(usernameField)
 										.addComponent(passwordText)
 										.addComponent(passwordField)
-										)
-										.addComponent(loginButton)
-										.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-												.addComponent(js)
-												)
-												.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE) 
-														.addComponent(farmCodeText)
-														.addComponent(farmCodeField)
-														.addComponent(addFarmCode)
-														.addComponent(removeFarmCode)
-														)
-														.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-																.addComponent(js1)
-																)
-																.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-																		.addComponent(farmText)
-																		.addComponent(farmField)
-																		.addComponent(createFarm)
-																		.addComponent(deleteFarm)
-																		)
-																		.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-																				.addComponent(js2)
-																				)
-																				.addComponent(farmerEmailText)
-																				.addComponent(farmerEmail)
-																				.addComponent(areaBoxText)
-																				.addComponent(listScrollPane)
-																				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-																						.addComponent(editArea)
-																						.addComponent(addArea)
-																						.addComponent(deleteArea)
-																						)
-																						.addContainerGap()
 								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(loginButton)
+										.addComponent(logoutButton)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(js)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(farmCodeText)
+										.addComponent(farmCodeField)
+										.addComponent(addFarmCode)
+										.addComponent(removeFarmCode)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(js1)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(farmText)
+										.addComponent(farmField)
+										.addComponent(createFarm)
+										.addComponent(deleteFarm)
+								)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(js2)
+								)
+								.addComponent(farmerEmailText)
+								.addComponent(farmerEmail)
+								.addComponent(areaBoxText)
+								.addComponent(listScrollPane)
+								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+										.addComponent(editArea)
+										.addComponent(addArea)
+										.addComponent(deleteArea)
+								)
+								.addContainerGap()
+						)
 						)
 				);
 	}
@@ -400,8 +413,10 @@ public class UserPanel extends JPanel {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new AreaEditFrame(panel.programFrame, null);
 			panel.setAreaOpenable(false);
+			AreaEditFrame a = new AreaEditFrame(panel.programFrame, null);
+			a.toFront();
+			a.requestFocusInWindow();
 		}
 	}
 
@@ -456,6 +471,7 @@ public class UserPanel extends JPanel {
 					r = nh.getUser();
 					String farmCode = nh.getFarmCode();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					farmer.setFarmId(nh.getFarmID());
 					r = nh.updateFarm(farmName, null);
 					if(r == null){
 						JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kunne ikke opprette navn.",
@@ -463,6 +479,7 @@ public class UserPanel extends JPanel {
 					}
 					r = nh.getUser();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
+					farmer.setFarmId(nh.getFarmID());
 					r = nh.getFarm(farmCode);
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
 					String newFarmName = farmer.getFarm().getFarmName();
@@ -573,6 +590,7 @@ public class UserPanel extends JPanel {
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
 					r = nh.getFarm(farmCode);
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
+					farmer.setFarmId(nh.getFarmID());
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Delekode lagt til og gård hentet",
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					Response rr = nh.getSheep(-1);
@@ -611,6 +629,7 @@ public class UserPanel extends JPanel {
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					farmField.setText("Ingen gård");
 					farmCodeField.setText("");
+					programFrame.getAlarmPanel().clearAlarmList();
 				}
 			}else{
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Kan ikke slette delekode: Gårdseier/ingen delkode å slette",
@@ -661,6 +680,7 @@ public class UserPanel extends JPanel {
 
 				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
+				farmer.setFarmId(handler.getFarmID());
 				if(handler.getFarmCode()!=""){
 					Response getFarmResult = handler.getFarm(handler.getFarmCode());
 					if(!handler.isError(getFarmResult.msg)){
@@ -691,10 +711,66 @@ public class UserPanel extends JPanel {
 				programFrame.getJTabbedPane().setEnabledAt(2, true);
 				programFrame.getJTabbedPane().setEnabledAt(3, true);
 				programFrame.getJTabbedPane().setEnabledAt(4, true);
+
+				logoutButton.setEnabled(true);
 			} else {
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), loginResult.msg + "\nPrøv på nytt",
 						"Innloggingsfeil", JOptionPane.WARNING_MESSAGE);
 			}
+		}
+	}
+
+	private class LogoutListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		    Response r = programFrame.getNetHandler().logout();
+			System.out.print("Logget ut: ");
+			r.consoletime();
+			JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Logget ut!",
+					"Utlogging", JOptionPane.WARNING_MESSAGE);
+			usernameField.setText("");
+			passwordField.setText("");
+			usernameField.setEditable(true);
+			passwordField.setEditable(true);
+			programFrame.getJTabbedPane().setEnabledAt(1, false);
+			programFrame.getJTabbedPane().setEnabledAt(2, false);
+			programFrame.getJTabbedPane().setEnabledAt(3, false);
+			programFrame.getJTabbedPane().setEnabledAt(4, false);
+
+			listScrollPane.setEnabled(false);
+			addArea.setEnabled(false);
+			editArea.setEnabled(false);
+			farmerEmail.setEnabled(false);
+			farmField.setEnabled(false);
+			farmCodeField.setEnabled(false);
+			deleteArea.setEnabled(false);
+			createFarm.setEnabled(false);
+			editFarm.setEnabled(false);
+			deleteFarm.setEnabled(false);
+			createFarmCode.setEnabled(false);
+			addFarmCode.setEnabled(false);
+			removeFarmCode.setEnabled(false);
+			areaBoxText.setEnabled(false);
+			farmerEmailText.setEnabled(false);
+			farmText.setEnabled(false);
+			farmCodeText.setEnabled(false);
+
+			farmerEmail.setText("");
+			farmField.setText("");
+			farmCodeField.setText("");
+			areaBoxText.setText("");
+
+			programFrame.getSheepPanel().clearSheepList();
+			programFrame.getLogPanel().clearLogList();
+			programFrame.getAlarmPanel().clearAlarmList();
+			programFrame.getMapPanel().deleteMarkers();
+
+
+			logoutButton.setEnabled(false);
+			loginButton.setEnabled(true);
+			repaint();
+
 		}
 	}
 }

@@ -216,7 +216,21 @@ public class AlarmPanel extends JPanel{
 		alarmDesc.setText("Beskrivelse");
 		alarmPos.setText("Posisjon");
 	}
-	
+
+	/**
+	 * Method to clear alarm list
+	 */
+	public void clearAlarmList() {
+		changing = true;
+		list.clearSelection();
+		alarmList.clear();
+		sheepId.setText("Sau-ID og kallenavn:");
+		alarmTime.setText("Alarmtid:");
+		alarmDesc.setText("Beskrivelse:");
+		alarmPos.setText("Posisjon:");
+		changing = false;
+	}
+
 	// Classes for listners to ListSelection and DeleteAlarmButton
 	/**
 	 * Listener for the "Slett alarm"-button
