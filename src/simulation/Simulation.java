@@ -164,7 +164,6 @@ public class Simulation {
 				if (currentSheep.isInfected() && simHasDisease && (daysOfDisease > currentDisease.getIncubationPeriod())){
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
-				
 				System.out.println("ID: " + currentSheep.getIdNr() + "\t Lat: " + currentSheep.getLocation().getLatitude() 
 									+ "  \t Long: " + currentSheep.getLocation().getLongitude() + "\t    Pulse: " + currentSheep.getPulse()
 									+ " In Area: " + isInArea(currentSheep) + "\t Infected: " + currentSheep.isInfected() + " \t Nick: " + currentSheep.getNick());
@@ -186,6 +185,9 @@ public class Simulation {
 	public void sheepAttack(){
 		Sheep currentSheep = null;
 		for (int i = 0; i < sheepList.size(); i++){
+			if (i == 4){
+				return;
+			}
 			int sheepIndex = rand.nextInt(sheepList.size());
 			currentSheep = sheepList.get(sheepIndex);
 			if (!currentSheep.isDead()){
