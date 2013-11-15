@@ -559,6 +559,7 @@ public class SheepPanel extends JPanel {
 				MapPanel map = programFrame.getMapPanel();
 				if (mapSelected.isSelected()) {
 					if (!list.isSelectionEmpty()) {
+						map.deleteMarkers();
 						Sheep sheep = list.getSelectedValue();
 						if (sheep.isDead()) {
 							map.addMarker("DØD: " + sheep.getNick(), sheep.getLocation().getLatitude(), sheep.getLocation().getLongitude());
@@ -573,6 +574,7 @@ public class SheepPanel extends JPanel {
 								"Kartfeil", JOptionPane.WARNING_MESSAGE);
 					}
 				} else if (mapAll.isSelected() && (!sheepList.isEmpty())) {
+					map.deleteMarkers();
 					for (int i = 0; i < list.getModel().getSize(); i++) {
 						Sheep sheep = list.getModel().getElementAt(i);
 						if (sheep.isDead()) {
