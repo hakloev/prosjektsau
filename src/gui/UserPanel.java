@@ -685,7 +685,7 @@ public class UserPanel extends JPanel {
 				// Parse Response to create farmer
 				farmer = JsonHandler.parseJsonAndReturnUser(loginResult);
 				farmer.setFarmId(handler.getFarmID());
-				if(handler.getFarmCode()!=""){
+				if(!handler.getFarmCode().equals("")){
 					Response getFarmResult = handler.getFarm(handler.getFarmCode());
 					if(!handler.isError(getFarmResult.msg)){
 						farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(getFarmResult));
