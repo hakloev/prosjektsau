@@ -772,7 +772,10 @@ public class NetHandler {
 	public Response getFarm(String sharecode) {
 		if(m_isDebugging) { System.out.println("[GET] farm " + sharecode); }
 		if(sharecode.equals("SIMULATOR")) { sharecode = "-1"; }
-		try { return _get("&rid=10&f="+sharecode, null);
+		try {
+			Response r = _get("&rid=10&f="+sharecode, null);
+			m_farmID = Integer.parseInt(searchJSON("id", r.msg));
+			return r;
 		} catch (IOException e) { m_lastError = "Kunne ikke hente informasjon."; e.printStackTrace(); }
 		return null;
 	}
