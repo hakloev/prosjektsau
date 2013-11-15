@@ -188,7 +188,7 @@ public class Sheep {
 	 * @return boolean pulse > 0
 	 */
 	public boolean isDead() {
-		return (pulse < 1);
+		return (pulse <= 0);
 	}
 
 	/**
@@ -225,8 +225,6 @@ public class Sheep {
 
 	/**
 	 * Used to print sheep identification in sheep list (Sheep Panel)
-	 *
-	 * @override overrides toString
 	 * @return a string of sheep identification and nickname
 	 */
 	@Override

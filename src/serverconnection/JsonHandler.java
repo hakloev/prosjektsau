@@ -249,11 +249,10 @@ public class JsonHandler {
 	/**
 	 * Method to parse alarm-json and return ArrayList of alarm-objects
 	 * @param jsonObject Response containing a json
-	 * @return
+	 * @return arraylist with alarm-objects
 	 */
 	public static ArrayList<Alarm> parseJsonAndReturnAlarms(Response jsonObject, ProgramFrame pf) {
 		ArrayList<Alarm> listOfAlarms = new ArrayList<Alarm>();
-		System.out.println(jsonObject.msg);
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -265,18 +264,28 @@ public class JsonHandler {
 			if (count == 0)  {
 				return new ArrayList<Alarm>();
 			}
-			for (int i = 1; i <= count; i++) {
+			Iterator<Entry<String,JsonNode>> nodeIt = input.getFields();
+			int countField = 0;
+			while (nodeIt.hasNext()) {
+				Entry<String, JsonNode> alarm = nodeIt.next();
+				if (countField <= 2) {
+					countField++;
+					continue;
+				}
 				Map<String, JsonNode> alarmMap = new HashMap<String, JsonNode>();
-				JsonNode alarm = input.get(Integer.toString(i));
-				Iterator<Entry<String, JsonNode>> nodeIterator = alarm.getFields();
-				while (nodeIterator.hasNext()) {
-					Entry<String, JsonNode> entry = nodeIterator.next();
+				JsonNode alarmString = alarm.getValue();
+				Iterator<Entry<String, JsonNode>> alarmIterator = alarmString.getFields();
+				while (alarmIterator.hasNext()) {
+
+					Entry<String, JsonNode> entry = alarmIterator.next();
 					alarmMap.put(entry.getKey(), entry.getValue());
 				}
 				Alarm a = new Alarm(alarmMap.get("id").asInt(), pf.getSheepPanel().getSheep(alarmMap.get("sheep_id").asInt()),
 						alarmMap.get("alarm_start_date").asText(), alarmMap.get("alarm_text").asText());
 				a.getSheep().setLocation(alarmMap.get("sheep_latitude").asDouble(), alarmMap.get("sheep_longitude").asDouble());
 				listOfAlarms.add(a);
+
+				// LEGGER NÅ KUN TIL FØRSTE ALARM
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -294,7 +303,9 @@ public class JsonHandler {
 	public static ArrayList<Area> parseJsonAndReturnAreas(Response jsonObject){
 		Map<String, JsonNode> areaMap = new HashMap<String, JsonNode>();
 		ArrayList<Area> areaList = new ArrayList<Area>();
-
+		if (new NetHandler().isError(jsonObject.msg)) {
+			return new ArrayList<Area>();
+		}
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getJsonFactory();
@@ -311,9 +322,7 @@ public class JsonHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (areaMap.get("request_response_message").asText().equals("Feil: Ugyldig farmID")) {
-			return new ArrayList<Area>();
-		}
+
 		int count = areaMap.get("count").asInt();
 		for (int i = 0; i < count; i++){
 			String[] latList = areaMap.get(""+(i+1)).get("area_latitude").asText().split(",");

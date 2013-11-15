@@ -829,6 +829,24 @@ public class SheepPanel extends JPanel {
 	 * Used by UserPanel.RemoveShareCodeListener.
 	 */
 	public void clearSheepList(){
+		changingSheep = true;
 		sheepList.clear();
+
+		hasAlarm.setText("Har alarm: NEI");
+		hasAlarm.setForeground(Color.BLACK);
+		radioGroup3.clearSelection();
+		sheepId.setText("ID");
+		sheepId.setEditable(false);
+		sheepAge.setText("Alder");
+		sheepAge.setEditable(false);
+		sheepNick.setText("Kallenavn");
+		sheepNick.setForeground(Color.BLACK);
+		sheepNick.setEditable(false);
+		sheepPos.setText("Posisjon");
+		sheepPos.setEditable(false);
+		sheepWeight.setText("Vekt");
+		sheepWeight.setEditable(false);
+
+		changingSheep = false;
 	}
 }

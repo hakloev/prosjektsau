@@ -25,7 +25,7 @@ public class Simulation {
 	private 				Position 			sheepLocation;
 	public static final 	int 				EARTHRADIUS 			= 6378137;
 	public static final 	int 				MSINDAY 				= 86400000;
-	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 500;
+	public static final 	int 				NUMBEROFUPDATESPERDAY 	= 8000;
 	public static final 	int 				NEGATIVE 				= 0;
 	public static final 	int 				POSITIVE 				= 1;
 	public static final		int					MOVEMENTSCALE			= 1000;
@@ -37,7 +37,6 @@ public class Simulation {
 	private					Response			response				= new Response();
 	/**
 	 * The simulation constructor
-	 * @param sheepList The list of sheep that should be moving around and stuff. You know what i'm talking about-
 	 */
 	public Simulation() {
 		netHandler = new NetHandler();
@@ -87,7 +86,7 @@ public class Simulation {
 			}
 			
 			//checks if a wolf attack should occur
-			if (rand.nextInt(100) < 10){
+			if (rand.nextInt(100) < 20){
 				System.out.println("Wolf attack");
 				sheepAttack();
 			}
@@ -97,7 +96,7 @@ public class Simulation {
 				generateDisease();
 				simHasDisease = true;
 			}
-
+			
 			for (Sheep currentSheep : sheepList){
 				//waits until enough time has passed
 				while (timeNow - previousUpdateTime <= updateInterval){
@@ -105,7 +104,12 @@ public class Simulation {
 				}
 				
 				if (currentSheep.isDead()){
+					System.out.println("ID: " + currentSheep.getIdNr() + "\t IS DEAD");
+
 					netHandler.updateSheep(currentSheep);
+					while (timeNow - previousUpdateTime <= updateInterval){
+						timeNow = System.currentTimeMillis() % MSINDAY;
+					}
 					continue;
 				}
 				sheepLocation = currentSheep.getLocation();
@@ -160,10 +164,9 @@ public class Simulation {
 				if (currentSheep.isInfected() && simHasDisease && (daysOfDisease > currentDisease.getIncubationPeriod())){
 					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
 				}
-				
-				System.out.println("ID: " + currentSheep.getIdNr() + " Lat: " + currentSheep.getLocation().getLatitude() 
-									+ " Long: " + currentSheep.getLocation().getLongitude() + " Pulse: " + currentSheep.getPulse()
-									+ " In Area: " + isInArea(currentSheep) + " Infected: " + currentSheep.isInfected());
+				System.out.println("ID: " + currentSheep.getIdNr() + "\t Lat: " + currentSheep.getLocation().getLatitude() 
+									+ "  \t Long: " + currentSheep.getLocation().getLongitude() + "\t    Pulse: " + currentSheep.getPulse()
+									+ " In Area: " + isInArea(currentSheep) + "\t Infected: " + currentSheep.isInfected() + " \t Nick: " + currentSheep.getNick());
 				
 				netHandler.updateSheep(currentSheep);
 				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);
@@ -182,11 +185,14 @@ public class Simulation {
 	public void sheepAttack(){
 		Sheep currentSheep = null;
 		for (int i = 0; i < sheepList.size(); i++){
+			if (i == 4){
+				return;
+			}
 			int sheepIndex = rand.nextInt(sheepList.size());
 			currentSheep = sheepList.get(sheepIndex);
 			if (!currentSheep.isDead()){
 				if (rand.nextInt(100) < 20){
-					System.out.println("Kill success on sheep: " + sheepIndex);
+					System.out.println("Kill success on sheep: " + currentSheep.getIdNr());
 					killSheep(currentSheep);
 					
 					//10% chance of trying to kill another sheep
@@ -196,7 +202,7 @@ public class Simulation {
 				}
 				//Hurts a sheep if it is not killed
 				else{
-					currentSheep.setPulse(currentSheep.getPulse() - 50);
+					currentSheep.setPulse(currentSheep.getPulse() - 10);
 				}
 			}
 		}
@@ -208,8 +214,6 @@ public class Simulation {
 	 */
 	public void killSheep(Sheep sheep){
 		sheep.setPulse(0);
-		netHandler.updateSheep(sheep);
-
 		
 	}
 	
@@ -272,6 +276,9 @@ public class Simulation {
 			farm.getAreaList();
 		}
 		catch(NullPointerException e){
+			return true;
+		}
+		if (farm.getAreaList().size() == 0){
 			return true;
 		}
 		for (Area area : farm.getAreaList()){
