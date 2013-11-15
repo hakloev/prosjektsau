@@ -19,6 +19,7 @@ public class Farmer {
 	private ArrayList<Area> areaList = new ArrayList<Area>();
 	private int farmId;
 	private Farm farm;
+	private String shareCode;
 
 	/**
 	 * Constructor for farmer-class
@@ -27,11 +28,12 @@ public class Farmer {
 	 * @param userName the farmer's user name
 	 * @param email the farmers Email address
 	 */
-	public Farmer(int farmerId, String farmerHash, String userName, String email) {
+	public Farmer(int farmerId, String farmerHash, String userName, String email, String shareCode) {
 		this.farmerId = farmerId;
 		this.farmerHash = farmerHash;
 		setEmail(email);
 		this.userName = userName;
+		this.shareCode = shareCode;
 	}
 	
 	/**
@@ -157,6 +159,14 @@ public class Farmer {
 	 */
 	public Farm getFarm(){
 		return this.farm;
+	}
+
+	/**
+	 * Method to get farmShareCode
+	 * @return Farmers shareCode
+	 */
+	public String getShareCode() {
+		return shareCode;
 	}
 }
 

@@ -470,7 +470,6 @@ public class UserPanel extends JPanel {
 							"Databasefeil", JOptionPane.WARNING_MESSAGE);
 				}else{
 					r = nh.getUser();
-					String farmCode = nh.getFarmCode();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
 					farmer.setFarmId(nh.getFarmID());
 					r = nh.updateFarm(farmName, null);
@@ -481,10 +480,11 @@ public class UserPanel extends JPanel {
 					r = nh.getUser();
 					farmer = JsonHandler.parseJsonAndReturnUser(r);
 					farmer.setFarmId(nh.getFarmID());
-					r = nh.getFarm(farmCode);
+					r = nh.getFarm(farmer.getShareCode());
 					farmer.setFarm(JsonHandler.parseJsonAndReturnNewFarm(r));
 					String newFarmName = farmer.getFarm().getFarmName();
 					farmField.setText(newFarmName);
+					farmCodeField.setText(farmer.getShareCode());
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Laget gård med navn: " + newFarmName,
 							"Laget ny gård", JOptionPane.OK_OPTION);
 				}
@@ -513,6 +513,8 @@ public class UserPanel extends JPanel {
 					Response userInfo = nh.getUser();
 					farmer = JsonHandler.parseJsonAndReturnUser(userInfo);
 					farmer.setFarm(null);
+					farmCodeField.setText("");
+					nh.setFarmCode("");
 					farmField.setText("Ingen farm");
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Slettet gård",
 							"Slettet gård", JOptionPane.OK_OPTION);
@@ -733,6 +735,9 @@ public class UserPanel extends JPanel {
 			r.consoletime();
 			JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Logget ut!",
 					"Utlogging", JOptionPane.WARNING_MESSAGE);
+			farmer = null;
+
+
 			usernameField.setText("");
 			passwordField.setText("");
 			usernameField.setEditable(true);
