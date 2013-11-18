@@ -41,7 +41,6 @@ public class Simulation {
 	public Simulation() {
 		netHandler = new NetHandler();
 		netHandler.login("Simulering", "Simulering");
-		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 		rand = new Random();
 		simHasDisease = false;
 	}
@@ -50,6 +49,7 @@ public class Simulation {
 	 * Runs the simulation
 	 */
 	public void runSimulation(){
+		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 		netHandler.isDebugging(false);
 		for (Sheep sheep : sheepList){
 			sheep.cure();
@@ -62,6 +62,7 @@ public class Simulation {
 			
 			while(sheepList.size() == 0){
 				System.out.println("No response from server or no sheep in database");
+				System.out.println(netHandler.getSimulatorSheep(-1).msg);
 				sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 				try {
 					Thread.sleep(NORESPONSETIME);
@@ -174,10 +175,140 @@ public class Simulation {
 			}
 			System.out.println("");
 			
-			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
+			}
 		}
-	}
+	
+	public void runSimulation(int id){
+		sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheep(id)));
+		netHandler.isDebugging(false);
+		for (Sheep sheep : sheepList){
+			sheep.cure();
+		}
+		
+		boolean running = true;
+		int sign;
+		
+		while (running){
+			
+			while(sheepList.size() == 0){
+				System.out.println("No response from server or no sheep in database");
+				System.out.println(netHandler.getSheep(id).msg);
+				sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheep(id)));
+				try {
+					Thread.sleep(NORESPONSETIME);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			previousUpdateTime = timeNow;
+			updateInterval = MSINDAY/(sheepList.size() * NUMBEROFUPDATESPERDAY) ; //The interval between sheep updates
+			
+			//checks if the disease should end based on how long it has lasted
+			if (simHasDisease){
+				daysOfDisease++;
+				if (daysOfDisease > currentDisease.getDiseaseLength()){
+					System.out.println("Disease ended");
+					for (Sheep infSheep : sheepList){
+						infSheep.cure();
+					}
+					simHasDisease = false;
+				}
+			}
+			
+			//checks if a wolf attack should occur
+			if (rand.nextInt(100) < 20){
+				System.out.println("Wolf attack");
+				sheepAttack();
+			}
+			
+			//checks if a new disease should be generated
+			if (rand.nextInt(100) < 20 && simHasDisease == false){
+				generateDisease();
+				simHasDisease = true;
+			}
+			
+			for (Sheep currentSheep : sheepList){
+				//waits until enough time has passed
+				while (timeNow - previousUpdateTime <= updateInterval){
+					timeNow = System.currentTimeMillis() % MSINDAY;
+				}
+				
+				if (currentSheep.isDead()){
+					System.out.println("ID: " + currentSheep.getIdNr() + "\t IS DEAD");
+
+					netHandler.updateSheep(currentSheep);
+					while (timeNow - previousUpdateTime <= updateInterval){
+						timeNow = System.currentTimeMillis() % MSINDAY;
+					}
+					continue;
+				}
+				sheepLocation = currentSheep.getLocation();
+				
+				//Random sheep movement
+				sign = rand.nextInt(2);
+				if (sign == NEGATIVE){
+					if (rand.nextInt(2) == 0){
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+					}
+					else{
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = (rand.nextDouble() * MOVEMENTSCALE) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() - latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+
+					}
+				}
+				else{
+					if (rand.nextInt(2) == 0){
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() + longrads * 180 / Math.PI);
+					}
+					else{
+						double latrads = (rand.nextDouble() * MOVEMENTSCALE) / EARTHRADIUS;
+						double longrads = ((rand.nextDouble() * MOVEMENTSCALE)) / (EARTHRADIUS * Math.cos(Math.PI * sheepLocation.getLatitude() / 180));
+						currentSheep.setLocation(sheepLocation.getLatitude() + latrads * 180 / Math.PI , sheepLocation.getLongitude() - longrads * 180 / Math.PI);
+
+					}
+				}
+				
+				//Sheep gain health every day they are not sick or at full health
+				if (currentSheep.getPulse() < 100 && !currentSheep.isDead() && !currentSheep.isInfected()){
+					currentSheep.setPulse(currentSheep.getPulse() + 10);
+					if (currentSheep.getPulse() > 100){
+						currentSheep.setPulse(100);
+					}
+				}
+				
+				//Check if current sheep should get infected
+				if (!currentSheep.isInfected() && simHasDisease){
+					for (Sheep infSheep : sheepList){
+						if (infSheep.isInfected() && (distanceBetween(currentSheep, infSheep) < currentDisease.getSpreadDistance()) && (rand.nextInt(100) < currentDisease.getSpreadChance())){
+							infectSheep(sheepList.indexOf(currentSheep));
+						}
+					}
+				}
+				
+				//Causes health decrease based of current disease
+				if (currentSheep.isInfected() && simHasDisease && (daysOfDisease > currentDisease.getIncubationPeriod())){
+					currentSheep.setPulse(currentSheep.getPulse() - currentDisease.getDamage());
+				}
+				System.out.println("ID: " + currentSheep.getIdNr() + "\t Lat: " + currentSheep.getLocation().getLatitude() 
+									+ "  \t Long: " + currentSheep.getLocation().getLongitude() + "\t    Pulse: " + currentSheep.getPulse()
+									+ " In Area: " + isInArea(currentSheep) + "\t Infected: " + currentSheep.isInfected() + " \t Nick: " + currentSheep.getNick());
+				
+				netHandler.updateSheep(currentSheep);
+				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);
+				previousUpdateTime = timeNow;
+			}
+			System.out.println("");
+			
+			previousUpdateTime = timeNow;
+			}
+		}
 	
 	/**
 	 * The wolf tries to kill 5 sheep. 90% chance of stopping after every kill.  
