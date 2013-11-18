@@ -175,6 +175,7 @@ public class Simulation {
 			}
 			System.out.println("");
 			
+			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
 			}
 		}
@@ -305,7 +306,7 @@ public class Simulation {
 				previousUpdateTime = timeNow;
 			}
 			System.out.println("");
-			
+			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSheep(id)));
 			previousUpdateTime = timeNow;
 			}
 		}
