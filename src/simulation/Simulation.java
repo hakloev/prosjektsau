@@ -13,7 +13,7 @@ import characters.Sheep;
 
 /**
  * Simulates sheep movement and diseases
- * @author maxmelander
+ * @author max melander
  *
  */
 public class Simulation {
