@@ -13,7 +13,7 @@ import characters.Sheep;
 
 /**
  * Simulates sheep movement and diseases
- * @author maxmelander
+ * @author max melander
  *
  */
 public class Simulation {
@@ -170,7 +170,7 @@ public class Simulation {
 			for (Sheep sheep : sheepList){
 				System.out.print(".");
 				netHandler.updateSheep(sheep);
-				netHandler.requestAlarmCheck(sheep.getIdNr(), /*!isInArea(currentSheep)*/ false,  null);
+				netHandler.requestAlarmCheck(sheep.getIdNr(), !isInArea(sheep),  null);
 
 			}
 			System.out.println("");
@@ -305,7 +305,7 @@ public class Simulation {
 				if (sheep.getFarmID() == id){
 					System.out.print(".");
 					netHandler.updateSheep(sheep);
-					netHandler.requestAlarmCheck(sheep.getIdNr(), /*!isInArea(currentSheep)*/ false,  null);
+					netHandler.requestAlarmCheck(sheep.getIdNr(), !isInArea(sheep),  null);
 				}
 
 			}
