@@ -609,6 +609,8 @@ public class UserPanel extends JPanel {
 							"Gårdkode", JOptionPane.INFORMATION_MESSAGE);
 					Response rr = nh.getSheep(-1);
 					farmField.setText(farmer.getFarm().getFarmName());
+					programFrame.getMapPanel().deleteAreas();
+					addFetchedAreasToGuiList();
 					programFrame.getSheepPanel().initUserSheeps(rr);
 				}
 			} else {
