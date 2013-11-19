@@ -346,7 +346,13 @@ public class NetHandler {
 	public Response newFarm() {
 	    List<NameValuePair> parameters = new ArrayList<NameValuePair>(1);
 	    parameters.add(new BasicNameValuePair("CREATE_FARM", m_userCode));
-	    try { return _post(parameters);
+	    try {
+		    Response r = _post(parameters);
+		    System.out.println(r.msg);
+		    if(!(isError(r.msg)) && m_isLoggedIn) {
+			    m_farmID = Integer.parseInt( searchJSON("id", r.msg) );
+		    }
+		    return r;
 		} catch (IOException e) { m_lastError = "Kunne ikke behandle forespørselen."; e.printStackTrace(); }
 	    return null;
 	}
@@ -705,7 +711,7 @@ public class NetHandler {
 		if(m_isDebugging) { System.out.println("[GET] user"); }
 		try { 
 			Response r = _get("&rid=1", null);
-			if(!isError(r.msg) && m_isLoggedIn) {
+			if(!(isError(r.msg)) && m_isLoggedIn) {
 				m_farmID = Integer.parseInt( searchJSON("farm_id", r.msg) );
 			}
 			return r;

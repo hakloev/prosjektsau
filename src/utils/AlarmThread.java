@@ -66,7 +66,7 @@ public class AlarmThread extends Thread implements Runnable {
 					}
 					if (debug) {System.out.println("AlarmThread: Sleeping for one minute");}
 
-					Thread.sleep(59000); // Check for new alarms every 60 seconds  59000 + 1000
+					Thread.sleep(10000); // Check for new alarms every 60 seconds  59000 + 1000 // 10000 for presentasjon
 				}
 			}
 		} catch (InterruptedException e) {
