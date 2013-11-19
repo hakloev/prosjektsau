@@ -389,6 +389,9 @@ public class UserPanel extends JPanel {
 				ArrayList<Position> temp = (ArrayList<Position>)programFrame.getUserPanel().areaGuiList.get(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().areaGuiList.remove(programFrame.getUserPanel().list.getSelectedIndex());
 				programFrame.getUserPanel().deleteAreafromServer(temp);
+				programFrame.getUserPanel().farmer.removeArea(temp);
+				programFrame.getMapPanel().deleteAreas();
+				addFetchedAreasToGuiList();
 			}
 		}
 	}
@@ -441,14 +444,18 @@ public class UserPanel extends JPanel {
 		 *
 		 */
 		@Override
-		public void actionPerformed(ActionEvent e) {///////////////////////////////////ENDREEE
+		public void actionPerformed(ActionEvent e) {
 			if(panel.areaGuiList.size()!=0 && panel.list.getSelectedIndex() != -1){
 				ArrayList<Position> temp = (ArrayList<Position>)panel.areaGuiList.get(panel.list.getSelectedIndex());
 				panel.areaGuiList.remove(panel.list.getSelectedIndex());
 				panel.deleteAreafromServer(temp);
-				new AreaEditFrame(panel.programFrame,temp);
 				panel.setAreaOpenable(false);
+				AreaEditFrame a = new AreaEditFrame(panel.programFrame, temp);
+				a.toFront();
+				a.requestFocusInWindow();
 				panel.farmer.removeArea(temp);
+				programFrame.getMapPanel().deleteAreas();
+				addFetchedAreasToGuiList();
 			}
 		}
 	}
@@ -487,12 +494,12 @@ public class UserPanel extends JPanel {
 					farmCodeField.setText(farmer.getShareCode());
 					nh.setFarmCode(String.valueOf(farmer.getFarmerId()));
 					JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Laget gård med navn: " + newFarmName,
-							"Laget ny gård", JOptionPane.OK_OPTION);
+							"Laget ny gård", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}else{
 				programFrame.getUserPanel().farmField.setText(programFrame.getUserPanel().farmer.getFarm().getFarmName());
 				JOptionPane.showMessageDialog(programFrame.getUserPanel(), "Har allerede gård",
-						"Har gård allerede", JOptionPane.OK_OPTION);
+						"Har gård allerede", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

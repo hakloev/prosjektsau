@@ -366,7 +366,9 @@ public class SheepPanel extends JPanel {
 	 * @param sheep
 	 */
 	public void addSheep(Sheep sheep) {
+		changingSheep = true;
 		sheepList.addElement(sheep);
+		changingSheep = false;
 	}
 
 	/**
