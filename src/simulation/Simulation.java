@@ -161,11 +161,11 @@ public class Simulation {
 				System.out.println("ID: " + currentSheep.getIdNr() + "     \t Lat: " + currentSheep.getLocation().getLatitude() 
 									+ "    \t Long: " + currentSheep.getLocation().getLongitude() + "     \t Pulse: " + currentSheep.getPulse()
 									+ " In Area: " + isInArea(currentSheep) + "\t Infected: " + currentSheep.isInfected() + " \t Nick: " + currentSheep.getNick());
-				//netHandler.updateSheep(currentSheep);
-				//netHandler.requestAlarmCheck(currentSheep.getIdNr(), /*!isInArea(currentSheep)*/ false,  null);
+				netHandler.updateSheep(currentSheep);
+				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);
 				previousUpdateTime = timeNow;
 			}
-			System.out.println("");
+			/*System.out.println("");
 			System.out.println("UPDATING SHEEP: ");
 			for (Sheep sheep : sheepList){
 				System.out.print(".");
@@ -174,7 +174,7 @@ public class Simulation {
 
 			}
 			System.out.println("");
-			System.out.println("");
+			System.out.println("");*/
 			sheepList = new ArrayList<Sheep>(JsonHandler.parseJsonAndReturnSheepList(netHandler.getSimulatorSheep(-1)));
 			previousUpdateTime = timeNow;
 			}
