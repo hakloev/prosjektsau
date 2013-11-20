@@ -165,6 +165,7 @@ public class Simulation {
 				netHandler.requestAlarmCheck(currentSheep.getIdNr(), !isInArea(currentSheep),  null);
 				previousUpdateTime = timeNow;
 			}
+			System.out.println("");
 			/*System.out.println("");
 			System.out.println("UPDATING SHEEP: ");
 			for (Sheep sheep : sheepList){
